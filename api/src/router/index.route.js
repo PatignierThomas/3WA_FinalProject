@@ -1,4 +1,10 @@
 import express from 'express';
+import authRouter from "./auth.route.js";
+import dataRouter from "./data.route.js";
+import adminRouter from "./admin.route.js";
+import moderatorRouter from "./moderation.route.js";
+import verifyAdminToken from '../middlewares/adminAuth.js';
+import verifyModeratorToken from '../middlewares/moderatorAuth.js';
 
 const indexRouter = express.Router();
 
@@ -6,6 +12,14 @@ indexRouter.get("/api/v1", (req, res) => {
     res.send("Hello World!");
     }
 );
+
+indexRouter.use("/api/v1/auth", authRouter);
+
+indexRouter.use("/api/v1/data", dataRouter);
+
+indexRouter.use("/api/v1/moderator", verifyModeratorToken, moderatorRouter);
+
+indexRouter.use("/api/v1/admin", verifyAdminToken, adminRouter);
 
 indexRouter.get("*", (req, res) => {
     res.json({ error: "Page not found" })

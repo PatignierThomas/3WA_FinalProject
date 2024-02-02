@@ -1,9 +1,13 @@
-import { useState } from 'react'
+import Header from './views/Header'
+import Footer from './views/Footer'
+import Router from './Router/Router.jsx'
 
 function App() {
   return (
     <>
-        <h1>Forum</h1>
+        <Header />
+        <Router />
+        <Footer />
     </>
   )
 }
