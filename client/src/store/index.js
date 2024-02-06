@@ -6,7 +6,6 @@ import gameReducer from './slices/game';
 
 const store = configureStore({
     reducer: {
-        // Add reducers here
         user: userReducer,
         post: postReducer,
         section: sectionReducer,

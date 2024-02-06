@@ -4,11 +4,11 @@ import auth from "../middlewares/auth.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/connexion", login);
+authRouter.post("/login", login);
 
-authRouter.post("/creer-un-compte", register);
+authRouter.post("/register", register);
 
-authRouter.get("/deconnexion", logout);
+authRouter.get("/logout", logout);
 
 authRouter.get("/check-token", auth, checkToken);
 
