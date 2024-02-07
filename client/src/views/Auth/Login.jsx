@@ -33,8 +33,7 @@ function Login() {
             });
             if (response.ok) {
                 const data = await response.json();
-                dispatch(login(data.username));
-                console.log(data);
+                dispatch(login({ username: data.username, role: data.role, age: data.age}));
                 navigate("/");
             } else {
                 setMsg("Une erreur s'est produite");

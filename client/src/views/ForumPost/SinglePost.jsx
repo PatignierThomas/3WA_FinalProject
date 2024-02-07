@@ -11,6 +11,7 @@ function SinglePost() {
     const { posts, loading} = useSelector(state => state.post)
     const { postId }= useParams()
 
+    // check token for a moderator or admin or dev
     useEffect(() => {
         dispatch(fetchPost(postId))
     }, [])

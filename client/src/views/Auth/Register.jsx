@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import user from '../../store/slices/user';
 
 
 function Register() {
@@ -29,6 +30,19 @@ function Register() {
             setError("Passwords do not match");
             return;
         }
+
+        //check if the user is over 13
+        const birthdate = new Date(userInfo.birthdate);
+        const now = new Date();
+        let age = now.getFullYear() - birthdate.getFullYear();
+        if (now.getMonth() < birthdate.getMonth() || (now.getMonth() === birthdate.getMonth() && now.getDate() < birthdate.getDate())) {
+            age--;
+        }
+        if (age < 13) {
+            setError("You must be at least 13 years old to register");
+            return;
+        }
+
         try {
             const response = await fetch("http://localhost:9001/api/v1/auth/register", {
                 method: "POST",

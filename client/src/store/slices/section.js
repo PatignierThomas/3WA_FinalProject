@@ -3,7 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const fetchSection = createAsyncThunk("section/fetchSection", async () => {
-    const response = await fetch("http://localhost:9001/api/v1/data/subject");
+    const response = await fetch("http://localhost:9001/api/v1/data/subject", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        }});
     const data = await response.json();
     return data;
 });

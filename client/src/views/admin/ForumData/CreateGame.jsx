@@ -1,0 +1,48 @@
+import React from 'react'
+import { useRef } from 'react'
+
+function CreateGame() {
+    const gameNameRef = useRef(null)
+    const gameAgeRef = useRef(null)
+
+    console.log("hello")
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const gameName = gameNameRef.current.value
+        const gameAge = gameAgeRef.current.value
+        const res = await fetch('http://localhost:9001/api/v1/admin/createGame', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ gameName, gameAge })
+        })
+        if (res.ok) {
+            console.log('Jeu créé')
+        }
+    }
+    return (
+        <form onSubmit={handleSubmit}>
+            <legend>Créer un jeu</legend>
+            <label htmlFor="gameName">Nom du jeu :</label>
+            <input 
+                ref={gameNameRef}
+                type="text" 
+                name="gameName" 
+                id="createGameName" 
+            />
+            <label htmlFor="gameAge">Age minimum :</label>
+            <input 
+                ref={gameAgeRef}
+                type="number" 
+                name="gameAge" 
+                id="createGameAge"
+            />
+            <input type="submit" value="Créer" />
+        </form>
+    )
+}
+
+export default CreateGame

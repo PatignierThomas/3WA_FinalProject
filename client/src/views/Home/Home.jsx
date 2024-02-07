@@ -8,6 +8,7 @@ import { fetchSection } from '../../store/slices/section.js'
 function Home() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
+    const { isLogged, age } = useSelector(state => state.user)
     
     useEffect(() => {
         dispatch(fetchGames())
@@ -18,16 +19,20 @@ function Home() {
             <h1>Home</h1>
             <p>Welcome to the Forum</p>
 
-            <h2>Visiter notre forum: </h2>
-            {games.map((data) => (
-                <div key={data.id}>
-                    {/* <h3>{data.game_name}</h3> */}
-                    <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
-                    {/* {section && section.map((section) => (
-                        section.game_section_id === data.id ? <p>hello</p> : null
-                    ))} */}
+            <h2>Visiter nos forum: </h2>
+            <section>
+                <div>
+                    <Link to="/news">News</Link>
                 </div>
+            {isLogged && 
+                games.map((data) => (
+                    age >= data.minimal_age ? 
+                    <div key={data.id}>
+                        <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                    </div>
+                    : null
             ))}
+            </section>
         </main>
     )
 }

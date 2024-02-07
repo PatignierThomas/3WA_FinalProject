@@ -7,10 +7,10 @@ import { logout } from "../store/slices/user.js";
 function Header() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { username, isLogged } = useSelector(state => state.user)
+    const { username, role, isLogged } = useSelector(state => state.user)
 
     const handleLogout = async () => {
-        const res = await fetch('http://localhost:9001/api/auth/logout', {
+        const res = await fetch('http://localhost:9001/api/v1/auth/logout', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,12 +25,12 @@ function Header() {
     }
     return (
         <header>
-            <h1>Welcome username not working {username}</h1>
+            <h1>Welcome {username}</h1>
             <nav>
             <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/connexion">Login</Link></li>
-                <li><Link to="/inscription">Register</Link></li>
+                {role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
+                {!isLogged ? <li><Link to="/inscription">Crée un compte</Link></li> : null} 
                 {isLogged ? 
                 <li><button onClick={handleLogout}>Se déconnecter</button></li> : 
                 <li><Link to="/connexion">Se connecter</Link></li>
