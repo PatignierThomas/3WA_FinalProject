@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function ProtectedRoute({ children, redirectPath }) {
+function ProtectedRoute({ child, redirectPath }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
@@ -20,7 +20,8 @@ function ProtectedRoute({ children, redirectPath }) {
         }
          checkAuth();
     }, []);
-    if (isAuthenticated) return children;
+    
+    if (isAuthenticated) return child;
 }
 
 export default ProtectedRoute;

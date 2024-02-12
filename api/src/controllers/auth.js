@@ -25,7 +25,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, keepLoggedIn } = req.body;
         const query = `SELECT id, username, password, role_id, birthdate FROM users WHERE email = ?`;
         const values = [email];
         const [data] = await Query.runWithParams(query, values);
@@ -59,13 +59,20 @@ export const login = async (req, res) => {
         }
 
         const TOKEN = jwt.sign(
-            { id: data.id, username: data.username, role: data.role_id, age}, // payload
+            { id: data.id, username: data.username, role: data.role_id, age, keepLoggedIn },
             process.env.SECRET_TOKEN, // signature de vérification
             { expiresIn: "1h" }
         );
-            
-        res.cookie("TK_AUTH", TOKEN, { httpOnly: true, maxAge: 3600000, sameSite: 'none', secure: false});
-        res.json({message: "Login Ok", username: data.username, role: data.role_id, age});
+
+        if (keepLoggedIn) {
+            // Set a persistent cookie if keepLoggedIn is true
+            res.cookie("TK_AUTH", TOKEN, { httpOnly: true, maxAge: 3600000, sameSite: 'lax', secure: true });
+        } else {
+            // Set a session cookie if keepLoggedIn is false
+            res.cookie("TK_AUTH", TOKEN, { httpOnly: true, sameSite: 'lax', secure: true });
+        }
+
+        res.json({message: "Login Ok", id: data.id, username: data.username, role: data.role_id, age});
         }
         catch (error) {
             console.log(error);

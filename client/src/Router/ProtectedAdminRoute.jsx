@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function ProtectedAdminRoute({ child, redirectPath }) {
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         async function checkAuth() {
@@ -17,13 +18,15 @@ function ProtectedAdminRoute({ child, redirectPath }) {
             const auth = await res.json();
 
             if (res.ok && auth.role === "admin") {
+                console.log("Route checked the token");
                 setIsAuthenticated(true);
             } else {
+                console.log("Route checked the token and failed");
                 navigate(redirectPath);
             }
         }
          checkAuth();
-    }, []);
+    }, [location]);
     if (isAuthenticated) return child;
 }
 

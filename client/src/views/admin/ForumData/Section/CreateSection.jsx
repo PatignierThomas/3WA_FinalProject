@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchGames } from '../../../store/slices/game.js'
+import { fetchGames } from '../../../../store/slices/game.js'
 
 function CreateSection() {
     const navigate = useNavigate()

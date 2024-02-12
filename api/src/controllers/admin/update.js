@@ -11,3 +11,15 @@ export const updateGame = async (req, res) => {
         res.status(500).json({error: "Erreur serveur"});
     }
 }
+
+export const updateSection = async (req, res) => {
+    try {
+        const query = "UPDATE sub_forum SET subject = ?, game_section_id = ? WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.body.sectionName, req.body.gameId, req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { fetchGames } from '../../../store/slices/game.js'
+import { fetchGames } from '../../../../store/slices/game.js'
 
 function UpdateGame() {
     const dispatch = useDispatch()
@@ -15,11 +15,13 @@ function UpdateGame() {
     const newGameNameRef = useRef(null)
     const gameAgeRef = useRef(null)
     const gameIdRef = useRef(null)
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const gameName = newGameNameRef.current.value
         const gameAge = gameAgeRef.current.value
         const gameId = gameIdRef.current.value
+
         const res = await fetch(`http://localhost:9001/api/v1/admin/updateGame/${gameId}`, {
             method: 'PATCH',
             headers: {

@@ -10,6 +10,7 @@ function Login() {
     const dispatch = useDispatch();
     const emailRef = useRef();
     const passwordRef = useRef();
+    const keepLoggedInRef = useRef();
 
     const [msg, setMsg] = useState("");
 
@@ -22,7 +23,8 @@ function Login() {
         try {
             const email = emailRef.current.value;
             const password = passwordRef.current.value;
-            const datas = { email, password };
+            const keepLoggedIn = keepLoggedInRef.current.checked;
+            const datas = { email, password, keepLoggedIn };
             const response = await fetch("http://localhost:9001/api/v1/auth/login", {
                 method: "POST",
                 headers: {
@@ -33,7 +35,8 @@ function Login() {
             });
             if (response.ok) {
                 const data = await response.json();
-                dispatch(login({ username: data.username, role: data.role, age: data.age}));
+                dispatch(login({ id: data.id, username: data.username, role: data.role, age: data.age}));
+
                 navigate("/");
             } else {
                 setMsg("Une erreur s'est produite");
@@ -48,6 +51,8 @@ function Login() {
             <input ref={emailRef} type="mail" name="email" id="email" />
             <label htmlFor="password">Password</label>
             <input ref={passwordRef} type="password" name="password" id="password" />
+            <label htmlFor="keepLoggedIn">Rester connecté</label>
+            <input ref={keepLoggedInRef} type="checkbox" name="keepLoggedIn" id="keepLoggedIn" />
             <input type="submit" value="Se connecter" />
             <Link to="/inscription">S'inscrire</Link>
             {msg && <p>{msg}</p>}

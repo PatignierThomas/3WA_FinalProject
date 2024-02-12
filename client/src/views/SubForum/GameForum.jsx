@@ -13,6 +13,7 @@ function ColorfullWorld() {
     useEffect(() => {
         dispatch(fetchSection())
     }, [])
+
     return (
         <main>
         {section.map((section) => (

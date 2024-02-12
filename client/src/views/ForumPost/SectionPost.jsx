@@ -11,6 +11,8 @@ function SectionPost() {
     const dispatch = useDispatch()
     const { posts } = useSelector(state => state.post)
     const { sectionId } = useParams()
+    const param = useParams()
+
 
     useEffect(() => {
         dispatch(fetchPosts())
@@ -23,6 +25,7 @@ function SectionPost() {
 
     return (
     <main>
+        <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>
         {posts.map((post) => (
             <div key={post.id}>
                 {post.sub_forum_id === Number(sectionId) && <Link to={`/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import CreateGame from './ForumData/CreateGame'
-import CreateSection from './ForumData/CreateSection'
+import CreateGame from './ForumData/Game/CreateGame'
+import CreateSection from './ForumData/Section/CreateSection'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 
@@ -35,18 +35,21 @@ function Panel() {
             {
                 data && data[0] && (
                     <>
-                        <div>Nombre d'utilisateur: {data[0].total_users}</div>
-                        <div>Nombre de jeux: {data[0].total_posts}</div>
-                        <div>Nombre de catégories: {data[0].total_replies}</div>
+                        <div>Nombre d'utilisateurs: {data[0].total_users}</div>
+                        <div>Nombre de posts: {data[0].total_posts}</div>
+                        <div>Nombre de réponses: {data[0].total_replies}</div>
                     </>
                 )
             }
             
             <div><Link to="/admin/create-game">Créer un jeu</Link></div>
             <div><Link to="/admin/update-game">Modifier un jeu</Link></div>
+            <div><Link to="/admin/delete-game">Supprimer un jeu</Link></div>
+            
             <br></br>
             <div><Link to="/admin/create-section">Créer une catégorie</Link></div>
             <div><Link to="/admin/update-section">Modifier une catégorie</Link></div>
+            <div><Link to="/admin/delete-section">Supprimer une catégorie</Link></div>
             
         </>
     )

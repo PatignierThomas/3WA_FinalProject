@@ -14,8 +14,8 @@ export const createGame = async (req, res) => {
 
 export const createSection = async (req, res) => {
     try {
-        const query = "INSERT INTO sub_forum (subject, game_section_id) VALUES (?, ?)";
-        const data = await Query.runWithParams(query, [req.body.sectionName, req.body.gameId]);
+        const query = "INSERT INTO sub_forum (subject, status, game_section_id) VALUES (?, ?, ?)";
+        const data = await Query.runWithParams(query, [req.body.sectionName, "ok", req.body.gameId]);
         res.json(data);
     }
     catch (error) {

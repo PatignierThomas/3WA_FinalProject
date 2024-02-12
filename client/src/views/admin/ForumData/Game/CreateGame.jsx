@@ -5,8 +5,6 @@ function CreateGame() {
     const gameNameRef = useRef(null)
     const gameAgeRef = useRef(null)
 
-    console.log("hello")
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         const gameName = gameNameRef.current.value
