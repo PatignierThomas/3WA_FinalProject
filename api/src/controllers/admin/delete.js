@@ -23,3 +23,27 @@ export const deleteSection = async (req, res) => {
         res.status(500).json({error: "Erreur serveur"});
     }
 }
+
+export const deletePost = async (req, res) => {
+    try {
+        const query = "DELETE FROM post WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}
+
+export const deleteReply = async (req, res) => {
+    try {
+        const query = "DELETE FROM post_reply WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}

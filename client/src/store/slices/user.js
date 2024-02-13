@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    id: null,
     username: "",
     role: "visitor",
     age: null,
@@ -13,14 +12,12 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.id = action.payload.id;
             state.username = action.payload.username;
             state.role = action.payload.role;
             state.age = action.payload.age;
             state.isLogged = true;
         },
         logout: (state) => {
-            state.id = null;
             state.username = "";
             state.role = "visitor";
             state.age = null;

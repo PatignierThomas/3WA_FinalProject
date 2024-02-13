@@ -1,11 +1,12 @@
 import React, { useRef, useState }from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function CreatePost() {
     const [value, setValue] = useState('')
 
+    const navigate = useNavigate()
     const param = useParams()
 
     const titleRef = useRef()
@@ -22,6 +23,7 @@ function CreatePost() {
             body: JSON.stringify({ title, content: value, sectionId: param.sectionId})
         })
         if (res.ok) {
+            navigate(-1)
             console.log('Post crée')
         }
     }

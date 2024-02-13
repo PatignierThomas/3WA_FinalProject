@@ -2,7 +2,9 @@ import React from "react"
 import { Routes, Route } from "react-router-dom"
 import Home from "../views/Home/Home.jsx"
 import GameForum from "../views/SubForum/GameForum.jsx"
+import PublicForum from "../views/SubForum/PublicForum.jsx"
 import SectionPost from "../views/ForumPost/SectionPost.jsx"
+import PublicSection from "../views/ForumPost/PublicSection.jsx"
 import SinglePost from "../views/ForumPost/SinglePost.jsx"
 import Login from "../views/Auth/Login.jsx"
 import Register from "../views/Auth/Register.jsx"
@@ -24,6 +26,8 @@ function Router() {
             <Route path="/" element={<Home />} />
             <Route path="connexion" element={<Login />} />
             <Route path="inscription" element={<Register />} />
+            <Route path="news" element={<PublicForum />} />
+            <Route path="news/:sectionId" element={<PublicSection />} />
 
             <Route path="game/:game/:gameId" element={<ProtectedRoute redirectPath="/connexion" child={<GameForum />}/> } />
             <Route path="section/:section/:sectionId" element={<ProtectedRoute redirectPath="/connexion"child={<SectionPost />}/> }/>

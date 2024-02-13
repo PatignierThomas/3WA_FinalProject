@@ -23,9 +23,8 @@ function App() {
             if (auth.error) return
             if (res.ok) {
                 console.log("I checked the token")
-                dispatch(login({ id: auth.id, username: auth.username, role: auth.role, age: auth.age}));
+                dispatch(login({ username: auth.username, role: auth.role, age: auth.age}));
             }
-
         }
         checkUser();
     }

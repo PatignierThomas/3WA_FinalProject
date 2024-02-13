@@ -1,8 +1,8 @@
 import express from 'express';
-import { getStats, banUser, unbanUser, deletePost, deleteReply } from "../controllers/admin/index.js";
+import { getStats, banUser, unbanUser } from "../controllers/admin/index.js";
 import { createGame, createSection } from "../controllers/admin/create.js";
 import { updateGame, updateSection } from "../controllers/admin/update.js";
-import { deleteGame, deleteSection } from "../controllers/admin/delete.js";
+import { deleteGame, deleteSection, deletePost, deleteReply } from "../controllers/admin/delete.js";
 
 const adminRouter = express.Router();
 

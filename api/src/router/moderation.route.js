@@ -1,13 +1,13 @@
 import express from 'express';
-import { lockPost, unlockPost, deletePost } from "../controllers/admin/index.js";
+import { lockPost, unlockPost, hidePost } from "../controllers/admin/index.js";
 
 const moderatorRouter = express.Router();
 
-moderatorRouter.post("/lockPost/:id", lockPost);
+moderatorRouter.get("/lockPost/:id", lockPost);
 
-moderatorRouter.post("/unlockPost/:id", unlockPost);
+moderatorRouter.get("/unlockPost/:id", unlockPost);
 
-moderatorRouter.post("/hidePost/:id", deletePost);
+moderatorRouter.get("/hidePost/:id", hidePost);
 
 
 export default moderatorRouter;

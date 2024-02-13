@@ -61,18 +61,18 @@ export const login = async (req, res) => {
         const TOKEN = jwt.sign(
             { id: data.id, username: data.username, role: data.role_id, age, keepLoggedIn },
             process.env.SECRET_TOKEN, // signature de vérification
-            { expiresIn: "1h" }
+            { expiresIn: "30d" }
         );
 
         if (keepLoggedIn) {
             // Set a persistent cookie if keepLoggedIn is true
-            res.cookie("TK_AUTH", TOKEN, { httpOnly: true, maxAge: 3600000, sameSite: 'lax', secure: true });
+            res.cookie("TK_AUTH", TOKEN, { httpOnly: true, maxAge: 2592000000, sameSite: 'lax', secure: true });
         } else {
             // Set a session cookie if keepLoggedIn is false
             res.cookie("TK_AUTH", TOKEN, { httpOnly: true, sameSite: 'lax', secure: true });
         }
 
-        res.json({message: "Login Ok", id: data.id, username: data.username, role: data.role_id, age});
+        res.json({message: "Login Ok", username: data.username, role: data.role_id, age});
         }
         catch (error) {
             console.log(error);
