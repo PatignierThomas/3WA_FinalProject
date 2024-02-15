@@ -14,7 +14,9 @@ function SinglePost() {
     const { isLogged, role, username } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
     const { replies } = useSelector(state => state.reply)
-
+    
+    
+    const [editingReply, setEditingReply] = useState(null);
     const [value, setValue] = useState('');
     const [isLocked, setIsLocked] = useState(false);
 
@@ -27,6 +29,7 @@ function SinglePost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!editingReply) {
         const res = await fetch('http://localhost:9001/api/v1/data/post/createReply', {
             method: 'POST',
             headers: {
@@ -38,7 +41,25 @@ function SinglePost() {
         if (res.ok) {
             console.log('Réponse crée')
         }
+    } 
+        if (editingReply) {
+            const res = await fetch(`http://localhost:9001/api/v1/data/post/editReply/${editingReply.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ content: value})
+            })
+            if (res.ok) {
+                console.log('Réponse éditée')
+            }
+        }
+        dispatch(fetchReply(postId))
+        setValue('')
+        setEditingReply(null)
     }
+
 
     const handleLock = async () => {
         const res = await fetch(`http://localhost:9001/api/v1/moderator/lockPost/${postId}`,{
@@ -97,8 +118,33 @@ function SinglePost() {
             navigate(-1);
         }
     }
+
+    const handleShowPost = async () => {
+        const res = await fetch(`http://localhost:9001/api/v1/moderator/showPost/${postId}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        if (res.ok) {
+            console.log('Post has been shown')
+            navigate(-1);
+        }
+    }
+
     const handleEdit = () => {
         navigate(`/edit/${postId}/${posts[0].title}`)
+    }
+
+    const handleReplyEdit = (reply) => {
+        setValue(reply.content)
+        setEditingReply(reply)
+    }
+
+    const cancel = () => {
+        setEditingReply(null)
+        setValue('')
     }
 
     const handleDeleteReply = async (replyId) => {
@@ -115,6 +161,34 @@ function SinglePost() {
         }
     }
 
+    const handleHideReply = async (replyId) => {
+        const res = await fetch(`http://localhost:9001/api/v1/moderator/hideReply/${replyId}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        if (res.ok) {
+            console.log('Réponse cachée')
+            dispatch(fetchReply(postId))
+        }
+    }
+
+    const handleShowReply = async (replyId) => {
+        const res = await fetch(`http://localhost:9001/api/v1/moderator/showReply/${replyId}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+        if (res.ok) {
+            console.log('Réponse affichée')
+            dispatch(fetchReply(postId))
+        }
+    }
+
     // data received with React-quill will be writen in a Delta format, stringified into a JSON object, 
     // saved in DB, and parsed back to a Delta format when retrieved from DB
     
@@ -127,9 +201,14 @@ function SinglePost() {
             }
             { ((role === "admin" || role === "moderator") && !loading) && (
                 <>
-                    {posts[0].status === "locked" ? (<button onClick={handleUnlock}>Unlock</button>) 
-                    : (<button onClick={handleLock}>Lock</button>)}
-                    <button onClick={handleHidePost}>Hide</button>
+                    {posts[0].status === "locked" ? 
+                        <button onClick={handleUnlock}>Unlock</button> : 
+                        <button onClick={handleLock}>Lock</button>
+                    }
+                    {posts[0].status === "hidden" ?
+                        <button onClick={handleShowPost}>Show</button> :
+                        <button onClick={handleHidePost}>Hide</button>
+                    }
                 </>
             )}
             { (role === "admin" && !loading) && (
@@ -144,18 +223,32 @@ function SinglePost() {
                     <div dangerouslySetInnerHTML={{ __html: posts[0].content }} />
                 </article>
             )}
-            {replies.map((reply) => (
-                <article key={reply.id}>
-                    <p>{reply.username}</p>
-                    <p>{reply.reply_date}</p>
-                    {reply.last_update && <p>Modifié le {reply.last_update}</p>}
-                    <div dangerouslySetInnerHTML={{ __html: reply.content }} />
-                </article>
-            ))}
+            {(role === "admin" || role === "moderator" ? replies : replies.filter(reply => reply.status !== "hidden")).map((reply) => {
+                return (
+                    <article key={reply.id}>
+                        {((reply && username === reply.username) || role === "admin" || role === "moderator") && 
+                            <button onClick={() => handleReplyEdit(reply)}>Editer réponse</button>}  
+                        {((role === "admin" || role === "moderator") && !loading) &&
+                            <button onClick={() => handleDeleteReply(reply.id)}>Supprimer réponse</button>
+                        }
+                        {((role === "admin" || role === "moderator") && !loading) &&
+                        (reply.status === "hidden" ? 
+                            <button onClick={() => handleShowReply(reply.id)}>Afficher réponse</button> : 
+                            <button onClick={() => handleHideReply(reply.id)}>Cacher réponse</button>
+                        )}
+
+                        <p>{reply.username}</p>
+                        <p>{reply.reply_date}</p>
+                        {reply.last_update && <p>Modifié le {reply.last_update}</p>}
+                        <div dangerouslySetInnerHTML={{ __html: reply.content }} />
+                    </article>
+                );
+            })}
             {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
             <form onSubmit={handleSubmit}>
+                {editingReply && <p>You are editing a reply. <button onClick={() => cancel()}>Cancel</button></p>}
                 <ReactQuill theme="snow" value={value} onChange={setValue} />
-                <input type="submit" value="Répondre" />
+                <button type="submit">{editingReply ? 'Update Reply' : 'Reply'}</button>
             </form>}
         </main>
     )

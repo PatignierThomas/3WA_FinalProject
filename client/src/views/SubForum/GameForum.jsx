@@ -15,14 +15,39 @@ function GameForum() {
         dispatch(fetchSection())
     }, []);
 
+    useEffect(() => {
+        const getlastPost = async (gameId) => {
+            const res = await fetch(`http://localhost:9001/api/v1/data/get/most/recent/post/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            })
+            const lastPost = await res.json();
+            console.log(lastPost)
+        }
+        getlastPost(gameId)
+    }
+    , [gameId])
+
     return (
         <main>
         {section.map((section) => (
             <div key={section.id}>
                 {(!isPublicRoute && section.game_section_id === Number(gameId)) ? 
-                <Link to={`/section/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link> 
+
+                // TODO : get most recent post for each section
+                <>
+                    <Link to={`/section/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link> 
+                    <p>Posts: {section.post_count}</p>
+                </>
                 : section.game_section_id === Number(gameId) && 
-                <Link to={`/open/sec/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>}
+                <>
+                    <Link to={`/open/sec/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
+                    <p>Posts: {section.post_count}</p>
+                </>
+                }
             </div>
         ))}
         </main>
