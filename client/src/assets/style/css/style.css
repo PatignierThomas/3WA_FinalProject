@@ -1,3 +1,177 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+}
+
+header {
+  background-color: #363636;
+}
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+}
+header nav a {
+  color: white;
+  width: 50%;
+  text-align: left;
+  padding: 1rem;
+  font-size: 2.5rem;
+  text-decoration: none;
+}
+header nav button {
+  background-color: #363636;
+  color: white;
+  border: none;
+  text-align: right;
+  width: 50%;
+  padding: 1rem;
+  font-size: 3rem;
+}
+header nav ul {
+  display: none;
+  list-style: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+}
+header nav ul li {
+  width: 100%;
+  text-align: center;
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #363636;
+}
+header nav ul li:hover {
+  background-color: #e5e5e5;
+}
+header nav ul li:hover a {
+  color: black;
+}
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+header nav ul.open {
+  display: flex;
+}
+@media (min-width: 768px) {
+  header nav ul {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+@media (min-width: 768px) {
+  header nav .cta-menu {
+    display: none;
+  }
+}
+
+main {
+  background-color: #e5e5e5;
+  color: #363636;
+  padding: 1rem;
+  min-height: 100vh;
+}
+main .intro {
+  text-align: center;
+  padding: 2rem;
+  font-size: 2.5rem;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main .public, main .private {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+main .public h2, main .private h2 {
+  font-size: 2.5rem;
+  width: 100%;
+  text-align: center;
+}
+main .public article, main .private article {
+  background-color: #363636;
+}
+main .public article a, main .private article a {
+  color: #e5e5e5;
+  text-decoration: none;
+}
+main .public article p, main .private article p {
+  color: #e5e5e5;
+}
+main form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+main form input {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main form select {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main form textarea {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main form button {
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main form .error {
+  color: red;
+  font-size: 2.5rem;
+}
+
+footer {
+  background-color: #363636;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.6rem;
+}
+
 .password-match {
   border-color: green;
 }

@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import slugify from 'slugify'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { fetchGames } from '../../store/slices/game.js'
-import { fetchSection } from '../../store/slices/section.js'
 import { fetchPosts } from '../../store/slices/post.js'
 
 function SectionPost() {
+    const matchPublic = useMatch('/open/sec/:section/:sectionId');
+    const isPublicRoute = matchPublic != null;
+
     const dispatch = useDispatch()
     const { posts } = useSelector(state => state.post)
+    const { isLogged } = useSelector(state => state.user)
     const { role } = useSelector(state => state.user)
     const { sectionId } = useParams()
     const param = useParams()
@@ -18,6 +20,7 @@ function SectionPost() {
         dispatch(fetchPosts())
     }, [])
 
+
     // format the title to be used as a slug
     // function createSlug(title) {
     //     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -25,11 +28,21 @@ function SectionPost() {
 
     return (
     <main>
-        <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>
+        <article className="intro">
+            <h1>Section</h1>
+            <p>Section {param.section}</p>
+        </article>
+        {(!isPublicRoute && isLogged) && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
+        {(isPublicRoute && role === "admin") && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
         {posts.map((post) => (
             ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (role === "admin" || role === "moderator"))) &&
             <div key={post.id}>
-                {post.sub_forum_id === Number(sectionId) && <Link to={`/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>}
+                {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
+                <Link to={`/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link> 
+                : post.sub_forum_id === Number(sectionId) &&
+                
+                <Link to={`/open/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
+            }
             </div>
         ))}
     </main>

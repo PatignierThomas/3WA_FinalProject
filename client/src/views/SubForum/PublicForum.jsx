@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom'
 import { fetchSection } from '../../store/slices/section.js'
 import slugify from 'slugify'
 
-
+// Unsued , to be deleted
 function PublicForum() {
     const dispatch = useDispatch()
     const { section } = useSelector(state => state.section)

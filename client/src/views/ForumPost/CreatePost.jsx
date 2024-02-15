@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function CreatePost() {
+function UpdatePost() {
     const [value, setValue] = useState('')
 
     const navigate = useNavigate()
@@ -38,4 +38,4 @@ function CreatePost() {
     )
 }
 
-export default CreatePost
+export default UpdatePost

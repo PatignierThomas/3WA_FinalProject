@@ -2,8 +2,8 @@ import Query from '../../model/Query.js';
 
 export const updateGame = async (req, res) => {
     try {
-        const query = "UPDATE game_section SET game_name = ?, minimal_age = ? WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.gameName, req.body.gameAge, req.params.id]);
+        const query = "UPDATE game_section SET game_name = ?, description,  minimal_age = ? WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.params.id]);
         res.json(data);
     }
     catch (error) {

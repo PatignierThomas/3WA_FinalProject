@@ -3,7 +3,6 @@ import slugify from 'slugify'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchGames } from '../../store/slices/game.js'
-import { fetchSection } from '../../store/slices/section.js'
 
 function Home() {
     const dispatch = useDispatch()
@@ -15,25 +14,61 @@ function Home() {
     }, [])
 
     return (
-        <main>
-            <h1>Home</h1>
-            <p>Welcome to the Forum</p>
+        // <main>
+        //     <h1>Home</h1>
+        //     <p>Welcome to the Forum</p>
 
-            <h2>Visiter nos forum: </h2>
-            <section>
-                <div>
-                    <Link to="/news">News</Link>
-                </div>
-            {isLogged && 
-                games.map((data) => (
-                    age >= data.minimal_age ? 
-                    <div key={data.id}>
-                        <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
-                    </div>
-                    : null
-            ))}
+        //     <h2>Visiter nos forum: </h2>
+        //     <section>
+        //     {isLogged ? 
+        //         games.map((data) => (
+        //             age >= data.minimal_age ? 
+        //             <article key={data.id}>
+        //                 {data.visibility === 'Public' && <Link to={`/open/main/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>}
+        //                 {data.visibility === 'Private' && <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>}
+        //             </article>
+        //             : null
+        //         ))
+        //         : games.map((data) => (
+        //             data.visibility === 'Public' ?
+        //             <div key={data.id}>
+        //                 <Link to={`/open/main/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+        //             </div>
+        //             : null
+        //         ))
+        //     }
+        //     </section>
+        // </main>
+
+        <main>
+            <section className='intro'>
+                <h1>Home</h1>
+                <p>Welcome to the Forum</p>
             </section>
-        </main>
+            <section className='public'>
+            <h2>Public Games</h2>
+            {games
+                .filter((data) => data.visibility === 'Public')
+                .map((data) => (
+                <article key={data.id}>
+                    <Link to={`/open/main/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                    <p>{data.description}</p>
+                </article>
+                ))}
+            </section>
+        {isLogged && (
+            <section className='private'>
+                <h2>Private Games</h2>
+                {games
+                .filter((data) => data.visibility === 'Private' && age >= data.minimal_age)
+                .map((data) => (
+                    <article key={data.id}>
+                    <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                    </article>
+                ))}
+            </section>
+        )}
+      </main>
     )
 }
 

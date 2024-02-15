@@ -11,7 +11,7 @@ function SinglePost() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { postId }= useParams()
-    const { isLogged, role } = useSelector(state => state.user)
+    const { isLogged, role, username } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
     const { replies } = useSelector(state => state.reply)
 
@@ -98,7 +98,7 @@ function SinglePost() {
         }
     }
     const handleEdit = () => {
-        navigate(`/forum/post/edit/${postId}`)
+        navigate(`/edit/${postId}/${posts[0].title}`)
     }
 
     const handleDeleteReply = async (replyId) => {
@@ -115,12 +115,16 @@ function SinglePost() {
         }
     }
 
-
     // data received with React-quill will be writen in a Delta format, stringified into a JSON object, 
     // saved in DB, and parsed back to a Delta format when retrieved from DB
     
     return (
         <main>
+            {loading && <p>Chargement...</p>}
+            { (posts[0] && (username === posts[0].username || (role === "admin" || role === "moderator"))  && !loading) && (
+                <button onClick={handleEdit}>Editer</button>
+            )
+            }
             { ((role === "admin" || role === "moderator") && !loading) && (
                 <>
                     {posts[0].status === "locked" ? (<button onClick={handleUnlock}>Unlock</button>) 
@@ -148,7 +152,7 @@ function SinglePost() {
                     <div dangerouslySetInnerHTML={{ __html: reply.content }} />
                 </article>
             ))}
-            {(!loading && posts[0] && posts[0].status !== "locked") &&
+            {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
             <form onSubmit={handleSubmit}>
                 <ReactQuill theme="snow" value={value} onChange={setValue} />
                 <input type="submit" value="Répondre" />

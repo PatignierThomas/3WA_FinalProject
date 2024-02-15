@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { fetchGames } from '../../../../store/slices/game.js'
 
+
+// preload form with game data
 function UpdateGame() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
@@ -36,30 +38,40 @@ function UpdateGame() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <legend>Modifier un jeu :</legend>
-            <label htmlFor="gameName">Nom du jeu :</label>
-            <select ref={gameIdRef} name="gameName" id="updateGameName">
-                {games.map((data) => (
-                    <option key={data.id} value={data.id}>{data.game_name}</option>
-                ))}
-            </select>
-            <label htmlFor="newName">Nouveau nom :</label>
-            <input 
-                ref={newGameNameRef}
-                type="text" 
-                name="newName" 
-                id="updateGameName"
-            />
-            <label htmlFor="gameAge">Age minimal :</label>
-            <input 
-                ref={gameAgeRef}
-                type="number" 
-                name="gameAge" 
-                id="updateGameAge" 
-            />
-            <input type="submit" value="Modifier" />
-        </form>
+        <main>
+            <form onSubmit={handleSubmit}>
+                <legend>Modifier un jeu :</legend>
+                <label htmlFor="gameName">Nom du jeu :</label>
+                <select ref={gameIdRef} name="gameName" id="updateGameName">
+                    {games.map((data) => (
+                        <option key={data.id} value={data.id}>{data.game_name}</option>
+                    ))}
+                </select>
+                <label htmlFor="newName">Nouveau nom :</label>
+                <input 
+                    ref={newGameNameRef}
+                    type="text" 
+                    name="newName" 
+                    id="updateGameName"
+                />
+                <label htmlFor="gameAge">Age minimal :</label>
+                <input 
+                    ref={gameAgeRef}
+                    type="number" 
+                    name="gameAge" 
+                    id="updateGameAge" 
+                />
+                <label htmlFor="visibility">Visibilité :</label>
+                <select name="visibility" id="visibility">
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                </select>
+
+                <label htmlFor="description">Description :</label>
+                <textarea name="description" id="description"></textarea>
+                <input type="submit" value="Modifier" />
+            </form>
+        </main>
     )
 }
 

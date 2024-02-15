@@ -1,3 +1,212 @@
+//mobile-first
+
+$color-primary: #363636;
+$color-secondary: #e5e5e5;
+$color-text: white;
+$color-background: $color-primary;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6rem;
+}
+
+header {
+    background-color: $color-primary;
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+
+        a {
+            color: $color-text;
+            width: 50%;
+            text-align: left;
+            padding: 1rem;
+            font-size: 2.5rem;
+            text-decoration: none;
+        }
+
+        button {
+            background-color: $color-primary;
+            color: $color-text;
+            border: none;
+            text-align:right;
+            width:50%;
+            padding: 1rem;
+            font-size: 3rem;
+        }
+
+        ul {
+            display:none;
+            list-style: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            padding: 0;
+
+            li {
+                width: 100%;
+                text-align: center;
+                margin: 1rem;
+                padding: 1rem;
+                background-color: $color-primary;
+
+                &:hover {
+                    background-color: $color-secondary;
+                    a {
+                        color: black;
+                    }
+
+
+                }
+                a {
+                    color: $color-text;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        ul.open {
+            display: flex;
+        }
+
+        @media (min-width: 768px) {
+            ul {
+                flex-direction: column;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+        }
+    }
+
+    @media (min-width: 768px) {
+        nav {
+            .cta-menu {
+                display: none;
+            }
+        }
+    }
+}
+
+main {
+    background-color: #e5e5e5;
+    color: #363636;
+    padding: 1rem;
+    min-height: 100vh;
+    
+    .intro {
+        text-align: center;
+        padding: 2rem;
+        font-size: 2.5rem;
+        background-color: #363636;
+        color: #e5e5e5;
+    }
+
+    .public, .private {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+
+            h2 {
+                font-size: 2.5rem;
+                width: 100%;    
+                text-align: center;
+            }
+
+            article {
+                background-color: #363636;
+                a {
+                    color: #e5e5e5;
+                    text-decoration: none;
+                
+                }
+
+                p {
+                    color: #e5e5e5;
+                }
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+
+            input {
+                width: 100%;
+                padding: 1rem;
+                margin: 1rem;
+                font-size: 2.5rem;
+                border: none;
+                background-color: #363636;
+                color: #e5e5e5;
+            }
+
+            select {
+                width: 100%;
+                padding: 1rem;
+                margin: 1rem;
+                font-size: 2.5rem;
+                border: none;
+                background-color: #363636;
+                color: #e5e5e5;
+            }
+
+            textarea {
+                width: 100%;
+                padding: 1rem;
+                margin: 1rem;
+                font-size: 2.5rem;
+                border: none;
+                background-color: #363636;
+                color: #e5e5e5;
+            }
+
+            button {
+                width: 100%;
+                padding: 1rem;
+                margin: 1rem;
+                font-size: 2.5rem;
+                border: none;
+                background-color: #363636;
+                color: #e5e5e5;
+            }
+
+            .error {
+                color: red;
+                font-size: 2.5rem;
+            }
+        }
+    }
+
+footer {
+    background-color: $color-primary;
+    color: $color-text;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.6rem;
+}
+
+
+
+
 .password-match {
     border-color: green;
 }
