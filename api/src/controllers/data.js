@@ -9,21 +9,37 @@ export const getAllGames = async (req, res) => {
 }
 
 export const getAllSubject = async (req, res) => {
-    const query = "SELECT * FROM sub_forum";
+    const query = `SELECT sub_forum.*, COUNT(post.id) as post_count
+                   FROM sub_forum 
+                   LEFT JOIN post ON sub_forum.id = post.sub_forum_id
+                   GROUP BY sub_forum.id`;
     const data = await Query.run(query)
     res.json(data);
 }
 
 export const getAllPost = async (req, res) => {
-    const query = "SELECT * FROM post ORDER BY creation_date DESC";
+    // GREATEST determine the greatest value from a list of values
+    // COALESCE returns the first non-null value in a list
+    const query = `SELECT post.*, COUNT(post_reply.id) as replies, MAX(post_reply.reply_date) as latest_reply
+                   FROM post 
+                   LEFT JOIN post_reply ON post.id = post_reply.post_id
+                   GROUP BY post.id
+                   ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC`;
+
     const data = await Query.run(query)
     res.json(data);
 }
 
-//TODO 
-export const getMostRecentPost = async (req, res) => {
-    const query = "SELECT * FROM post ORDER BY last_update DESC LIMIT 1";
-    const data = await Query.run(query)
+export const getMostRecentPostOfCategory = async (req, res) => {
+    const query = `SELECT post.*, COUNT(post_reply.id) as replies, MAX(post_reply.reply_date) as latest_reply
+                   FROM post 
+                   LEFT JOIN post_reply ON post.id = post_reply.post_id
+                   WHERE post.sub_forum_id = ?
+                   GROUP BY post.id
+                   ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC
+                   LIMIT 1`;
+
+    const data = await Query.runWithParams(query, [req.params.id])
     res.json(data);
 }
 
@@ -34,10 +50,8 @@ export const getPostById = async (req, res) => {
                    WHERE post.id = ?`;
     const data = await Query.runWithParams(query, [req.params.id])
 
-    // if (data.user_id !== req.user.id) {
-    //     const query = "UPDATE post SET views = views + 1 WHERE id = ?";
-    //     await Query.runWithParams(query, [req.params.id]);
-    // }
+    const view = "UPDATE post SET views = views + 1 WHERE id = ?";
+    await Query.runWithParams(view, [req.params.id]);
 
     const creation_date = new Date(data[0].creation_date);
     data[0].creation_date = creation_date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -45,8 +59,13 @@ export const getPostById = async (req, res) => {
         const last_update = new Date(data[0].last_update);
         data[0].last_update = last_update.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     }
-    console.log(data);
     res.json(data);
+}
+
+export const getNumberOfPostByCategory = async (req, res) => {
+    const query = "SELECT COUNT(*) as total FROM post WHERE sub_forum_id = ?";
+    const data = await Query.runWithParams(query, [req.params.id]);
+    return data[0].total;
 }
 
 export const getEditPostById = async (req, res) => {
@@ -61,11 +80,11 @@ export const getEditPostById = async (req, res) => {
 }
 
 export const getReplyByPostId = async (req, res) => {
-    const query = `SELECT * 
+    const query = `SELECT post_reply.id, post_reply.content, post_reply.reply_date, post_reply.last_update, post_reply.status, users.username
                    FROM post_reply 
                    JOIN users ON post_reply.user_id = users.id
                    WHERE post_reply.post_id = ?
-                   ORDER BY reply_date DESC`;
+                   ORDER BY reply_date ASC`;
 
     const data = await Query.runWithParams(query, [req.params.postId])
     data.map((reply) => {
@@ -81,13 +100,30 @@ export const getReplyByPostId = async (req, res) => {
 
 export const updatePost = async (req, res) => {
     try {
-        const check = "SELECT * FROM post WHERE id = ? AND user_id = ?";
-        const checkData = await Query.runWithParams(check, [req.params.id, req.user.id]);
-        if (req.user.role !== "admin" && (data.user_id !== req.user.id || data.status === "locked" || data.status === "hidden")) {
+        const check = "SELECT * FROM post WHERE id = ?";
+        const [checkData] = await Query.runWithParams(check, [req.params.id]);
+        if (req.user.role !== "admin" && (checkData.user_id !== req.user.id || checkData.status === "locked" || checkData.status === "hidden")) {
             return res.status(403).json({error: "Unauthorized"});
         }
         const query = "UPDATE post SET title = ?, content = ?, last_update = ? WHERE id = ?";
         const data = await Query.runWithParams(query, [req.body.title, req.body.content, new Date(), req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}
+
+export const updateReply = async (req, res) => {
+    try {
+        const check = "SELECT * FROM post_reply WHERE id = ?";
+        const [checkData] = await Query.runWithParams(check, [req.params.id]);
+        if (req.user.role !== "admin" && (checkData.user_id !== req.user.id || checkData.status === "locked" || checkData.status === "hidden")) {
+            return res.status(403).json({error: "Unauthorized"});
+        }
+        const query = "UPDATE post_reply SET content = ?, last_update = ? WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.body.content, new Date(), req.params.id]);
         res.json(data);
     }
     catch (error) {

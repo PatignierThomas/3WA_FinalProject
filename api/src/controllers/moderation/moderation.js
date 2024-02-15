@@ -1,3 +1,5 @@
+import Query from "../../model/Query.js";
+
 export const lockPost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'locked' WHERE id = ?";
@@ -34,9 +36,33 @@ export const hidePost = async (req, res) => {
     }
 }
 
+export const showPost = async (req, res) => {
+    try {
+        const query = "UPDATE post SET status = 'ok' WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}
+
 export const hideReply = async (req, res) => {
     try {
         const query = "UPDATE post_reply SET status = 'hidden' WHERE id = ?";
+        const data = await Query.runWithParams(query, [req.params.id]);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}
+
+export const showReply = async (req, res) => {
+    try {
+        const query = "UPDATE post_reply SET status = 'ok' WHERE id = ?";
         const data = await Query.runWithParams(query, [req.params.id]);
         res.json(data);
     }

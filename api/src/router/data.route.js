@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllGames, getAllSubject, getAllPost, getPostById, getReplyByPostId, createPost, createReply, getEditPostById, updatePost } from "../controllers/data.js";
+import { getAllGames, getAllSubject, getAllPost, getPostById, getReplyByPostId, createPost, createReply, getEditPostById, updatePost, updateReply, getNumberOfPostByCategory, getMostRecentPostOfCategory } from "../controllers/data.js";
 import auth from "../middlewares/auth.js";
 import { updateGame } from '../controllers/admin/update.js';
 
@@ -19,8 +19,11 @@ dataRouter.post("/post/createReply", createReply);
 
 dataRouter.patch("/post/editPost/:id", auth, updatePost);
 
-dataRouter.patch("/post/editReply/:id", createReply);
+dataRouter.patch("/post/editReply/:id", auth, updateReply);
 
+dataRouter.get("/get/number/post/:id", getNumberOfPostByCategory);
+
+dataRouter.get("/get/most/recent/post/:id", getMostRecentPostOfCategory);
 
 dataRouter.get("/get/edit/post/:id", auth, getEditPostById);
 
