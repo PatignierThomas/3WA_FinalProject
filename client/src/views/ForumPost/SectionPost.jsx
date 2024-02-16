@@ -3,7 +3,7 @@ import slugify from 'slugify'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { fetchPosts } from '../../store/slices/post.js'
+import { fetchPostsBySection } from '../../store/slices/post.js'
 
 function SectionPost() {
     const matchPublic = useMatch('/open/sec/:section/:sectionId');
@@ -17,8 +17,8 @@ function SectionPost() {
     const param = useParams()
 
     useEffect(() => {
-        dispatch(fetchPosts())
-    }, [])
+        dispatch(fetchPostsBySection(param.sectionId))
+    }, [param.sectionId])
 
 
     // format the title to be used as a slug

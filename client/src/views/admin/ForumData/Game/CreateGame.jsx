@@ -1,6 +1,18 @@
 import React from 'react'
 import { useRef } from 'react'
 
+// SELECT p.id as postID, pr.id, pr.reply_date, p.title, p.creation_date, p.views, p.user_id
+//     FROM post_reply pr
+//     JOIN post p ON p.id = pr.post_id
+//     JOIN (
+//         SELECT post_id, MAX(reply_date) as max_reply_date
+//         FROM post_reply
+//         WHERE status = 'ok'
+//         GROUP BY post_id
+//     ) pr_max ON pr.post_id = pr_max.post_id AND pr.reply_date = pr_max.max_reply_date
+//     WHERE p.sub_forum_id = ?
+//     ORDER BY pr.reply_date DESC;
+
 function CreateGame() {
     const gameNameRef = useRef(null)
     const gameAgeRef = useRef(null)

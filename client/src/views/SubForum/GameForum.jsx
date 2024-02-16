@@ -1,55 +1,58 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import slugify from 'slugify'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchSection } from '../../store/slices/section.js'
+import { mostRecentPost } from '../../store/slices/post.js'
 
 function GameForum() {
     const matchPublic = useMatch('/open/main/:game/:gameId');
     const isPublicRoute = matchPublic != null;
     const dispatch = useDispatch();
     const { section } = useSelector(state => state.section);
+    const { posts } = useSelector(state => state.post);
     const { gameId } = useParams();
+
+    const [ recentPosts, setRecentPosts ] = useState([])
     
     useEffect(() => {
         dispatch(fetchSection())
     }, []);
 
     useEffect(() => {
-        const getlastPost = async (gameId) => {
-            const res = await fetch(`http://localhost:9001/api/v1/data/get/most/recent/post/${gameId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            })
-            const lastPost = await res.json();
-            console.log(lastPost)
-        }
-        getlastPost(gameId)
+        dispatch(mostRecentPost(gameId))
     }
     , [gameId])
 
+    useEffect(() => {
+        setRecentPosts(posts)
+    }, [posts])
+
     return (
         <main>
-        {section.map((section) => (
+        {section.map((section) => 
+            {const recentPost = recentPosts.find(post => post.subID === section.id);
+         return (
             <div key={section.id}>
                 {(!isPublicRoute && section.game_section_id === Number(gameId)) ? 
-
-                // TODO : get most recent post for each section
                 <>
                     <Link to={`/section/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link> 
                     <p>Posts: {section.post_count}</p>
+                    {recentPost && <p>Latest Post: {recentPost.title}</p>}
+                    {recentPost && <p>Author: {recentPost.username}</p>}
                 </>
                 : section.game_section_id === Number(gameId) && 
                 <>
                     <Link to={`/open/sec/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
                     <p>Posts: {section.post_count}</p>
+                    {recentPost && <p>Latest Post: {recentPost.title} </p>}
+                    {recentPost && <p>Author: {recentPost.username} </p>}
+
                 </>
                 }
             </div>
-        ))}
+            )}
+        )}
         </main>
     )
 }

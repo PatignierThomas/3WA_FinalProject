@@ -223,7 +223,7 @@ function SinglePost() {
                     <div dangerouslySetInnerHTML={{ __html: posts[0].content }} />
                 </article>
             )}
-            {(role === "admin" || role === "moderator" ? replies : replies.filter(reply => reply.status !== "hidden")).map((reply) => {
+            {(role === "admin" || role === "moderator" ? replies : replies.filter(reply => reply.status === "ok")).map((reply) => {
                 return (
                     <article key={reply.id}>
                         {((reply && username === reply.username) || role === "admin" || role === "moderator") && 

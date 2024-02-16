@@ -14,32 +14,6 @@ function Home() {
     }, [])
 
     return (
-        // <main>
-        //     <h1>Home</h1>
-        //     <p>Welcome to the Forum</p>
-
-        //     <h2>Visiter nos forum: </h2>
-        //     <section>
-        //     {isLogged ? 
-        //         games.map((data) => (
-        //             age >= data.minimal_age ? 
-        //             <article key={data.id}>
-        //                 {data.visibility === 'Public' && <Link to={`/open/main/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>}
-        //                 {data.visibility === 'Private' && <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>}
-        //             </article>
-        //             : null
-        //         ))
-        //         : games.map((data) => (
-        //             data.visibility === 'Public' ?
-        //             <div key={data.id}>
-        //                 <Link to={`/open/main/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
-        //             </div>
-        //             : null
-        //         ))
-        //     }
-        //     </section>
-        // </main>
-
         <main>
             <section className='intro'>
                 <h1>Home</h1>

@@ -2,18 +2,32 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const fetchPosts = createAsyncThunk("post/fetchPosts", async () => {
-    const response = await fetch("http://localhost:9001/api/v1/data/post", {
+const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async (sectionId) => {
+    const response = await fetch(`http://localhost:9001/api/v1/data/post/section/${sectionId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-        }});
+        },
+        credentials: "include",
+    });
     const data = await response.json();
     return data;
 });
 
 const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
     const response = await fetch(`http://localhost:9001/api/v1/data/post/${id}`);
+    const data = await response.json();
+    return data;
+});
+
+const mostRecentPost = createAsyncThunk("post/mostRecentPost", async (gameId) => {
+    const response = await fetch(`http://localhost:9001/api/v1/data/get/most/recent/post/${gameId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
     const data = await response.json();
     return data;
 });
@@ -29,18 +43,19 @@ const postSlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder
-            .addCase(fetchPosts.pending, (state) => {
+            .addCase(fetchPostsBySection.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchPosts.fulfilled, (state, action) => {
+            .addCase(fetchPostsBySection.fulfilled, (state, action) => {
                 state.loading = false;
                 state.posts = action.payload;
             })
-            .addCase(fetchPosts.rejected, (state, action) => {
+            .addCase(fetchPostsBySection.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
+
             .addCase(fetchPost.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -52,9 +67,22 @@ const postSlice = createSlice({
             .addCase(fetchPost.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+            })
+
+            .addCase(mostRecentPost.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(mostRecentPost.fulfilled, (state, action) => {
+                state.loading = false;
+                state.posts = action.payload;
+            })
+            .addCase(mostRecentPost.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
             });
     },
 });
 
-export { fetchPosts, fetchPost };
+export { fetchPostsBySection, fetchPost, mostRecentPost };
 export default postSlice.reducer;

@@ -3,9 +3,17 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 
 export const getAllGames = async (req, res) => {
+
+    if (req.user) {
     const query = "SELECT * FROM game_section ORDER BY visibility DESC, game_name ASC";
     const data = await Query.run(query)
     res.json(data);
+    }
+    else {
+        const query = "SELECT * FROM game_section WHERE visibility = 'Public' ORDER BY game_name ASC";
+        const data = await Query.run(query)
+        res.json(data);
+    }
 }
 
 export const getAllSubject = async (req, res) => {
@@ -17,30 +25,103 @@ export const getAllSubject = async (req, res) => {
     res.json(data);
 }
 
-export const getAllPost = async (req, res) => {
+export const getPostsBySection = async (req, res) => {
     // GREATEST determine the greatest value from a list of values
     // COALESCE returns the first non-null value in a list
-    const query = `SELECT post.*, COUNT(post_reply.id) as replies, MAX(post_reply.reply_date) as latest_reply
-                   FROM post 
-                   LEFT JOIN post_reply ON post.id = post_reply.post_id
-                   GROUP BY post.id
-                   ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC`;
+    // const query =  `SELECT post.*, COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
+    //                     MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply
+    //                 FROM post 
+    //                 LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'
+    //                 WHERE post.sub_forum_id = ? AND post.status = 'ok'
+    //                 GROUP BY post.id
+    //                 ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC;`
 
-    const data = await Query.run(query)
+    let commonQuery =  `SELECT post.*, COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
+                            MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply
+                        FROM post 
+                        LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'`
+
+    switch (req.user?.role) {
+        case "admin":
+            commonQuery += `
+            WHERE post.sub_forum_id = ?`;
+            break;
+        case "user":
+            commonQuery += `
+            WHERE post.sub_forum_id = ? AND post.status = 'ok'`
+            break;
+        case null || undefined:
+            commonQuery += `
+            JOIN sub_forum ON post.sub_forum_id = sub_forum.id
+            JOIN game_section ON sub_forum.game_section_id = game_section.id
+            WHERE post.status = 'ok' AND post.sub_forum_id = ? AND game_section.visibility = 'Public'`
+            break;
+    }
+
+    commonQuery += `
+    GROUP BY post.id
+    ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC`;
+
+    // const alternativeQuery = `  SELECT post.*, COUNT(post_reply.id) as replies, 
+    //                                 MAX(post_reply.reply_date) as latest_reply
+    //                             FROM post_reply
+    //                             RIGHT JOIN post ON post.id = post_reply.post_id AND post_reply.status = 'ok'
+    //                             GROUP BY post.id
+    //                             ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC;`
+
+    const data = await Query.runWithParams(commonQuery, [req.params.id])
     res.json(data);
 }
 
+
+// SELECT post.*, COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
+//                         MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply
+//                     FROM post 
+//                     LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'
+//                     JOIN sub_forum ON post.sub_forum_id = sub_forum.id
+//                     JOIN game_section ON sub_forum.game_section_id = game_section.id
+//                     WHERE post.status = 'ok' AND post.sub_forum_id = ? AND game_section.visibility = 'Public'
+//                     GROUP BY post.id
+//                     ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC;
+
 export const getMostRecentPostOfCategory = async (req, res) => {
-    const query = `SELECT post.*, COUNT(post_reply.id) as replies, MAX(post_reply.reply_date) as latest_reply
-                   FROM post 
-                   LEFT JOIN post_reply ON post.id = post_reply.post_id
-                   WHERE post.sub_forum_id = ?
-                   GROUP BY post.id
-                   ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC
-                   LIMIT 1`;
+    // get the most recent post of each category and the date of the most recent activity
+    const query = `
+    SELECT 
+        p.id postID, 
+        p.title, 
+        p.creation_date, 
+        p.views, 
+        p.user_id, 
+        pr.id, 
+        pr.reply_date, 
+        sub_forum.game_section_id, 
+        sub_forum.id subID, 
+        users.username
+
+    FROM post_reply pr
+    JOIN post p ON p.id = pr.post_id
+    JOIN sub_forum on sub_forum.id = p.sub_forum_id
+    JOIN users ON p.user_id = users.id
+    JOIN (
+        SELECT post_id, MAX(reply_date) as max_reply_date
+        FROM post_reply
+        WHERE status = 'ok'
+        GROUP BY post_id
+    ) pr_max ON pr.post_id = pr_max.post_id AND pr.reply_date = pr_max.max_reply_date
+    WHERE sub_forum.game_section_id = ?
+    ORDER BY pr.reply_date DESC;`;
 
     const data = await Query.runWithParams(query, [req.params.id])
-    res.json(data);
+
+    // filter the first post of each category
+    const filteredData = data.filter((post, index, self) => {
+        return index === self.findIndex((p) => (
+            p.subID === post.subID
+        ))
+    })
+
+    res.json(filteredData);
 }
 
 export const getPostById = async (req, res) => {
