@@ -9,6 +9,8 @@ function DeleteSection() {
     const { games } = useSelector(state => state.game)
 
     const [formValues, setFormValues] = useState({})
+    const [showModal, setShowModal] = useState(false)
+    const [selectedGameId, setSelectedGameId] = useState(null)
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -19,9 +21,8 @@ function DeleteSection() {
         setFormValues(prev => ({ ...prev, [`${gameId}-${field}`]: value }))
     }
 
-    const handleSubmit = async (e, gameId) => {
-        e.preventDefault()
-        const sectionId = formValues[`${gameId}-sectionId`]
+    const handleDelete = async () => {
+        const sectionId = formValues[`${selectedGameId}-sectionId`]
         const res = await fetch(`http://localhost:9001/api/v1/admin/deleteSection/${sectionId}`, {
             method: 'DELETE',
             headers: {
@@ -31,12 +32,21 @@ function DeleteSection() {
             body: JSON.stringify({ sectionId })
         })
         if (res.ok) {
-            console.log('Section supprimée')
+            setShowModal(false)
+            dispatch(fetchSection())
+
         }
     }
+
+    const handleSubmit = (e, gameId) => {
+        e.preventDefault()
+        setShowModal(true)
+        setSelectedGameId(gameId)
+    }
+
     return (
         <>
-        <h2>Modifier une section :</h2>
+        <h2>Supprimer une section :</h2>
         {games.map((game) => (
             <form key={game.id} onSubmit={(e) => handleSubmit(e, game.id)} > 
                 <h2>{game.game_name}</h2>
@@ -56,6 +66,13 @@ function DeleteSection() {
                 <button type="submit">Delete Section</button>
             </form>
         ))}
+        {showModal && (
+            <div className="modal">
+                <p>Are you sure you want to delete this section?</p>
+                <button onClick={handleDelete}>Yes</button>
+                <button onClick={() => setShowModal(false)}>No</button>
+            </div>
+        )}
     </>
     )
 }

@@ -35,6 +35,10 @@ function Login() {
             });
             if (response.ok) {
                 const data = await response.json();
+                if (data.error) {
+                    setMsg(data.error);
+                    return;
+                }
                 dispatch(login({ id: data.id, username: data.username, role: data.role, age: data.age}));
 
                 navigate("/");

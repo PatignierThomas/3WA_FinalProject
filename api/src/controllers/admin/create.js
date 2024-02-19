@@ -2,7 +2,7 @@ import Query from '../../model/Query.js';
 
 export const createGame = async (req, res) => {
     try {
-        const query = "INSERT INTO game_section (game_name, description<, minimal_age, visibility) VALUES (?, ?, ?, ?)";
+        const query = "INSERT INTO game_section (game_name, description, minimal_age, visibility) VALUES (?, ?, ?, ?)";
         const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.body.visibility]);
         res.json(data);
     }

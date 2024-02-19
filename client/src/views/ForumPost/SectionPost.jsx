@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import slugify from 'slugify'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,6 +8,9 @@ import { fetchPostsBySection } from '../../store/slices/post.js'
 function SectionPost() {
     const matchPublic = useMatch('/open/sec/:section/:sectionId');
     const isPublicRoute = matchPublic != null;
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 25;
 
     const dispatch = useDispatch()
     const { posts } = useSelector(state => state.post)
@@ -20,6 +23,20 @@ function SectionPost() {
         dispatch(fetchPostsBySection(param.sectionId))
     }, [param.sectionId])
 
+    const numberOfPages = Math.ceil(posts.length / itemsPerPage);
+    const paginatedPosts = posts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < numberOfPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
     // format the title to be used as a slug
     // function createSlug(title) {
@@ -32,9 +49,14 @@ function SectionPost() {
             <h1>Section</h1>
             <p>Section {param.section}</p>
         </article>
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
+        <button onClick={handleNextPage} disabled={currentPage === numberOfPages}>Next</button>
+        <div>
+            Page {currentPage} of {numberOfPages}
+        </div>
         {(!isPublicRoute && isLogged) && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
         {(isPublicRoute && role === "admin") && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
-        {posts.map((post) => (
+        {paginatedPosts.map((post) => (
             ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (role === "admin" || role === "moderator"))) &&
             <div key={post.id}>
                 {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?

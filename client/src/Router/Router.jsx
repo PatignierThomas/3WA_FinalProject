@@ -17,6 +17,7 @@ import UpdateSection from "../views/admin/ForumData/Section/UpdateSection.jsx"
 import DeleteSection from "../views/admin/ForumData/Section/DeleteSection.jsx"
 import CreatePost from "../views/ForumPost/CreatePost.jsx"
 import UpdatePost from "../views/ForumPost/UpdatePost.jsx"
+import UpdateUser from "../views/admin/UserManagement/UpdateUser.jsx"
 import TermsOfUse from "../views/TermsOfUse.jsx"
 import PrivacyPolicy from "../views/PrivacyPolicy.jsx"
 import Error_404 from "../views/Error404.jsx"
@@ -49,6 +50,7 @@ function Router() {
             <Route path="admin/create-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateSection />} />} />
             <Route path="admin/update-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateSection />} />} />
             <Route path="admin/delete-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteSection />} />} />
+            <Route path="admin/update-user/:userId" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateUser />} />} />
 
 
  

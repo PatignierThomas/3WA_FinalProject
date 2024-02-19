@@ -1,5 +1,5 @@
 import express from 'express';
-import { getStats, banUser, unbanUser } from "../controllers/admin/index.js";
+import { getStats, getNonBannedUsers, getAllBannedUsers, banUser, unbanUser, getAllUsers, getUserById, changeUserInfo } from "../controllers/admin/index.js";
 import { createGame, createSection } from "../controllers/admin/create.js";
 import { updateGame, updateSection } from "../controllers/admin/update.js";
 import { deleteGame, deleteSection, deletePost, deleteReply } from "../controllers/admin/delete.js";
@@ -8,9 +8,19 @@ const adminRouter = express.Router();
 
 adminRouter.get("/stats", getStats);
 
-adminRouter.get("/ban/:id", banUser);
+adminRouter.get("/all/users", getAllUsers);
 
-adminRouter.get("/unban/:id", unbanUser);
+adminRouter.get("/user/:id", getUserById);
+
+adminRouter.get("/users", getNonBannedUsers);
+
+adminRouter.get("/users/ban", getAllBannedUsers);
+
+adminRouter.patch("/user/info/:userId", changeUserInfo);
+
+adminRouter.post("/ban", banUser);
+
+adminRouter.post("/unban", unbanUser);
 
 adminRouter.post("/createGame", createGame);
 

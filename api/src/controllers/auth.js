@@ -26,14 +26,18 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password, keepLoggedIn } = req.body;
-        const query = `SELECT id, username, password, role_id, birthdate FROM users WHERE email = ?`;
+        const query = `SELECT id, username, password, role_id, birthdate, account_status FROM users WHERE email = ?`;
         const values = [email];
         const [data] = await Query.runWithParams(query, values);
-        
+
+        console.log(data)
+
         if (!data || !(await bcrypt.compare(password, data.password))) {
             return res.json({error: "Mauvais nom d'utilisateur ou mot de passe"});
         }
+        if (data.account_status === "banned") return res.json({error: "Votre compte a été banni"});
     
+        //TODO : use utils function instead
         switch(data.role_id) {
             case 1:
                 data.role_id = "user";

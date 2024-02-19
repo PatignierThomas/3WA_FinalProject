@@ -62,27 +62,9 @@ export const getPostsBySection = async (req, res) => {
     GROUP BY post.id
     ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC`;
 
-    // const alternativeQuery = `  SELECT post.*, COUNT(post_reply.id) as replies, 
-    //                                 MAX(post_reply.reply_date) as latest_reply
-    //                             FROM post_reply
-    //                             RIGHT JOIN post ON post.id = post_reply.post_id AND post_reply.status = 'ok'
-    //                             GROUP BY post.id
-    //                             ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC;`
-
     const data = await Query.runWithParams(commonQuery, [req.params.id])
     res.json(data);
 }
-
-
-// SELECT post.*, COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
-//                         MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply
-//                     FROM post 
-//                     LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'
-//                     JOIN sub_forum ON post.sub_forum_id = sub_forum.id
-//                     JOIN game_section ON sub_forum.game_section_id = game_section.id
-//                     WHERE post.status = 'ok' AND post.sub_forum_id = ? AND game_section.visibility = 'Public'
-//                     GROUP BY post.id
-//                     ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC;
 
 export const getMostRecentPostOfCategory = async (req, res) => {
     // get the most recent post of each category and the date of the most recent activity
