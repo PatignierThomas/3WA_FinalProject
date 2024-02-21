@@ -14,8 +14,7 @@ function SectionPost() {
 
     const dispatch = useDispatch()
     const { posts } = useSelector(state => state.post)
-    const { isLogged } = useSelector(state => state.user)
-    const { role } = useSelector(state => state.user)
+    const { user, isLogged } = useSelector(state => state.user)
     const { sectionId } = useParams()
     const param = useParams()
 
@@ -57,7 +56,7 @@ function SectionPost() {
         {(!isPublicRoute && isLogged) && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
         {(isPublicRoute && role === "admin") && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
         {paginatedPosts.map((post) => (
-            ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (role === "admin" || role === "moderator"))) &&
+            ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (user.role === "admin" || user.role === "moderator"))) &&
             <div key={post.id}>
                 {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
                 <>

@@ -7,6 +7,11 @@ const dotenv = process.env;
 
 export const register = async (req, res) => {
     const { username, email, password, birthdate } = req.body;
+
+    if (!username || !email || !password || !birthdate) return res.status(403).json({error: "Veuillez remplir tous les champs"});
+    if (username.length < 3 || username.length > 20) return res.status(403).json({error: "Le nom d'utilisateur doit contenir entre 3 et 20 caractères"});
+    if (password.length < 8 || !/\d/.test(password) || !/[A-Z]/.test(password) || !/[!@#$%^&*]/.test(password) ) return res.status(403).json({error: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial"});
+
     const checkUser = "SELECT * FROM users WHERE username = ? OR email = ?";
     const [data] = await Query.runWithParams(checkUser, [username, email]);
     if (data) return res.json({error: "L'utilisateur existe déjà"});
@@ -26,11 +31,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password, keepLoggedIn } = req.body;
-        const query = `SELECT id, username, password, role_id, birthdate, account_status FROM users WHERE email = ?`;
+        const query = `SELECT id, username, password, email, role_id, birthdate, account_status FROM users WHERE email = ?`;
         const values = [email];
         const [data] = await Query.runWithParams(query, values);
-
-        console.log(data)
 
         if (!data || !(await bcrypt.compare(password, data.password))) {
             return res.json({error: "Mauvais nom d'utilisateur ou mot de passe"});
@@ -63,7 +66,7 @@ export const login = async (req, res) => {
         }
 
         const TOKEN = jwt.sign(
-            { id: data.id, username: data.username, role: data.role_id, age, keepLoggedIn },
+            { id: data.id, username: data.username, role: data.role_id, age, keepLoggedIn, email: data.email},
             process.env.SECRET_TOKEN, // signature de vérification
             { expiresIn: "30d" }
         );
@@ -76,7 +79,7 @@ export const login = async (req, res) => {
             res.cookie("TK_AUTH", TOKEN, { httpOnly: true, sameSite: 'lax', secure: true });
         }
 
-        res.json({message: "Login Ok", username: data.username, role: data.role_id, age});
+        res.json({message: "Login Ok", id: data.id, email: data.email, username: data.username, role: data.role_id, age});
         }
         catch (error) {
             console.log(error);
@@ -90,6 +93,6 @@ export const logout = (req, res) => {
 }
 
 export const checkToken = (req, res) => {
-    res.json({message: "Token valide", username: req.user.username, role: req.user.role, age: req.user.age});
+    res.json({message: "Token valide", id: req.user.id, username: req.user.username, role: req.user.role, age: req.user.age, email : req.user.email});
 }
 

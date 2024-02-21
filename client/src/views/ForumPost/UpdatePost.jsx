@@ -6,13 +6,15 @@ import { useDispatch } from 'react-redux';
 import { fetchPost } from '../../store/slices/post.js';
 import { useSelector } from 'react-redux';
 
-function UpdatePost() {
+import TextEditor from './TextEditor.jsx'
 
+function UpdatePost() {
     const param = useParams()
     const navigate = useNavigate()
 
     const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
+    const [value, setValue] = useState('')
+    const quillRef = useRef()
 
     useEffect(() => {
         const fetchPost = async () => { 
@@ -23,8 +25,9 @@ function UpdatePost() {
             if (!res.ok) {
                 navigate('/404')
             }
-            setContent(data.content)
+            console.log(data)
             setTitle(data.title)
+            setValue(data.content)
         }
         fetchPost()
     }, [param.postId])
@@ -37,18 +40,18 @@ function UpdatePost() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ title, content: content})
+            body: JSON.stringify({ title, content: quillRef.current.value})
         })
         if (res.ok) {
             navigate(-1)
-            console.log('Post crée')
+            console.log('Post édité')
         }
     }
     return (
     <form onSubmit={handleSubmit}>
         <label>Titre</label>
         <input type="text" name="title" id="title" value={title} onChange={e => setTitle(e.target.value)}/>
-        <ReactQuill theme="snow" value={content} onChange={setContent}/>
+        <TextEditor value={value} setValue={setValue} quillRef={quillRef}/>
         <input type="submit" value="Editer" />
     </form>
     )

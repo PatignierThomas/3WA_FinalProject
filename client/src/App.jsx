@@ -19,11 +19,11 @@ function App() {
                 },
                 credentials: 'include'
             })
-            const auth = await res.json();
-            if (auth.error) return
+            const data = await res.json();
+            if (data.error) return
             if (res.ok) {
                 console.log("I checked the token")
-                dispatch(login({ username: auth.username, role: auth.role, age: auth.age}));
+                dispatch(login(data));
             }
         }
         checkUser();

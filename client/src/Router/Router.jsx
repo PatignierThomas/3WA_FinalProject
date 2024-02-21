@@ -18,6 +18,7 @@ import DeleteSection from "../views/admin/ForumData/Section/DeleteSection.jsx"
 import CreatePost from "../views/ForumPost/CreatePost.jsx"
 import UpdatePost from "../views/ForumPost/UpdatePost.jsx"
 import UpdateUser from "../views/admin/UserManagement/UpdateUser.jsx"
+import Profil from "../views/User/Profil.jsx"
 import TermsOfUse from "../views/TermsOfUse.jsx"
 import PrivacyPolicy from "../views/PrivacyPolicy.jsx"
 import Error_404 from "../views/Error404.jsx"
@@ -43,6 +44,8 @@ function Router() {
             <Route path="new/:sectionId/create-post" element={<ProtectedRoute redirectPath="/connexion" child={<CreatePost />}/> } />
             <Route path="edit/:postId/:postTitle" element={<ProtectedRoute redirectPath="/connexion" child={<UpdatePost />}/> } />
 
+            <Route path="profil" element={<ProtectedRoute redirectPath="/connexion" child={<Profil />} />} />
+
             <Route path="admin" element={<ProtectedAdminRoute redirectPath="/connexion" child={<Panel />} />} />
             <Route path="admin/create-game" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateGame />} />} />
             <Route path="admin/update-game" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateGame />} />} />
@@ -51,8 +54,6 @@ function Router() {
             <Route path="admin/update-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateSection />} />} />
             <Route path="admin/delete-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteSection />} />} />
             <Route path="admin/update-user/:userId" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateUser />} />} />
-
-
  
             <Route path="*" element={<Error_404 />} />
       </Routes>

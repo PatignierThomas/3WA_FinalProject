@@ -31,6 +31,26 @@ function Register() {
             return;
         }
 
+        if (userInfo.password.length < 8) {
+            setError("Password must be at least 8 characters long");
+            return;
+        }
+        
+        if (!/\d/.test(userInfo.password)) {
+            setError("Password must contain at least one number");
+            return;
+        }
+        
+        if (!/[A-Z]/.test(userInfo.password)) {
+            setError("Password must contain at least one uppercase letter");
+            return;
+        }
+        
+        if (!/[!@#$%^&*]/.test(userInfo.password)) {
+            setError("Password must contain at least one symbol (e.g. !@#$%^&*)");
+            return;
+        }
+
         //check if the user is over 13
         const birthdate = new Date(userInfo.birthdate);
         const now = new Date();
@@ -54,10 +74,11 @@ function Register() {
             if (response.ok) {
                 navigate("/connexion");
             } else {
-                setError("Une erreur s'est produite");
+                const data = await response.json();
+                setError(data.error);
             }
         } catch (error) {
-            setError("Une erreur s'est produite");
+            setError("An error occurred while registering");
         }
     }
     return (

@@ -1,10 +1,11 @@
 import React, { useRef, useState }from 'react'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function UpdatePost() {
+import TextEditor from './TextEditor.jsx'
+
+function CreatePost() {
     const [value, setValue] = useState('')
+    const quillRef = useRef();
 
     const navigate = useNavigate()
     const param = useParams()
@@ -20,7 +21,7 @@ function UpdatePost() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ title, content: value, sectionId: param.sectionId})
+            body: JSON.stringify({ title, content: quillRef.current.value, sectionId: param.sectionId})
         })
         if (res.ok) {
             navigate(-1)
@@ -32,10 +33,10 @@ function UpdatePost() {
     <form onSubmit={handleSubmit}>
         <label>Titre</label>
         <input ref={titleRef} type="text" name="title" id="title"/>
-        <ReactQuill theme="snow" value={value} onChange={setValue}/>
+        <TextEditor value={value} setValue={setValue} quillRef={quillRef} />
         <input type="submit" value="Créer" />
     </form>
     )
 }
 
-export default UpdatePost
+export default CreatePost

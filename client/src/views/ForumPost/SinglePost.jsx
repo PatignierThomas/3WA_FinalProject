@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import ReactQuill from 'react-quill'
@@ -6,20 +6,23 @@ import 'react-quill/dist/quill.snow.css'
 
 import { fetchPost } from '../../store/slices/post.js'
 import { fetchReply } from '../../store/slices/reply.js'
+import TextEditor from './TextEditor.jsx'
+
+
 
 function SinglePost() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { postId }= useParams()
-    const { isLogged, role, username } = useSelector(state => state.user)
+    const { user, isLogged } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
     const { replies } = useSelector(state => state.reply)
-    
+
+    const [value, setValue] = useState('');
+    const quillRef = useRef(); // Create a Ref
     
     const [editingReply, setEditingReply] = useState(null);
-    const [value, setValue] = useState('');
     const [isLocked, setIsLocked] = useState(false);
-
 
     // check token for a moderator or admin or dev
     useEffect(() => {
@@ -36,10 +39,10 @@ function SinglePost() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ content: value, postId})
+            body: JSON.stringify({ content: quillRef.current.value, postId})
         })
         if (res.ok) {
-            console.log('Réponse crée')
+            console.log(quillRef.current.value)
         }
     } 
         if (editingReply) {
@@ -56,7 +59,6 @@ function SinglePost() {
             }
         }
         dispatch(fetchReply(postId))
-        setValue('')
         setEditingReply(null)
     }
 
@@ -133,20 +135,7 @@ function SinglePost() {
         }
     }
 
-    const handleEdit = () => {
-        navigate(`/edit/${postId}/${posts[0].title}`)
-    }
-
-    const handleReplyEdit = (reply) => {
-        setValue(reply.content)
-        setEditingReply(reply)
-    }
-
-    const cancel = () => {
-        setEditingReply(null)
-        setValue('')
-    }
-
+    
     const handleDeleteReply = async (replyId) => {
         const res = await fetch(`http://localhost:9001/api/v1/admin/deleteReply/${replyId}`,{
             method: 'DELETE',
@@ -160,7 +149,7 @@ function SinglePost() {
             dispatch(fetchReply(postId))
         }
     }
-
+    
     const handleHideReply = async (replyId) => {
         const res = await fetch(`http://localhost:9001/api/v1/moderator/hideReply/${replyId}`,{
             method: 'GET',
@@ -174,7 +163,7 @@ function SinglePost() {
             dispatch(fetchReply(postId))
         }
     }
-
+    
     const handleShowReply = async (replyId) => {
         const res = await fetch(`http://localhost:9001/api/v1/moderator/showReply/${replyId}`,{
             method: 'GET',
@@ -189,17 +178,33 @@ function SinglePost() {
         }
     }
 
+    // format url to avoid spaces and special characters
+    const handleEdit = () => {
+        navigate(`/edit/${postId}/${posts[0].title}`)
+    }
+
+    const handleReplyEdit = (reply) => {
+        setValue(reply.content)
+        setEditingReply(reply)
+    }
+
+    const cancel = () => {
+        setEditingReply(null)
+        setValue('')
+    }
+    // const [value, setValue] = useState('');
+    
     // data received with React-quill will be writen in a Delta format, stringified into a JSON object, 
     // saved in DB, and parsed back to a Delta format when retrieved from DB
     
     return (
         <main>
             {loading && <p>Chargement...</p>}
-            { (posts[0] && (username === posts[0].username || (role === "admin" || role === "moderator"))  && !loading) && (
+            { (posts[0] && (user.username === posts[0].username || (user.role === "admin" || user.role === "moderator"))  && !loading) && (
                 <button onClick={handleEdit}>Editer</button>
-            )
+                )
             }
-            { ((role === "admin" || role === "moderator") && !loading) && (
+            { ((user.role === "admin" || user.role === "moderator") && !loading) && (
                 <>
                     {posts[0].status === "locked" ? 
                         <button onClick={handleUnlock}>Unlock</button> : 
@@ -211,7 +216,7 @@ function SinglePost() {
                     }
                 </>
             )}
-            { (role === "admin" && !loading) && (
+            { (user.role === "admin" && !loading) && (
                 <button onClick={handleDeletePost}>Delete</button>
             )}
             {!loading && posts.length > 0 && (
@@ -223,15 +228,15 @@ function SinglePost() {
                     <div dangerouslySetInnerHTML={{ __html: posts[0].content }} />
                 </article>
             )}
-            {(role === "admin" || role === "moderator" ? replies : replies.filter(reply => reply.status === "ok")).map((reply) => {
+            {(user.role === "admin" || user.role === "moderator" ? replies : replies.filter(reply => reply.status === "ok")).map((reply) => {
                 return (
                     <article key={reply.id}>
-                        {((reply && username === reply.username) || role === "admin" || role === "moderator") && 
+                        {((reply && user.username === reply.username) || user.role === "admin" || user.role === "moderator") && 
                             <button onClick={() => handleReplyEdit(reply)}>Editer réponse</button>}  
-                        {((role === "admin" || role === "moderator") && !loading) &&
+                        {((user.role === "admin" || user.role === "moderator") && !loading) &&
                             <button onClick={() => handleDeleteReply(reply.id)}>Supprimer réponse</button>
                         }
-                        {((role === "admin" || role === "moderator") && !loading) &&
+                        {((user.role === "admin" || user.role === "moderator") && !loading) &&
                         (reply.status === "hidden" ? 
                             <button onClick={() => handleShowReply(reply.id)}>Afficher réponse</button> : 
                             <button onClick={() => handleHideReply(reply.id)}>Cacher réponse</button>
@@ -247,7 +252,7 @@ function SinglePost() {
             {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
             <form onSubmit={handleSubmit}>
                 {editingReply && <p>You are editing a reply. <button onClick={() => cancel()}>Cancel</button></p>}
-                <ReactQuill theme="snow" value={value} onChange={setValue} />
+                <TextEditor props={[value, setValue, quillRef]}/>
                 <button type="submit">{editingReply ? 'Update Reply' : 'Reply'}</button>
             </form>}
         </main>

@@ -11,7 +11,7 @@ function Header() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const { username, role, isLogged } = useSelector(state => state.user)
+    const { user, isLogged } = useSelector(state => state.user)
 
     const handleToggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
@@ -45,12 +45,13 @@ function Header() {
                 </button>
                 <ul className={isMenuOpen ? 'open' : ''}>
                     <li><Link to="/">Home</Link></li>
-                    {role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
+                    {user.role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
                     {!isLogged ? <li><Link to="/inscription">Crée un compte</Link></li> : null} 
                     {isLogged ? 
                     <li><button onClick={handleLogout}>Se déconnecter</button></li> : 
                     <li><Link to="/connexion">Se connecter</Link></li>
                     }
+                    {isLogged ? <li><Link to={`/profil`}>Profil</Link></li> : null}
                 </ul>
             </nav>
         </header>

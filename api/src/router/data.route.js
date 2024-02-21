@@ -1,8 +1,9 @@
 import express from 'express';
-import { getAllGames, getAllSubject, getPostById, getReplyByPostId, createPost, createReply, getEditPostById, updatePost, updateReply, getNumberOfPostByCategory, getMostRecentPostOfCategory, getPostsBySection } from "../controllers/data.js";
+import { getAllGames, getAllSubject, getPostById, getReplyByPostId, createPost, createReply, getEditPostById, updatePost, updateReply, getNumberOfPostByCategory, getMostRecentPostOfCategory, getPostsBySection, updateUserInfo, uploadImage } from "../controllers/data.js";
 import auth from "../middlewares/auth.js";
 import checkToken from '../middlewares/checkAuth.js';
 import { updateGame } from '../controllers/admin/update.js';
+import upload from '../middlewares/multer.js';
 
 const dataRouter = express.Router();
 
@@ -20,7 +21,7 @@ dataRouter.get("/post/:id", getPostById);
 dataRouter.post("/post/createPost", createPost);
 
 dataRouter.post("/post/createReply", createReply);
-// 
+
 dataRouter.patch("/post/editPost/:id", auth, updatePost);
 
 dataRouter.patch("/post/editReply/:id", auth, updateReply);
@@ -32,6 +33,10 @@ dataRouter.get("/get/most/recent/post/:id", getMostRecentPostOfCategory);
 dataRouter.get("/get/edit/post/:id", auth, getEditPostById);
 
 dataRouter.get("/post/reply/:postId/", getReplyByPostId);
+
+dataRouter.post("/upload/image", auth, upload, uploadImage);
+
+dataRouter.patch("/user/info/:userId", updateUserInfo);
 
 
 export default dataRouter;

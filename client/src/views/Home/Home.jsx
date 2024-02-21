@@ -7,7 +7,7 @@ import { fetchGames } from '../../store/slices/game.js'
 function Home() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
-    const { isLogged, age } = useSelector(state => state.user)
+    const { user, isLogged } = useSelector(state => state.user)
     
     useEffect(() => {
         dispatch(fetchGames())
@@ -34,7 +34,7 @@ function Home() {
             <section className='private'>
                 <h2>Private Games</h2>
                 {games
-                .filter((data) => data.visibility === 'Private' && age >= data.minimal_age)
+                .filter((data) => data.visibility === 'Private' && user.age >= data.minimal_age)
                 .map((data) => (
                     <article key={data.id}>
                     <Link to={`/game/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>

@@ -39,7 +39,7 @@ function Login() {
                     setMsg(data.error);
                     return;
                 }
-                dispatch(login({ id: data.id, username: data.username, role: data.role, age: data.age}));
+                dispatch(login(data));
 
                 navigate("/");
             } else {

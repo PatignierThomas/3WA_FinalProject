@@ -23,7 +23,7 @@ app.use(cors({
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/src/assets/img', express.static(path.join(process.cwd(), "/public/assets/img/")));
+app.use('/public/assets/img', express.static(path.join(process.cwd(), "/public/assets/img/")));
 
 app.use(express.json());
 

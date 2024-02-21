@@ -1,6 +1,8 @@
 import Query from "../model/Query.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import "dotenv/config";
+import { query } from "express";
 
 export const getAllGames = async (req, res) => {
 
@@ -224,3 +226,58 @@ export const createReply = async (req, res) => {
     const data = await Query.runWithParams(query, values);
     res.json({message: "Réponse crée"})
 } 
+
+export const updateUserInfo = async (req, res) => {
+    try {
+        const {username, email, currentPassword, newPassword} = req.body;
+        const queryParam = [];
+        
+        let builtQuery = "UPDATE users SET ";
+
+        // switch(req.body) {
+        //     case email === "":
+        //         return res.status(400).json({error: "Email vide"});
+        //     case currentPassword === "":
+        //         return res.status(400).json({error: "Mot de passe actuel manquant"});
+        //     case newPassword === "":
+        //         return res.status(400).json({error: "Nouveau mot de passe manquant"});
+        //     default:
+        // }
+
+        console.log(currentPassword, newPassword);
+
+        if (email !== undefined && email !== "") {
+            console.log("email");
+            builtQuery += "email = ?, ";
+            queryParam.push(email);
+        } 
+        
+        if (currentPassword !== undefined && newPassword !== undefined) {
+            console.log("password");
+            const query = "SELECT password FROM users WHERE id = ?";
+            const [data] = await Query.runWithParams(query, [req.params.userId]);
+            if (!await bcrypt.compare(currentPassword, data.password)) {
+                return res.status(403).json({error: "Mot de passe incorrect"});
+            }
+            const hash = await bcrypt.hash(newPassword, Number(process.env.SALT));
+            builtQuery += "password = ?,"; 
+            queryParam.push(hash);
+        }
+
+        builtQuery += "username = ? WHERE id = ?";
+        queryParam.push(username, req.params.userId);
+        const data = await Query.runWithParams(builtQuery, queryParam);
+        res.json(data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Erreur serveur"});
+    }
+}
+
+export const uploadImage = async (req, res) => {
+    console.log("uploadImage");
+
+    const URL = `http://localhost:9001/public${req.files[0]}`;
+    res.json({message: "Image uploadée", url: URL});
+}
