@@ -2,8 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const fetchSection = createAsyncThunk("section/fetchSection", async () => {
-    const response = await fetch("http://localhost:9001/api/v1/data/subject", {
+const fetchAllSections = createAsyncThunk("section/fetchAllSections", async () => {
+    const response = await fetch("http://localhost:9001/api/v1/data/post/section", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        credentials: 'include'
+        }});
+    const data = await response.json();
+    return data;
+});
+
+const fetchSection = createAsyncThunk("section/fetchSection", async (gameId) => {
+    const response = await fetch(`http://localhost:9001/api/v1/data/subject/${gameId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -23,6 +34,18 @@ const sectionSlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder
+            .addCase(fetchAllSections.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchAllSections.fulfilled, (state, action) => {
+                state.loading = false;
+                state.section = action.payload;
+            })
+            .addCase(fetchAllSections.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
             .addCase(fetchSection.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -38,5 +61,5 @@ const sectionSlice = createSlice({
     },
 });
 
-export { fetchSection };
+export { fetchSection, fetchAllSections };
 export default sectionSlice.reducer;

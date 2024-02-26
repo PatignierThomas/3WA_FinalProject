@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ function CreateSection() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
+    const [error, setError] = useState('')
     const sectionNameRef = useRef(null)
 
     useEffect(() => {
@@ -26,14 +27,18 @@ function CreateSection() {
             credentials: 'include',
             body: JSON.stringify({ sectionName, gameId })
         })
+        const data = await res.json()
         if (res.ok) {
-            console.log('Section crée')
+            console.log(data)
+        } else {
+            setError(data.errors)
         }
     }
     return (
         <form onSubmit={handleSubmit}>
             <legend>Créer une catégorie :</legend>
             <label htmlFor="sectionName">Nom de la catégorie :</label>
+            {error && <p>{error}</p>}
             <input 
                 ref={sectionNameRef}
                 type="text" 

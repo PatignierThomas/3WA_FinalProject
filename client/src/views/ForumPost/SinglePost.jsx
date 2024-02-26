@@ -8,15 +8,15 @@ import { fetchPost } from '../../store/slices/post.js'
 import { fetchReply } from '../../store/slices/reply.js'
 import TextEditor from './TextEditor.jsx'
 
-
-
 function SinglePost() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { postId }= useParams()
+    const { postId } = useParams()
     const { user, isLogged } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
     const { replies } = useSelector(state => state.reply)
+
+    const [images, setImages] = useState([])
 
     const [value, setValue] = useState('');
     const quillRef = useRef(); // Create a Ref
@@ -29,22 +29,27 @@ function SinglePost() {
         dispatch(fetchPost(postId))
         dispatch(fetchReply(postId))
     }, [])
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
+
+        const url = await submitPost();
+
+        console.log(url)
+
         if (!editingReply) {
-        const res = await fetch('http://localhost:9001/api/v1/data/post/createReply', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({ content: quillRef.current.value, postId})
-        })
-        if (res.ok) {
-            console.log(quillRef.current.value)
-        }
-    } 
+            const res = await fetch('http://localhost:9001/api/v1/data/post/createReply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ postId, url, content: quillRef.current.value})
+            })
+            if (res.ok) {
+                console.log(quillRef.current.value)
+            }
+        } 
         if (editingReply) {
             const res = await fetch(`http://localhost:9001/api/v1/data/post/editReply/${editingReply.id}`, {
                 method: 'PATCH',
@@ -52,16 +57,19 @@ function SinglePost() {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include',
-                body: JSON.stringify({ content: value})
+                body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
             if (res.ok) {
                 console.log('Réponse éditée')
             }
         }
+        
         dispatch(fetchReply(postId))
         setEditingReply(null)
+        setValue('')
+        setImages([])
     }
-
+    
 
     const handleLock = async () => {
         const res = await fetch(`http://localhost:9001/api/v1/moderator/lockPost/${postId}`,{
@@ -192,6 +200,37 @@ function SinglePost() {
         setEditingReply(null)
         setValue('')
     }
+
+    const submitPost = async () => {
+        // Upload all images
+        const url = []
+        for (const image of images) {
+            const formData = new FormData();
+            formData.append('postId', postId);
+            formData.append('image', image.file);
+
+            const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
+                method: 'POST',
+                body: formData, // update with your image data
+                credentials: 'include'
+            });
+            const data = await res.json();
+            if(res.ok) {
+                url.push(data.url)
+            }
+            else console.log(data.error)
+
+            // Remove placeholder image
+            quillRef.current.getEditor().deleteText(image.range.index, 1);
+
+            // Insert uploaded image
+            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', data.url);
+
+            // Move cursor to right side of image (easier to continue typing)
+            quillRef.current.getEditor().setSelection(image.range.index + 1);
+        }
+        return url
+    };
     // const [value, setValue] = useState('');
     
     // data received with React-quill will be writen in a Delta format, stringified into a JSON object, 
@@ -223,6 +262,9 @@ function SinglePost() {
                 <article>
                     <h1>{posts[0].title}</h1>
                     <p>{posts[0].username}</p>
+                    {posts[0].src === null ? 
+                    <img src={`http://localhost:9001/public/assets/img/avatar/default.png`} alt={`Avatar de ${posts[0].username}`} /> 
+                    : <img src={posts[0].src} alt={`Avatar de ${posts[0].username}`} />}
                     <p>{posts[0].creation_date}</p>
                     {posts[0].last_update && <p>Modifié le {posts[0].last_update}</p>}
                     <div dangerouslySetInnerHTML={{ __html: posts[0].content }} />
@@ -243,6 +285,9 @@ function SinglePost() {
                         )}
 
                         <p>{reply.username}</p>
+                        {reply.src === null ? 
+                            <img src={`http://localhost:9001/public/assets/img/avatar/default.png`} alt={`Avatar de ${reply.username}`} /> 
+                            : <img src={reply.src} alt={`Avatar de ${reply.username}`} />}
                         <p>{reply.reply_date}</p>
                         {reply.last_update && <p>Modifié le {reply.last_update}</p>}
                         <div dangerouslySetInnerHTML={{ __html: reply.content }} />
@@ -252,7 +297,7 @@ function SinglePost() {
             {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
             <form onSubmit={handleSubmit}>
                 {editingReply && <p>You are editing a reply. <button onClick={() => cancel()}>Cancel</button></p>}
-                <TextEditor props={[value, setValue, quillRef]}/>
+                <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
                 <button type="submit">{editingReply ? 'Update Reply' : 'Reply'}</button>
             </form>}
         </main>

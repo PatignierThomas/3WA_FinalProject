@@ -31,6 +31,7 @@ function DeleteGame() {
     const handleSubmit = (e) => {
         e.preventDefault()
         setShowModal(true)
+        dispatch(fetchGames())
     }
 
     return (

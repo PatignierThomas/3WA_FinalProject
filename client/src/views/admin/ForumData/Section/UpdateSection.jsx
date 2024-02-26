@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchGames } from '../../../../store/slices/game'
-import { fetchSection } from '../../../../store/slices/section'
+import { fetchAllSections } from '../../../../store/slices/section'
 
 function UpdateSection() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
     const { section } = useSelector(state => state.section)
+    const [error, setError] = useState(null)
 
     const [formValues, setFormValues] = useState({})
 
     useEffect(() => {
         dispatch(fetchGames())
-        dispatch(fetchSection())
+        dispatch(fetchAllSections())
     }, [])
 
     const handleChange = (gameId, field, value) => {
@@ -32,9 +33,10 @@ function UpdateSection() {
             credentials: 'include',
             body: JSON.stringify({ gameId, sectionName })
         })
-        if (res.ok) {
-            const data = await res.json()
-            console.log(data)
+        const result = await res.json()
+        if (!res.ok) {
+            setError(result.errors)
+            return
         }
     }
 
@@ -44,13 +46,14 @@ function UpdateSection() {
         {games.map((game) => (
             <form key={game.id} onSubmit={(e) => handleSubmit(e, game.id)}>
                 <h2>{game.game_name}</h2>
+                {error && <p>{error}</p>}
                 <label htmlFor={`sectionName-${game.id}`}>Nom de la section :</label>
                 <select 
                     name={`sectionName-${game.id}`} 
                     id={`updateSectionName-${game.id}`}
                     onChange={(e) => handleChange(game.id, 'sectionId', e.target.value)}
                 >
-                    <option value="">--Please choose an option--</option>
+                    <option value="0">--Please choose an option--</option>
                     {section
                         .filter(sec => sec.game_section_id === game.id)
                         .map((sec) => (

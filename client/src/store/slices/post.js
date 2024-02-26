@@ -15,7 +15,13 @@ const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async (sectionId
 });
 
 const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
-    const response = await fetch(`http://localhost:9001/api/v1/data/post/${id}`);
+    const response = await fetch(`http://localhost:9001/api/v1/data/post/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            },
+        credentials: "include",
+     });
     const data = await response.json();
     return data;
 });

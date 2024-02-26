@@ -9,8 +9,8 @@ const fetchGames = createAsyncThunk("games/fetchGames", async () => {
         },
         credentials: "include",
     });
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+    return result;
 });
 
 const initialState = {
@@ -30,7 +30,7 @@ const gameSlice = createSlice({
             })
             .addCase(fetchGames.fulfilled, (state, action) => {
                 state.loading = false;
-                state.games = action.payload;
+                state.games = action.payload.data;
             })
             .addCase(fetchGames.rejected, (state, action) => {
                 state.loading = false;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchGames } from '../../../../store/slices/game'
-import { fetchSection } from '../../../../store/slices/section'
+import { fetchAllSections } from '../../../../store/slices/section'
 
 function DeleteSection() {
     const dispatch = useDispatch()
@@ -14,7 +14,7 @@ function DeleteSection() {
 
     useEffect(() => {
         dispatch(fetchGames())
-        dispatch(fetchSection())
+        dispatch(fetchAllSections())
     }, [])
 
     const handleChange = (gameId, field, value) => {
@@ -33,8 +33,7 @@ function DeleteSection() {
         })
         if (res.ok) {
             setShowModal(false)
-            dispatch(fetchSection())
-
+            dispatch(fetchAllSections())
         }
     }
 

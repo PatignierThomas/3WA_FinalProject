@@ -16,7 +16,7 @@ function GameForum() {
     const [ recentPosts, setRecentPosts ] = useState([])
     
     useEffect(() => {
-        dispatch(fetchSection())
+        dispatch(fetchSection(gameId))
     }, []);
 
     useEffect(() => {

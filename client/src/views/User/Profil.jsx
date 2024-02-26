@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 function Profil() {
     const { user } = useSelector(state => state.user)
     const [userInfo, setUserInfo] = useState(user)
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         setUserInfo(user)
@@ -22,21 +23,50 @@ function Profil() {
             // {error: "Mot de passe incorrect"}
             const data = await res.json()
         }
+        else {
+            const data = await res.json()
+            setError(data.error)
+        }
     }
+
+    const handleAvatar = async (e) => {
+        e.preventDefault()
+        const formData = new FormData()
+        formData.append('image', e.target["image"].files[0])
+        const res = await fetch('http://localhost:9001/api/v1/data/upload/avatar', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            console.log(data)
+        }
+    }
+
+    const handleDeleteAvatar = async (e) => {
+        e.preventDefault()
+        const res = await fetch(`http://localhost:9001/api/v1/data/delete/avatar/${user.id}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            console.log(data)
+        }
+    }
+
 
  
 
-    return (
+    return ( <>
         <form onSubmit={handleSubmit}>
+        {error && <p>{error}</p>}
             <legend>Profil</legend>
-            <label htmlFor="username">Nom d'utilisateur :</label>
-            <input type="text" name="username" id="username" value={userInfo.username} onChange={e => setUserInfo({...userInfo, username: e.target.value}) }/>
-
             <label htmlFor="email">Adresse email :</label>
             <input type="email" name="email" id="email" value={userInfo.email} onChange={e => setUserInfo({...userInfo, email: e.target.value})}/>
-
-            {/* <label name="avatar">Avatar</label>
-            <input type="file" name="avatar" id="avatar" /> */}
 
             <label name="currenPassword">Mot de passe</label>
             <input type="password" name="currentPassword" id="password" onChange={e => setUserInfo({...userInfo, currentPassword: e.target.value})}/>
@@ -49,6 +79,18 @@ function Profil() {
 
             <button type="submit">Enregistrer</button>
         </form>
+        
+        <form onSubmit={handleAvatar} encType='multipart/form-data'>
+            <legend>Ajouter un avatar</legend>
+            <input type="file" name="image" id="image" />
+            <button type="submit">Ajouter</button>
+        </form>
+
+        <form onSubmit={handleDeleteAvatar}>
+            <legend>Supprimer l'avatar</legend>
+            <button type="submit">Supprimer</button>
+        </form>
+        </>
     )
 }
 

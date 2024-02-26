@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom'
 function UpdateUser() {
     const param = useParams();
 
+    const userId = param.userId;
+    const [message, setMessage] = useState('');
     const [user, setUser] = useState({});
 
     useEffect(() => {
@@ -15,8 +17,9 @@ function UpdateUser() {
                     'Content-Type': 'application/json'
                 },
             });
-            const data = await response.json();
-            setUser(data);
+            const result = await response.json();
+
+            setUser(result.data);
         }
         getUser();
     }, [])
@@ -31,12 +34,29 @@ function UpdateUser() {
             },
             body: JSON.stringify({id: param.id, username: user.username, email: user.email, role: user.role, account_status: user.account_status})
         });
-        const data = await response.json();
+        const result = await response.json();
+        console.log(result);
+        if (response.ok) setMessage(result.message);
     }
+
+    // const handleReset = async (e) => {
+    //     e.preventDefault();
+    //     const response = await fetch(`http://localhost:9001/api/v1/admin/reset/${param.userId}`, {
+    //         method: 'PATCH',
+    //         credentials: 'include',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+            
+    //     });
+    //     const data = await response.json();
+    // }
 
 
     return (
+    <>
         <form onSubmit={changeUserInfo}>
+            {message && <p>{message}</p>}
             <label>Username</label>
             <input type="text" name="username" id="username" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>
             <label>Email</label>
@@ -55,6 +75,9 @@ function UpdateUser() {
             </select>
             <button type="submit">Update</button>
         </form>
+
+        {/* <button name="resetPassword" onClick={handleReset}>Reset password</button> */}
+    </>
     )
 }
 

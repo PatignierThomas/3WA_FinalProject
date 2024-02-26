@@ -9,6 +9,7 @@ import { fetchGames } from '../../../../store/slices/game.js'
 function UpdateGame() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
+    const [selectedGame, setSelectedGame] = useState({})
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -20,9 +21,13 @@ function UpdateGame() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const gameName = newGameNameRef.current.value
-        const gameAge = gameAgeRef.current.value
-        const gameId = gameIdRef.current.value
+        const gameId = selectedGame.id
+        const gameName = selectedGame.game_name
+        const gameAge = selectedGame.minimal_age
+        const visibility = selectedGame.visibility
+        const description = selectedGame.description
+
+        console.log(gameName, gameAge, gameId)
 
         const res = await fetch(`http://localhost:9001/api/v1/admin/updateGame/${gameId}`, {
             method: 'PATCH',
@@ -30,11 +35,17 @@ function UpdateGame() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ gameName, gameId, gameAge })
+            body: JSON.stringify({ gameName, gameAge, visibility, description})
         })
         if (res.ok) {
             console.log('Jeu modifié')
         }
+    }
+
+    const handleGameChange = (e) => {
+        const selectedGameId = e.target.value;
+        const selectedGame = games.find(game => game.id === Number(selectedGameId));
+        setSelectedGame(selectedGame || {});
     }
 
     return (
@@ -42,33 +53,42 @@ function UpdateGame() {
             <form onSubmit={handleSubmit}>
                 <legend>Modifier un jeu :</legend>
                 <label htmlFor="gameName">Nom du jeu :</label>
-                <select ref={gameIdRef} name="gameName" id="updateGameName">
+                <select onChange={handleGameChange} name="gameName" id="updateGameName">
+                    <option value="">--Please choose an option--</option>
                     {games.map((data) => (
                         <option key={data.id} value={data.id}>{data.game_name}</option>
                     ))}
                 </select>
                 <label htmlFor="newName">Nouveau nom :</label>
                 <input 
-                    ref={newGameNameRef}
                     type="text" 
                     name="newName" 
                     id="updateGameName"
+                    value={selectedGame.game_name || ''}
+                    onChange={(e) => setSelectedGame({...selectedGame, game_name: e.target.value})}
                 />
                 <label htmlFor="gameAge">Age minimal :</label>
                 <input 
-                    ref={gameAgeRef}
                     type="number" 
                     name="gameAge" 
-                    id="updateGameAge" 
+                    id="updateGameAge"
+                    value={selectedGame.minimal_age|| ''}
+                    onChange={(e) => setSelectedGame({...selectedGame, minimal_age: e.target.value})}
                 />
                 <label htmlFor="visibility">Visibilité :</label>
-                <select name="visibility" id="visibility">
+                <select name="visibility" id="visibility" value={selectedGame.visibility || ''} onChange={(e) => setSelectedGame({...selectedGame, visibility: e.target.value})}>
                     <option value="Public">Public</option>
                     <option value="Private">Private</option>
                 </select>
 
                 <label htmlFor="description">Description :</label>
-                <textarea name="description" id="description"></textarea>
+                <textarea 
+                    name="description" 
+                    id="description" 
+                    value={selectedGame.description || ''} 
+                    onChange={(e) => setSelectedGame({...selectedGame, description: e.target.value})}
+                >
+                </textarea>
                 <input type="submit" value="Modifier" />
             </form>
         </main>

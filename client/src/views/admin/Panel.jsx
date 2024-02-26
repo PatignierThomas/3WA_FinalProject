@@ -27,9 +27,9 @@ function Panel() {
                 method: 'GET',
                 credentials: 'include'
             })
+            const result = await res.json()
             if (res.ok) {
-                const data = await res.json()
-                setData(data)
+                setData(result.data)
             }
         }
         getStats()
@@ -42,8 +42,8 @@ function Panel() {
             credentials: 'include'
         })
         if (res.ok) {
-            const data = await res.json()
-            setAllusers(data)
+            const result = await res.json()
+            setAllusers(result.data)
         }
     }
 

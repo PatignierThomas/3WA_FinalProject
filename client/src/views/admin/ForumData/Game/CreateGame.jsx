@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRef } from 'react'
 
 // SELECT p.id as postID, pr.id, pr.reply_date, p.title, p.creation_date, p.views, p.user_id
@@ -18,6 +18,7 @@ function CreateGame() {
     const gameAgeRef = useRef(null)
     const visibilityRef = useRef(null)
     const descriptionRef = useRef(null)
+    const [error, setError] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -33,14 +34,20 @@ function CreateGame() {
             credentials: 'include',
             body: JSON.stringify({ gameName, gameAge, visibility, description })
         })
+        const data = await res.json()
         if (res.ok) {
-            console.log('Jeu créé')
+            console.log(data)
+        } else {
+            setError(data.errors)
         }
     }
+
+    console.log(error)
     return (
         <main>
             <form onSubmit={handleSubmit}>
                 <legend>Créer un jeu</legend>
+                {error && <p>{error}</p>}
                 <label htmlFor="gameName">Nom du jeu :</label>
                 <input 
                     ref={gameNameRef}
