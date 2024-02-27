@@ -29,7 +29,6 @@ function Header() {
             dispatch(logout())
             navigate('/')
         }
-
     }
     return (
         <header>

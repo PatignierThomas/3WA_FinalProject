@@ -22,13 +22,12 @@ function UpdatePost() {
             const res = await fetch(`http://localhost:9001/api/v1/data/get/edit/post/${param.postId}`, {
                 credentials: 'include'
                 })
-            const data = await res.json()
+            const result = await res.json()
             if (!res.ok) {
                 navigate('/404')
             }
-            console.log(data)
-            setTitle(data.title)
-            setValue(data.content)
+            setTitle(result.data.title)
+            setValue(result.data.content)
         }
         fetchPost()
     }, [param.postId])
@@ -65,18 +64,16 @@ function UpdatePost() {
                 body: formData, // update with your image data
                 credentials: 'include'
             });
-            const data = await res.json();
+            const result = await res.json();
             if(res.ok) {
-                url.push(data.url)
+                url.push(result.data.url)
             }
-
-            else console.log(data.error)
 
             // Remove placeholder image
             quillRef.current.getEditor().deleteText(image.range.index, 1);
 
             // Insert uploaded image
-            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', data.url);
+            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', result.data.url);
 
             // Move cursor to right side of image (easier to continue typing)
             quillRef.current.getEditor().setSelection(image.range.index + 1);

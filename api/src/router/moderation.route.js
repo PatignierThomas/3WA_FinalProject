@@ -3,17 +3,17 @@ import { lockPost, unlockPost, hidePost, hideReply, showPost, showReply } from "
 
 const moderatorRouter = express.Router();
 
-moderatorRouter.get("/lockPost/:id", lockPost);
+moderatorRouter.get("/lockPost/:id(\\d+)", lockPost);
 
-moderatorRouter.get("/unlockPost/:id", unlockPost);
+moderatorRouter.get("/unlockPost/:id(\\d+)", unlockPost);
 
-moderatorRouter.get("/hidePost/:id", hidePost);
+moderatorRouter.get("/hidePost/:id(\\d+)", hidePost);
 
-moderatorRouter.get("/hideReply/:id", hideReply);
+moderatorRouter.get("/hideReply/:id(\\d+)", hideReply);
 
-moderatorRouter.get("/showPost/:id", showPost);
+moderatorRouter.get("/showPost/:id(\\d+)", showPost);
 
-moderatorRouter.get("/showReply/:id", showReply);
+moderatorRouter.get("/showReply/:id(\\d+)", showReply);
 
 
 

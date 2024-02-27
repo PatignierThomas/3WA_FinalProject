@@ -40,7 +40,7 @@ const sectionSlice = createSlice({
             })
             .addCase(fetchAllSections.fulfilled, (state, action) => {
                 state.loading = false;
-                state.section = action.payload;
+                state.section = action.payload.data;
             })
             .addCase(fetchAllSections.rejected, (state, action) => {
                 state.loading = false;
@@ -52,7 +52,7 @@ const sectionSlice = createSlice({
             })
             .addCase(fetchSection.fulfilled, (state, action) => {
                 state.loading = false;
-                state.section = action.payload;
+                state.section = action.payload.data;
             })
             .addCase(fetchSection.rejected, (state, action) => {
                 state.loading = false;

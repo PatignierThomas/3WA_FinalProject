@@ -3,6 +3,9 @@ import "dotenv/config";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import CustomError from "../utils/customError/errorHandler.js";
+import customSuccess from "../utils/successRes.js";
+
 const dotenv = process.env;
 
 export const register = async (req, res) => {

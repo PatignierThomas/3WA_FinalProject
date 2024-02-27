@@ -5,6 +5,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 
 import router from "./router/index.route.js";
+import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
@@ -25,10 +26,10 @@ app.use(express.json());
 
 app.use('/public/assets/img', express.static(path.join(process.cwd(), "/public/assets/img/")));
 
-app.use(express.json());
-
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
 app.use(router)
+
+app.use(errorHandler);

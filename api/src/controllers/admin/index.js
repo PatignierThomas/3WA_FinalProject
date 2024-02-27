@@ -1,5 +1,7 @@
 import Query from '../../model/Query.js';
 import { letterToIDRoleSwitch, IDToLetterRoleSwitch } from '../../utils/roleSwitch.js';
+import CustomError from '../../utils/customError/errorHandler.js';
+import customSuccess from '../../utils/successRes.js';
 
 export const getStats = async (req, res) => {
     try {
@@ -10,11 +12,11 @@ export const getStats = async (req, res) => {
             (SELECT COUNT(*) FROM post_reply) AS total_replies;
         `;
         const data = await Query.run(stats);
-        res.json(data);
+        res.customSuccess(200, "Statistiques", data);
     }
     catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
+        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
+        return next(customError);
     }
 }
 
@@ -22,11 +24,11 @@ export const getAllUsers = async (req, res) => {
     try {
         const query = "SELECT * FROM users";
         const data = await Query.run(query);
-        res.json(data);
+        res.customSuccess(200, "Utilisateurs", data);
     }
     catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
+        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
+        return next(customError);
     }
 }
 
@@ -34,66 +36,16 @@ export const getUserById = async (req, res) => {
     try {
         const query = "SELECT username, email, role_id AS role, account_status FROM users WHERE id = ?";
         const [data] = await Query.runWithParams(query, [req.params.id]);
+        if (!data) {
+            const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");
+            return next(customError);
+        }
         data.role = IDToLetterRoleSwitch(data.role);
-        res.json(data);
+        res.customSuccess(200, "Utilisateur modifié", data);
     }
     catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
-    }
-}
-
-//unused
-export const getNonBannedUsers = async (req, res) => {
-    try {
-        const query = "SELECT * FROM users WHERE account_status = 'ok'";
-        const data = await Query.run(query);
-        res.json(data);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
-    }
-}
-
-//unused
-export const getAllBannedUsers = async (req, res) => {
-    try {
-        const query = "SELECT * FROM users WHERE account_status = 'banned'";
-        const data = await Query.run(query);
-        res.json(data);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
-    }
-}
-
-export const banUser = async (req, res) => {
-    try {
-        const userIds = req.body.userIds;
-        const placeholders = userIds.map(() => '?').join(',');
-        const query = `UPDATE users SET account_status = 'banned' WHERE id IN (${placeholders})`;
-        const data = await Query.runWithParams(query, userIds);
-        res.json(data);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
-    }
-}
-
-export const unbanUser = async (req, res) => {
-    try {
-        const userIds = req.body.userIds;
-        const placeholders = userIds.map(() => '?').join(',');
-        const query = `UPDATE users SET account_status = 'ok' WHERE id IN (${placeholders})`;
-        const data = await Query.runWithParams(query, userIds);
-        res.json(data);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
+        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
+        return next(customError);
     }
 }
 
@@ -101,7 +53,11 @@ export const hidePost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'hidden' WHERE id = ?";
         const data = await Query.runWithParams(query, [req.params.id]);
-        res.json(data);
+        if (data.affectedRows === 0) {
+            const customError = new CustomError(404, "Not found", "Introuvable", "Le post n'existe pas");
+            return next(customError);
+        }
+        res.customSuccess(200, "Post caché", data);
     }
     catch (error) {
         console.log(error);
@@ -112,15 +68,34 @@ export const hidePost = async (req, res) => {
 export const changeUserInfo = async (req, res) => {
     try {
         const {username, email, role, account_status} = req.body;
+
+        if (!username || !email || !role || !account_status) {
+            const customError = new CustomError(400, "Bad request", "Requête incorrecte", "Veuillez remplir tous les champs");
+            return next(customError);
+        }
         const query = "UPDATE users SET username = ?, email = ?, role_id = ?, account_status = ? WHERE id = ?";
-        console.log(username, email, letterToIDRoleSwitch(role), account_status, req.params.userId);
         const data = await Query.runWithParams(query, [username, email, letterToIDRoleSwitch(role), account_status, req.params.userId]);
-        res.json(data);
+
+        res.customSuccess(200, "Utilisateur modifié", data);
     }
     catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
+        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
+        return next(customError);
     }
+}
+
+// UNUSED
+// will generate a random password and update the user's password
+// then send the new password to the user's email
+// OR it could send a mail to the user with a link to reset the password
+export const resetPassword = async (req, res) => {
+    const newPassword = "1234";
+    const hash = await bcrypt.hash(newPassword, Number(dotenv.SALT));
+
+    const updateUser = "UPDATE users SET password = ? WHERE id = ?";
+    const result = await Query.runWithParams(updateUser, [hash, req.params.id]);
+
+    res.json({result});
 }
 
 

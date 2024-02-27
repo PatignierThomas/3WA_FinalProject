@@ -55,33 +55,31 @@ const postSlice = createSlice({
             })
             .addCase(fetchPostsBySection.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload;
+                state.posts = action.payload.data;
             })
             .addCase(fetchPostsBySection.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
-
             .addCase(fetchPost.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchPost.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload;
+                state.posts = action.payload.data;
             })
             .addCase(fetchPost.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })
-
             .addCase(mostRecentPost.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(mostRecentPost.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload;
+                state.posts = action.payload.data;
             })
             .addCase(mostRecentPost.rejected, (state, action) => {
                 state.loading = false;

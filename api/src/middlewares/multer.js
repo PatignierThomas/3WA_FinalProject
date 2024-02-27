@@ -2,15 +2,24 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
+let newDirectory = "";
+
 // multer.diskStorage permet de définir le dossier de destination et le nom du fichier
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // le nom du dossier est le titre de l'article suffixé par id_ pour éviter les doublons
         // de fait chaque article aura son propre dossier d'images
-        const newDirectory = path.join(
-            process.cwd(),
-            "public/assets/img/user_" + req.user.username
-        );
+        if (req.body.type === 'avatar') {
+            newDirectory = path.join(
+                process.cwd(),
+                `public/assets/img/avatar/${req.user.id}_${req.user.username}`  
+            );
+        } else {
+            newDirectory = path.join(
+                process.cwd(),
+                "public/assets/img/post/" + req.body.postId
+            );
+        }
         fs.mkdirSync(newDirectory, { recursive: true });
         cb(null, newDirectory);
     },
@@ -45,7 +54,7 @@ const upload = (req, res, next) => {
                 cb("Images en png, jpg ou jpeg uniquement");
             }
         },
-    }).array("image", 1) // image est le nom de l'input type file -> attribut name, 10 est le nombre de fichiers acceptés maximum
+    }).array("image", 5) // image est le nom de l'input type file -> attribut name, 10 est le nombre de fichiers acceptés maximum
     (req, res, function(err) {
         if (err) {
             // handle error
@@ -54,6 +63,8 @@ const upload = (req, res, next) => {
         req.files = req.files.map(file => {
             return file.path.split("public")[1].split("\\").join("/");
         });
+    console.log(req.body.postId)
+    console.log("multer")
     next();
     });
 }

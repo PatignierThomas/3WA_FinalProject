@@ -35,7 +35,6 @@ function UpdateUser() {
             body: JSON.stringify({id: param.id, username: user.username, email: user.email, role: user.role, account_status: user.account_status})
         });
         const result = await response.json();
-        console.log(result);
         if (response.ok) setMessage(result.message);
     }
 
@@ -51,7 +50,6 @@ function UpdateUser() {
     //     });
     //     const data = await response.json();
     // }
-
 
     return (
     <>

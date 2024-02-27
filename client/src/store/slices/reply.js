@@ -8,8 +8,8 @@ const fetchReply = createAsyncThunk("post/fetchReply", async (postId) => {
         headers: {
             "Content-Type": "application/json",
         }});
-    const data = await response.json();
-    return data;
+    const result = await response.json();
+    return result;
 });
 
 const initialState = {
@@ -29,7 +29,7 @@ const replySlice = createSlice({
             })
             .addCase(fetchReply.fulfilled, (state, action) => {
                 state.loading = false;
-                state.replies = action.payload;
+                state.replies = action.payload.data;
             })
             .addCase(fetchReply.rejected, (state, action) => {
                 state.loading = false;

@@ -10,7 +10,7 @@ function SectionPost() {
     const isPublicRoute = matchPublic != null;
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 25;
+    const postsPerPage = 25;
 
     const dispatch = useDispatch()
     const { posts } = useSelector(state => state.post)
@@ -22,8 +22,8 @@ function SectionPost() {
         dispatch(fetchPostsBySection(param.sectionId))
     }, [param.sectionId])
 
-    const numberOfPages = Math.ceil(posts.length / itemsPerPage);
-    const paginatedPosts = posts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const numberOfPages = Math.ceil(posts.length / postsPerPage);
+    const paginatedPosts = posts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {

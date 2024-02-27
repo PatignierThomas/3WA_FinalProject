@@ -31,8 +31,8 @@ function CreatePost() {
         }
 
         // Get the post ID
-        const post = await res.json();
-        const postId = post.postId;
+        const result = await res.json();
+        const postId = result.data.id;
         
         const url = await submitPost(postId);
         
@@ -48,7 +48,6 @@ function CreatePost() {
             navigate(-1)
             console.log('Post created')
         }
-        
     }
     
     const submitPost = async (postId) => {
@@ -64,9 +63,9 @@ function CreatePost() {
                 body: formData, // update with your image data
                 credentials: 'include'
             });
-            const data = await res.json();
+            const result = await res.json();
             if(res.ok) {
-                url.push(data.url)
+                url.push(result.data.url)
             }
 
             else console.log(data.error)
@@ -75,7 +74,7 @@ function CreatePost() {
             quillRef.current.getEditor().deleteText(image.range.index, 1);
 
             // Insert uploaded image
-            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', data.url);
+            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', result.data.url);
 
             // Move cursor to right side of image (easier to continue typing)
             quillRef.current.getEditor().setSelection(image.range.index + 1);

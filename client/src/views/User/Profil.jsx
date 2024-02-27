@@ -32,16 +32,16 @@ function Profil() {
     const handleAvatar = async (e) => {
         e.preventDefault()
         const formData = new FormData()
+        formData.append('type', 'avatar')
         formData.append('image', e.target["image"].files[0])
         const res = await fetch('http://localhost:9001/api/v1/data/upload/avatar', {
             method: 'POST',
             credentials: 'include',
             body: formData
         })
-
         if (res.ok) {
-            const data = await res.json()
-            console.log(data)
+            const result = await res.json()
+            console.log(result)
         }
     }
 
@@ -51,17 +51,14 @@ function Profil() {
             method: 'DELETE',
             credentials: 'include'
         })
-
         if (res.ok) {
             const data = await res.json()
             console.log(data)
         }
     }
 
-
- 
-
-    return ( <>
+    return ( 
+    <>
         <form onSubmit={handleSubmit}>
         {error && <p>{error}</p>}
             <legend>Profil</legend>
@@ -90,7 +87,7 @@ function Profil() {
             <legend>Supprimer l'avatar</legend>
             <button type="submit">Supprimer</button>
         </form>
-        </>
+    </>
     )
 }
 

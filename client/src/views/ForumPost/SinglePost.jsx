@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import slugify from 'slugify'
 
 import { fetchPost } from '../../store/slices/post.js'
 import { fetchReply } from '../../store/slices/reply.js'
@@ -12,19 +13,18 @@ function SinglePost() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { postId } = useParams()
+
     const { user, isLogged } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
     const { replies } = useSelector(state => state.reply)
 
     const [images, setImages] = useState([])
-
     const [value, setValue] = useState('');
-    const quillRef = useRef(); // Create a Ref
-    
     const [editingReply, setEditingReply] = useState(null);
-    const [isLocked, setIsLocked] = useState(false);
+    
+    const quillRef = useRef();
+    
 
-    // check token for a moderator or admin or dev
     useEffect(() => {
         dispatch(fetchPost(postId))
         dispatch(fetchReply(postId))
@@ -70,7 +70,6 @@ function SinglePost() {
         setImages([])
     }
     
-
     const handleLock = async () => {
         const res = await fetch(`http://localhost:9001/api/v1/moderator/lockPost/${postId}`,{
             method: 'GET',
@@ -188,7 +187,7 @@ function SinglePost() {
 
     // format url to avoid spaces and special characters
     const handleEdit = () => {
-        navigate(`/edit/${postId}/${posts[0].title}`)
+        navigate(`/edit/${postId}/${slugify(posts[0].title, {lower: true})}`)
     }
 
     const handleReplyEdit = (reply) => {
@@ -214,9 +213,9 @@ function SinglePost() {
                 body: formData, // update with your image data
                 credentials: 'include'
             });
-            const data = await res.json();
+            const result = await res.json();
             if(res.ok) {
-                url.push(data.url)
+                url.push(result.data.url)
             }
             else console.log(data.error)
 
@@ -224,7 +223,7 @@ function SinglePost() {
             quillRef.current.getEditor().deleteText(image.range.index, 1);
 
             // Insert uploaded image
-            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', data.url);
+            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', result.data.url);
 
             // Move cursor to right side of image (easier to continue typing)
             quillRef.current.getEditor().setSelection(image.range.index + 1);

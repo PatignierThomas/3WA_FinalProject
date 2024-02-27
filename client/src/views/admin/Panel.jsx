@@ -1,11 +1,4 @@
 import React, { useEffect } from 'react'
-import CreateGame from './ForumData/Game/CreateGame'
-import CreateSection from './ForumData/Section/CreateSection'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-
-import { fetchGames } from '../../store/slices/game'
-import { fetchSection } from '../../store/slices/section'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import DeleteGame from './ForumData/Game/DeleteGame'

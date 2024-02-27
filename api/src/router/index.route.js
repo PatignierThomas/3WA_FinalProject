@@ -22,7 +22,7 @@ indexRouter.use("/api/v1/moderator", verifyModeratorToken, moderatorRouter);
 indexRouter.use("/api/v1/admin", verifyAdminToken, adminRouter);
 
 indexRouter.get("*", (req, res) => {
-    res.json({ error: "Page not found" })
+    res.json({ error: "No route found" })
 });
 
 export default indexRouter;
