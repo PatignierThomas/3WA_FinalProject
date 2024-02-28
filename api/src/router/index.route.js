@@ -3,6 +3,9 @@ import authRouter from "./auth.route.js";
 import dataRouter from "./data.route.js";
 import adminRouter from "./admin.route.js";
 import moderatorRouter from "./moderation.route.js";
+import postRouter from './post.route.js';
+import replyRouter from './reply.route.js';
+import fileRouter from './file.route.js';
 import verifyAdminToken from '../middlewares/adminAuth.js';
 import verifyModeratorToken from '../middlewares/moderatorAuth.js';
 
@@ -16,6 +19,12 @@ indexRouter.get("/api/v1", (req, res) => {
 indexRouter.use("/api/v1/auth", authRouter);
 
 indexRouter.use("/api/v1/data", dataRouter);
+
+indexRouter.use("/api/v1/post", postRouter);
+
+indexRouter.use("/api/v1/reply", replyRouter);
+
+indexRouter.use("/api/v1/file", fileRouter);
 
 indexRouter.use("/api/v1/moderator", verifyModeratorToken, moderatorRouter);
 

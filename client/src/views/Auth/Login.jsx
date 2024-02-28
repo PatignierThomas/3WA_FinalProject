@@ -34,12 +34,12 @@ function Login() {
                 credentials: 'include',
             });
             if (response.ok) {
-                const data = await response.json();
-                if (data.error) {
-                    setMsg(data.error);
+                const result = await response.json();
+                if (result.errors) {
+                    setMsg(result.errors);
                     return;
                 }
-                dispatch(login(data));
+                dispatch(login(result.data));
 
                 navigate("/");
             } else {

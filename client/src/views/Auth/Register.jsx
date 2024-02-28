@@ -75,7 +75,7 @@ function Register() {
                 navigate("/connexion");
             } else {
                 const data = await response.json();
-                setError(data.error);
+                setError(data.errors);
             }
         } catch (error) {
             setError("An error occurred while registering");

@@ -14,10 +14,8 @@ function ProtectedAdminRoute({ child, redirectPath }) {
                     credentials: "include",
                 }
             );
-
-            const auth = await res.json();
-
-            if (res.ok && auth.role === "admin") {
+            const result = await res.json();
+            if (res.ok && result.data.role === "admin") {
                 console.log("Route checked the token");
                 setIsAuthenticated(true);
             } else {
@@ -27,6 +25,7 @@ function ProtectedAdminRoute({ child, redirectPath }) {
         }
          checkAuth();
     }, [location]);
+
     if (isAuthenticated) return child;
 }
 

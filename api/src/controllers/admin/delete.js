@@ -5,7 +5,7 @@ import customSuccess from '../../utils/successRes.js';
 export const deleteGame = async (req, res, next) => {
     try {
         const query = "DELETE FROM game_section WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.gameId]);
+        const data = await Query.runWithParams(query, [req.body.gameID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "Le jeu n'existe pas");
@@ -22,7 +22,7 @@ export const deleteGame = async (req, res, next) => {
 export const deleteSection = async (req, res, next) => {
     try {
         const query = "DELETE FROM sub_forum WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.sectionId]);
+        const data = await Query.runWithParams(query, [req.body.sectionID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "La section n'existe pas");
@@ -39,7 +39,7 @@ export const deleteSection = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
     try {
         const query = "DELETE FROM post WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.postID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "Le post n'existe pas");
@@ -56,7 +56,7 @@ export const deletePost = async (req, res, next) => {
 export const deleteReply = async (req, res, next) => {
     try {
         const query = "DELETE FROM post_reply WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.replyID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "La réponse n'existe pas");

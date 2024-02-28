@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async (sectionId) => {
-    const response = await fetch(`http://localhost:9001/api/v1/data/post/section/${sectionId}`, {
+    const response = await fetch(`http://localhost:9001/api/v1/post/section/${sectionId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -15,7 +15,7 @@ const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async (sectionId
 });
 
 const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
-    const response = await fetch(`http://localhost:9001/api/v1/data/post/${id}`, {
+    const response = await fetch(`http://localhost:9001/api/v1/post/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -27,7 +27,7 @@ const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
 });
 
 const mostRecentPost = createAsyncThunk("post/mostRecentPost", async (gameId) => {
-    const response = await fetch(`http://localhost:9001/api/v1/data/get/most/recent/post/${gameId}`, {
+    const response = await fetch(`http://localhost:9001/api/v1/post/recent/${gameId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

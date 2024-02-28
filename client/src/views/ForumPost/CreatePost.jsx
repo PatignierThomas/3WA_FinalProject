@@ -18,7 +18,7 @@ function CreatePost() {
         e.preventDefault()
 
         const title = titleRef.current.value
-        const res = await fetch('http://localhost:9001/api/v1/data/post/createPost', {
+        const res = await fetch('http://localhost:9001/api/v1/post/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ function CreatePost() {
         
         const url = await submitPost(postId);
         
-        const nextRes = await fetch(`http://localhost:9001/api/v1/data/post/editPost/${postId}`, {
+        const nextRes = await fetch(`http://localhost:9001/api/v1/post/editPost/${postId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ function CreatePost() {
             formData.append('postId', postId);
             formData.append('image', image.file);
 
-            const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
+            const res = await fetch('http://localhost:9001/api/v1/file/upload/image', {
                 method: 'POST',
                 body: formData, // update with your image data
                 credentials: 'include'

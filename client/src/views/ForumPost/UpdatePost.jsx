@@ -19,7 +19,7 @@ function UpdatePost() {
 
     useEffect(() => {
         const fetchPost = async () => { 
-            const res = await fetch(`http://localhost:9001/api/v1/data/get/edit/post/${param.postId}`, {
+            const res = await fetch(`http://localhost:9001/api/v1/post/info/${param.postId}`, {
                 credentials: 'include'
                 })
             const result = await res.json()
@@ -37,7 +37,7 @@ function UpdatePost() {
 
         const url = await submitPost(param.postId)
 
-        const res = await fetch(`http://localhost:9001/api/v1/data/post/editPost/${param.postId}`, {
+        const res = await fetch(`http://localhost:9001/api/v1/post/editPost/${param.postId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ function UpdatePost() {
             formData.append('postId', postId);
             formData.append('image', image.file);
 
-            const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
+            const res = await fetch('http://localhost:9001/api/v1/file/upload/image', {
                 method: 'POST',
                 body: formData, // update with your image data
                 credentials: 'include'

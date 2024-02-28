@@ -20,6 +20,24 @@ export const getStats = async (req, res) => {
     }
 }
 
+// get all the subjects of all games
+export const allSubject = async (req, res, next) => {
+    if (req.user) {
+        try {
+            const query = ` SELECT sf.id, sf.subject, sf.status, sf.game_section_id, COUNT(post.id) as post_count
+                            FROM sub_forum sf
+                            LEFT JOIN post ON sf.id = post.sub_forum_id
+                            GROUP BY sf.id`;
+            const data = await Query.run(query) 
+            res.customSuccess(200, "Sujets", data);
+        }
+        catch (error) {
+            const customError = new CustomError(500, "Database error", "Erreur serveur", error);
+            return next(customError);
+       }
+    }
+}
+
 export const getAllUsers = async (req, res) => {
     try {
         const query = "SELECT * FROM users";
@@ -35,7 +53,7 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
     try {
         const query = "SELECT username, email, role_id AS role, account_status FROM users WHERE id = ?";
-        const [data] = await Query.runWithParams(query, [req.params.id]);
+        const [data] = await Query.runWithParams(query, [req.params.userID]);
         if (!data) {
             const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");
             return next(customError);
@@ -49,22 +67,6 @@ export const getUserById = async (req, res) => {
     }
 }
 
-export const hidePost = async (req, res) => {
-    try {
-        const query = "UPDATE post SET status = 'hidden' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
-        if (data.affectedRows === 0) {
-            const customError = new CustomError(404, "Not found", "Introuvable", "Le post n'existe pas");
-            return next(customError);
-        }
-        res.customSuccess(200, "Post caché", data);
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).json({error: "Erreur serveur"});
-    }
-}
-
 export const changeUserInfo = async (req, res) => {
     try {
         const {username, email, role, account_status} = req.body;
@@ -74,7 +76,7 @@ export const changeUserInfo = async (req, res) => {
             return next(customError);
         }
         const query = "UPDATE users SET username = ?, email = ?, role_id = ?, account_status = ? WHERE id = ?";
-        const data = await Query.runWithParams(query, [username, email, letterToIDRoleSwitch(role), account_status, req.params.userId]);
+        const data = await Query.runWithParams(query, [username, email, letterToIDRoleSwitch(role), account_status, req.params.userID]);
 
         res.customSuccess(200, "Utilisateur modifié", data);
     }
@@ -88,15 +90,16 @@ export const changeUserInfo = async (req, res) => {
 // will generate a random password and update the user's password
 // then send the new password to the user's email
 // OR it could send a mail to the user with a link to reset the password
-export const resetPassword = async (req, res) => {
-    const newPassword = "1234";
-    const hash = await bcrypt.hash(newPassword, Number(dotenv.SALT));
 
-    const updateUser = "UPDATE users SET password = ? WHERE id = ?";
-    const result = await Query.runWithParams(updateUser, [hash, req.params.id]);
+// export const resetUserPassword = async (req, res) => {
+//     const newPassword = "1234";
+//     const hash = await bcrypt.hash(newPassword, Number(dotenv.SALT));
 
-    res.json({result});
-}
+//     const updateUser = "UPDATE users SET password = ? WHERE id = ?";
+//     const result = await Query.runWithParams(updateUser, [hash, req.params.id]);
+
+//     res.json({result});
+// }
 
 
 

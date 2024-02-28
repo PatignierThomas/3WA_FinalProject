@@ -24,7 +24,7 @@ function SinglePost() {
     
     const quillRef = useRef();
     
-
+    console.log(user)
     useEffect(() => {
         dispatch(fetchPost(postId))
         dispatch(fetchReply(postId))
@@ -38,7 +38,7 @@ function SinglePost() {
         console.log(url)
 
         if (!editingReply) {
-            const res = await fetch('http://localhost:9001/api/v1/data/post/createReply', {
+            const res = await fetch('http://localhost:9001/api/v1/reply/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -208,7 +208,7 @@ function SinglePost() {
             formData.append('postId', postId);
             formData.append('image', image.file);
 
-            const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
+            const res = await fetch('http://localhost:9001/api/v1/file/upload/image', {
                 method: 'POST',
                 body: formData, // update with your image data
                 credentials: 'include'

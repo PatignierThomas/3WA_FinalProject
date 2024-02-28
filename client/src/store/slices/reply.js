@@ -3,12 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const fetchReply = createAsyncThunk("post/fetchReply", async (postId) => {
-    const response = await fetch(`http://localhost:9001/api/v1/data/post/reply/${postId}`, {
+    const response = await fetch(`http://localhost:9001/api/v1/reply/all/${postId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-        }});
+        },
+        credentials: "include",
+    });
     const result = await response.json();
+    console.log(result);
     return result;
 });
 

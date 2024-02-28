@@ -9,7 +9,7 @@ export const updateGame = async (req, res) => {
             return next(customError);
         }
         const query = "UPDATE game_section SET game_name = ?, description = ?, minimal_age = ? WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.params.id]);
+        const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.params.gameID]);
         res.json(data);
     }
     catch (error) {
@@ -25,7 +25,7 @@ export const updateSection = async (req, res, next) => {
             return next(customError);
         }
         const query = "UPDATE sub_forum SET subject = ?, game_section_id = ? WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.sectionName, req.body.gameId, req.params.id]);
+        const data = await Query.runWithParams(query, [req.body.sectionName, req.body.gameId, req.params.sectionID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "La section n'existe pas");

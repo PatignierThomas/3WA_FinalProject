@@ -17,6 +17,7 @@ function Profil() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(userInfo)
         })
         if (res.ok) {
@@ -34,7 +35,7 @@ function Profil() {
         const formData = new FormData()
         formData.append('type', 'avatar')
         formData.append('image', e.target["image"].files[0])
-        const res = await fetch('http://localhost:9001/api/v1/data/upload/avatar', {
+        const res = await fetch('http://localhost:9001/api/v1/file/upload/avatar', {
             method: 'POST',
             credentials: 'include',
             body: formData
@@ -47,7 +48,7 @@ function Profil() {
 
     const handleDeleteAvatar = async (e) => {
         e.preventDefault()
-        const res = await fetch(`http://localhost:9001/api/v1/data/delete/avatar/${user.id}`, {
+        const res = await fetch(`http://localhost:9001/api/v1/file/delete/avatar/${user.id}`, {
             method: 'DELETE',
             credentials: 'include'
         })

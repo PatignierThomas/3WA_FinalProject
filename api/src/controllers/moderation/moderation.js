@@ -5,7 +5,7 @@ import customSuccess from '../../utils/successRes.js';
 export const lockPost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'locked' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.postID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Post not found", "Post non trouvé");
             return next(customError);
@@ -22,7 +22,7 @@ export const lockPost = async (req, res) => {
 export const unlockPost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'ok' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.postID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Post not found", "Post non trouvé");
             return next(customError);
@@ -38,7 +38,7 @@ export const unlockPost = async (req, res) => {
 export const hidePost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'hidden' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.postID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Post not found", "Post non trouvé");
             return next(customError);
@@ -54,7 +54,7 @@ export const hidePost = async (req, res) => {
 export const showPost = async (req, res) => {
     try {
         const query = "UPDATE post SET status = 'ok' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.postID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Post not found", "Post non trouvé");
             return next(customError);
@@ -70,7 +70,7 @@ export const showPost = async (req, res) => {
 export const hideReply = async (req, res) => {
     try {
         const query = "UPDATE post_reply SET status = 'hidden' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.replyID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Reply not found", "Réponse non trouvée");
             return next(customError);
@@ -86,7 +86,7 @@ export const hideReply = async (req, res) => {
 export const showReply = async (req, res) => {
     try {
         const query = "UPDATE post_reply SET status = 'ok' WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.params.id]);
+        const data = await Query.runWithParams(query, [req.params.replyID]);
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Reply not found", "Réponse non trouvée");
             return next(customError);
