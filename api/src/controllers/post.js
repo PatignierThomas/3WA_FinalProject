@@ -98,7 +98,7 @@ export const mostRecentPostOfCategory = async (req, res, next) => {
 export const postById = async (req, res, next) => {
     try {
         let commonQuery = `
-            SELECT post.title, post.content, post.status, post.creation_date, post.last_update, users.username, avatar.src
+            SELECT post.id, post.title, post.content, post.status, post.creation_date, post.last_update, users.username, avatar.src
             FROM post
             JOIN users ON post.user_id = users.id
             LEFT JOIN avatar ON avatar.user_id = users.id
@@ -106,9 +106,7 @@ export const postById = async (req, res, next) => {
 
         switch (req.user?.role) {
             case "admin":
-                commonQuery += `
-                WHERE post.id = ?`;
-                break;
+                // fall through
             case "moderator":
                 commonQuery += `
                 WHERE post.id = ?`
@@ -125,8 +123,13 @@ export const postById = async (req, res, next) => {
                 break;
             }
 
-        //could also use cache to store the number of views
         const data = await Query.runWithParams(commonQuery, [req.params.postID])
+
+        if (data.length === 0) {
+            const customError = new CustomError(404, "Not found", "Introuvable", "Le post n'existe pas");
+            return next(customError);
+        }
+
         const view = "UPDATE post SET views = views + 1 WHERE id = ?";
         await Query.runWithParams(view, [req.params.postID]);
 

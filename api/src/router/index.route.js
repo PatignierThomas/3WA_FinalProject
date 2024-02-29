@@ -16,6 +16,7 @@ indexRouter.get("/api/v1", (req, res) => {
     }
 );
 
+// access to everyone
 indexRouter.use("/api/v1/auth", authRouter);
 
 indexRouter.use("/api/v1/data", dataRouter);
@@ -26,8 +27,10 @@ indexRouter.use("/api/v1/reply", replyRouter);
 
 indexRouter.use("/api/v1/file", fileRouter);
 
+// access to moderator and admin
 indexRouter.use("/api/v1/moderator", verifyModeratorToken, moderatorRouter);
 
+// access to admin only
 indexRouter.use("/api/v1/admin", verifyAdminToken, adminRouter);
 
 indexRouter.get("*", (req, res) => {

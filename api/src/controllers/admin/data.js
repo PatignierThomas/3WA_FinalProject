@@ -1,5 +1,5 @@
 import Query from '../../model/Query.js';
-import { letterToIDRoleSwitch, IDToLetterRoleSwitch } from '../../utils/roleSwitch.js';
+import { letterToIDRoleSwitch } from '../../utils/roleSwitch.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
@@ -43,23 +43,6 @@ export const getAllUsers = async (req, res) => {
         const query = "SELECT * FROM users";
         const data = await Query.run(query);
         res.customSuccess(200, "Utilisateurs", data);
-    }
-    catch (error) {
-        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
-        return next(customError);
-    }
-}
-
-export const getUserById = async (req, res) => {
-    try {
-        const query = "SELECT username, email, role_id AS role, account_status FROM users WHERE id = ?";
-        const [data] = await Query.runWithParams(query, [req.params.userID]);
-        if (!data) {
-            const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");
-            return next(customError);
-        }
-        data.role = IDToLetterRoleSwitch(data.role);
-        res.customSuccess(200, "Utilisateur modifié", data);
     }
     catch (error) {
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);

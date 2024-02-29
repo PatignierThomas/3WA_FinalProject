@@ -33,11 +33,12 @@ function UpdateSection() {
             credentials: 'include',
             body: JSON.stringify({ gameId, sectionName })
         })
-        const result = await res.json()
         if (!res.ok) {
             setError(result.errors)
             return
         }
+        const result = await res.json()
+        console.log(result)
     }
 
     return (

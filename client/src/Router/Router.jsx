@@ -30,16 +30,16 @@ function Router() {
             <Route path="connexion" element={<Login />} />
             <Route path="inscription" element={<Register />} />
 
-            <Route path="open/main/:game/:gameId" element={<GameForum />} />
-            <Route path="open/sec/:section/:sectionId" element={<SectionPost />} />
-            <Route path="open/post/:post/:postId" element={<SinglePost />} />
+            <Route path="public/theme/:game/:gameId" element={<GameForum />} />
+            <Route path="public/categorie/:section/:sectionId" element={<SectionPost />} />
+            <Route path="public/poste/:post/:postId" element={<SinglePost />} />
 
-            <Route path="term-of-use" element={<TermsOfUse />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="CGU" element={<TermsOfUse />} />
+            <Route path="confidentialite" element={<PrivacyPolicy />} />
 
-            <Route path="game/:game/:gameId" element={<ProtectedRoute redirectPath="/connexion" child={<GameForum />}/> } />
-            <Route path="section/:section/:sectionId" element={<ProtectedRoute redirectPath="/connexion"child={<SectionPost />}/> }/>
-            <Route path="post/:post/:postId" element={<ProtectedRoute redirectPath="/connexion" child={<SinglePost />}/> } />
+            <Route path="jeu/:game/:gameId" element={<ProtectedRoute redirectPath="/connexion" child={<GameForum />}/> } />
+            <Route path="categorie/:section/:sectionId" element={<ProtectedRoute redirectPath="/connexion"child={<SectionPost />}/> }/>
+            <Route path="poste/:post/:postId" element={<ProtectedRoute redirectPath="/connexion" child={<SinglePost />}/> } />
 
             <Route path="new/:sectionId/create-post" element={<ProtectedRoute redirectPath="/connexion" child={<CreatePost />}/> } />
             <Route path="edit/:postId/:postTitle" element={<ProtectedRoute redirectPath="/connexion" child={<UpdatePost />}/> } />
@@ -47,13 +47,13 @@ function Router() {
             <Route path="profil" element={<ProtectedRoute redirectPath="/connexion" child={<Profil />} />} />
 
             <Route path="admin" element={<ProtectedAdminRoute redirectPath="/connexion" child={<Panel />} />} />
-            <Route path="admin/create-game" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateGame />} />} />
-            <Route path="admin/update-game" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateGame />} />} />
-            <Route path="admin/delete-game" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteGame />} />} />
-            <Route path="admin/create-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateSection />} />} />
-            <Route path="admin/update-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateSection />} />} />
-            <Route path="admin/delete-section" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteSection />} />} />
-            <Route path="admin/update-user/:userId" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateUser />} />} />
+            <Route path="admin/creer-un-jeu" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateGame />} />} />
+            <Route path="admin/editer-un-jeu" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateGame />} />} />
+            <Route path="admin/supprimer-un-jeu" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteGame />} />} />
+            <Route path="admin/creer-une-categorie" element={<ProtectedAdminRoute redirectPath="/connexion" child={<CreateSection />} />} />
+            <Route path="admin/editer-une-categorie" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateSection />} />} />
+            <Route path="admin/supprimer-une-categorie" element={<ProtectedAdminRoute redirectPath="/connexion" child={<DeleteSection />} />} />
+            <Route path="admin/modifier-utilisateur/:userId" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateUser />} />} />
  
             <Route path="*" element={<Error_404 />} />
       </Routes>

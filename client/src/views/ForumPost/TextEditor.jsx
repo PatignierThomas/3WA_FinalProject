@@ -14,24 +14,8 @@ function TextEditor({ value, setValue, quillRef, images, setImages}) {
 
         input.onchange = async () => {
             const file = input.files[0];
-            // const formData = new FormData();
-        
-            // formData.append('image', file);
-        
-            // // Create a local URL for the selected image file
-            // const url = URL.createObjectURL(file);
 
-            // // Save current cursor state
-            // const range = quillRef.current.getEditor().getSelection(true);
-
-            // quillRef.current.getEditor().insertEmbed(range.index, 'image', url);
-
-            // // Insert temporary loading placeholder image
-            // // quillRef.current.getEditor().insertEmbed(range.index, 'image', `${window.location.origin}/images/loaders/placeholder.gif`);
-
-            // setImages(oldImages => [...oldImages, { file, range }]);
-
-                        // Create a FileReader
+            // Create a FileReader
             const reader = new FileReader();
 
             // Define the onload event handler
@@ -50,56 +34,8 @@ function TextEditor({ value, setValue, quillRef, images, setImages}) {
             };
 
             reader.readAsDataURL(file);
-            
-            // // Start upload
-            // const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
-            //     method: 'POST',
-            //     body: formData, // update with your image data
-            //     credentials: 'include'
-            // });
-            // const data = await res.json();
-            // if(res.ok) console.log(data)
-            // else console.log(data.error)
-
-            //         // Remove placeholder image
-            // quillRef.current.getEditor().deleteText(range.index, 1);
-            
-            // // Insert uploaded image
-            // quillRef.current.getEditor().insertEmbed(range.index, 'image', data.url);
-            
-            // // Move cursor to right side of image (easier to continue typing)
-            // quillRef.current.getEditor().setSelection(range.index + 1);
         };
     }, [quillRef, setImages]);
-
-    // const submitPost = async () => {
-    //     // Upload all images
-    //     for (const image of images) {
-    //         const formData = new FormData();
-    //         formData.append('image', image.file);
-
-    //         const res = await fetch('http://localhost:9001/api/v1/data/upload/image', {
-    //             method: 'POST',
-    //             body: formData,
-    //             credentials: 'include'
-    //         });
-    //         const data = await res.json();
-    //         if(res.ok) console.log(data)
-    //         else console.log(data.error)
-
-    //         // Remove placeholder image
-    //         quillRef.current.getEditor().deleteText(image.range.index, 1);
-
-    //         // Insert uploaded image
-    //         quillRef.current.getEditor().insertEmbed(image.range.index, 'image', data.url);
-
-    //         // Move cursor to right side of image (easier to continue typing)
-    //         quillRef.current.getEditor().setSelection(image.range.index + 1);
-    //     }
-
-    //     // Submit the post...
-    // };
-
 
     const modules = {
     toolbar: {

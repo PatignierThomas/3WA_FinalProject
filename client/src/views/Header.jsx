@@ -43,7 +43,7 @@ function Header() {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <ul className={isMenuOpen ? 'open' : ''}>
-                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/">Accueil</Link></li>
                     {user.role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
                     {!isLogged ? <li><Link to="/inscription">Crée un compte</Link></li> : null} 
                     {isLogged ? 

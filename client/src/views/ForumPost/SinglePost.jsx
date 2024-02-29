@@ -8,6 +8,7 @@ import slugify from 'slugify'
 import { fetchPost } from '../../store/slices/post.js'
 import { fetchReply } from '../../store/slices/reply.js'
 import TextEditor from './TextEditor.jsx'
+import PostContent from './PostContent.jsx'
 
 function SinglePost() {
     const dispatch = useDispatch()
@@ -24,7 +25,6 @@ function SinglePost() {
     
     const quillRef = useRef();
     
-    console.log(user)
     useEffect(() => {
         dispatch(fetchPost(postId))
         dispatch(fetchReply(postId))
@@ -32,10 +32,7 @@ function SinglePost() {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-
         const url = await submitPost();
-
-        console.log(url)
 
         if (!editingReply) {
             const res = await fetch('http://localhost:9001/api/v1/reply/create', {
@@ -230,10 +227,6 @@ function SinglePost() {
         }
         return url
     };
-    // const [value, setValue] = useState('');
-    
-    // data received with React-quill will be writen in a Delta format, stringified into a JSON object, 
-    // saved in DB, and parsed back to a Delta format when retrieved from DB
     
     return (
         <main>
@@ -258,16 +251,7 @@ function SinglePost() {
                 <button onClick={handleDeletePost}>Delete</button>
             )}
             {!loading && posts.length > 0 && (
-                <article>
-                    <h1>{posts[0].title}</h1>
-                    <p>{posts[0].username}</p>
-                    {posts[0].src === null ? 
-                    <img src={`http://localhost:9001/public/assets/img/avatar/default.png`} alt={`Avatar de ${posts[0].username}`} /> 
-                    : <img src={posts[0].src} alt={`Avatar de ${posts[0].username}`} />}
-                    <p>{posts[0].creation_date}</p>
-                    {posts[0].last_update && <p>Modifié le {posts[0].last_update}</p>}
-                    <div dangerouslySetInnerHTML={{ __html: posts[0].content }} />
-                </article>
+                <PostContent post={posts[0]} />
             )}
             {(user.role === "admin" || user.role === "moderator" ? replies : replies.filter(reply => reply.status === "ok")).map((reply) => {
                 return (

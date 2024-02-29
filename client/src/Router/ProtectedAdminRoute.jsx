@@ -24,7 +24,7 @@ function ProtectedAdminRoute({ child, redirectPath }) {
             }
         }
          checkAuth();
-    }, [location]);
+    }, []);
 
     if (isAuthenticated) return child;
 }

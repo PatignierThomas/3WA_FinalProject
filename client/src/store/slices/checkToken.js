@@ -31,10 +31,14 @@ const checkTokenSlice = createSlice({
                 state.error = null;
             })
             .addCase(checkToken.fulfilled, (state, action) => {
-                state.data = action.payload.data;
-                state.message = action.payload.message;
+                if (action.payload.data) {
+                    state.data = action.payload.data;
+                    state.message = action.payload.message;
+                } else {
+                    state.data = {};
+                    state.message = action.payload.message;
+                }
                 state.loading = false;
-                state.isLogged = true;
             })
             .addCase(checkToken.rejected, (state, action) => {
                 state.loading = false;

@@ -6,7 +6,7 @@ import { fetchSection } from '../../store/slices/section.js'
 import { mostRecentPost } from '../../store/slices/post.js'
 
 function GameForum() {
-    const matchPublic = useMatch('/open/main/:game/:gameId');
+    const matchPublic = useMatch('/public/theme/:game/:gameId');
     const isPublicRoute = matchPublic != null;
     const dispatch = useDispatch();
     const { section } = useSelector(state => state.section);
@@ -36,14 +36,14 @@ function GameForum() {
             <div key={section.id}>
                 {(!isPublicRoute && section.game_section_id === Number(gameId)) ? 
                 <>
-                    <Link to={`/section/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link> 
+                    <Link to={`/categorie/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link> 
                     <p>Posts: {section.post_count}</p>
                     {recentPost && <p>Latest Post: {recentPost.title}</p>}
                     {recentPost && <p>Author: {recentPost.username}</p>}
                 </>
                 : section.game_section_id === Number(gameId) && 
                 <>
-                    <Link to={`/open/sec/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
+                    <Link to={`/public/categorie/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
                     <p>Posts: {section.post_count}</p>
                     {recentPost && <p>Latest Post: {recentPost.title} </p>}
                     {recentPost && <p>Author: {recentPost.username} </p>}

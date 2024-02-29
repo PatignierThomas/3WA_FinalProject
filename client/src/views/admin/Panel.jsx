@@ -4,14 +4,18 @@ import { useState } from 'react'
 import DeleteGame from './ForumData/Game/DeleteGame'
 import DeleteSection from './ForumData/Section/DeleteSection'
 import UpdateSection from './ForumData/Section/UpdateSection'
+import CreateGame from './ForumData/Game/CreateGame'
+import UpdateGame from './ForumData/Game/UpdateGame'
+import CreateSection from './ForumData/Section/CreateSection'
 
 
 function Panel() {
+    
+    const [searchTerm, setSearchTerm] = useState('');
+    const [allUsers, setAllusers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
     const [data, setData] = useState(null)
-    const [nonBannedUsers, setNonBannedUsers] = useState([])
-    const [bannedUsers, setBannedUsers] = useState([])
-    const [selectedUsers, setSelectedUsers] = useState([]);
-
+    
     const itemsPerPage = 5; 
 
     useEffect(() => {
@@ -42,10 +46,6 @@ function Panel() {
 
     // Pagination and search
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [allUsers, setAllusers] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
-
     const filteredUsers = allUsers.filter((user) =>
         user.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -69,7 +69,6 @@ function Panel() {
 
     const numberOfPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
-    // TODO: add each component of the CRUD instead of the links
     return (
         <>
             <h1>Panel</h1>
@@ -83,12 +82,12 @@ function Panel() {
                 )
             }
             
-            <div><Link to="/admin/create-game">Créer un jeu</Link></div>
-            <div><Link to="/admin/update-game">Modifier un jeu</Link></div>
+            <CreateGame />
+            <UpdateGame />
             <DeleteGame />
             
             <br></br>
-            <div><Link to="/admin/create-section">Créer une catégorie</Link></div>
+            <CreateSection />
             <UpdateSection />
             <DeleteSection />
 
@@ -122,7 +121,7 @@ function Panel() {
                                 <td>{user.role_id}</td>
                                 <td>{user.account_status}</td>
                                 <td>
-                                    <Link to={`/admin/update-user/${user.id}`}>Modifier</Link>
+                                    <Link to={`/admin/modifier-utilisateur/${user.id}`}>Modifier</Link>
                                 </td>
                             </tr>
                         ))}

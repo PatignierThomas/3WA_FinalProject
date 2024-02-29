@@ -1,6 +1,6 @@
 import express from 'express';
 import { login, register, logout, checkToken } from "../controllers/auth.js";
-import auth from "../middlewares/auth.js";
+import tokenChecker from "../middlewares/checkAuth.js";
 
 const authRouter = express.Router();
 
@@ -10,6 +10,6 @@ authRouter.post("/register", register);
 
 authRouter.get("/logout", logout);
 
-authRouter.get("/check-token", auth, checkToken);
+authRouter.get("/check-token", tokenChecker, checkToken);
 
 export default authRouter;

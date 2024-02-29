@@ -31,23 +31,10 @@ function Register() {
             return;
         }
 
-        if (userInfo.password.length < 8) {
-            setError("Password must be at least 8 characters long");
-            return;
-        }
-        
-        if (!/\d/.test(userInfo.password)) {
-            setError("Password must contain at least one number");
-            return;
-        }
-        
-        if (!/[A-Z]/.test(userInfo.password)) {
-            setError("Password must contain at least one uppercase letter");
-            return;
-        }
-        
-        if (!/[!@#$%^&*]/.test(userInfo.password)) {
-            setError("Password must contain at least one symbol (e.g. !@#$%^&*)");
+        const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/
+
+        if (!passwordPattern.test(userInfo.password)) {
+            setError("Password must be at least 8 characters long, contain at least one number, one lowercase letter, one uppercase letter, and one symbol (e.g. !@#$%^&*)");
             return;
         }
 
@@ -75,7 +62,7 @@ function Register() {
                 navigate("/connexion");
             } else {
                 const data = await response.json();
-                setError(data.errors);
+                setError(data.errorMessage);
             }
         } catch (error) {
             setError("An error occurred while registering");
@@ -93,7 +80,7 @@ function Register() {
             />
             <label htmlFor="email">Email :</label>
             <input 
-                type="mail" 
+                type="email" 
                 name="email" 
                 id="email" 
                 onChange={handleChange}

@@ -14,23 +14,6 @@ function App() {
 
     useEffect(() => {
         dispatch(checkToken());
-        // const checkUser = async () => {
-        //     const res = await fetch('http://localhost:9001/api/v1/auth/check-token', {
-        //         method: 'GET',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         credentials: 'include'
-        //     })
-        //     const result = await res.json();
-        //     if (result.error) return
-        //     console.log(result)
-        //     if (res.ok) {
-        //         console.log("I checked the token")
-        //         dispatch(login(result.data));
-        //     }
-        // }
-        // checkUser();
     }
     ,[userType])
 

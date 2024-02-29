@@ -27,8 +27,6 @@ function UpdateGame() {
         const visibility = selectedGame.visibility
         const description = selectedGame.description
 
-        console.log(gameName, gameAge, gameId)
-
         const res = await fetch(`http://localhost:9001/api/v1/admin/updateGame/${gameId}`, {
             method: 'PATCH',
             headers: {
@@ -38,7 +36,8 @@ function UpdateGame() {
             body: JSON.stringify({ gameName, gameAge, visibility, description})
         })
         if (res.ok) {
-            console.log('Jeu modifié')
+            const data = await res.json()
+            console.log(data)
         }
     }
 

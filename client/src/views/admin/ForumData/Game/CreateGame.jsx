@@ -42,7 +42,6 @@ function CreateGame() {
         }
     }
 
-    console.log(error)
     return (
         <main>
             <form onSubmit={handleSubmit}>

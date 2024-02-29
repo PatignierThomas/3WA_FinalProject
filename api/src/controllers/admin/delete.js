@@ -5,7 +5,7 @@ import customSuccess from '../../utils/successRes.js';
 export const deleteGame = async (req, res, next) => {
     try {
         const query = "DELETE FROM game_section WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.gameID]);
+        const data = await Query.runWithParams(query, [req.params.gameID]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "Le jeu n'existe pas");

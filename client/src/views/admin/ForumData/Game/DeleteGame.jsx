@@ -14,14 +14,13 @@ function DeleteGame() {
 
     const handleDelete = async (e) => {
         e.preventDefault()
-        const gameId = gameIdRef.current.value
-        const res = await fetch(`http://localhost:9001/api/v1/admin/deleteGame/${gameId}`, {
+        const gameID = gameIdRef.current.value
+        const res = await fetch(`http://localhost:9001/api/v1/admin/deleteGame/${gameID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ gameId })
         })
         if (res.ok) {
             console.log('Jeu supprimé')

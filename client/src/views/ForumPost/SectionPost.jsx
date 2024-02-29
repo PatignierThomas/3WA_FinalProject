@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fetchPostsBySection } from '../../store/slices/post.js'
 
 function SectionPost() {
-    const matchPublic = useMatch('/open/sec/:section/:sectionId');
+    const matchPublic = useMatch('/public/categorie/:section/:sectionId');
     const isPublicRoute = matchPublic != null;
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -37,11 +37,6 @@ function SectionPost() {
         }
     };
 
-    // format the title to be used as a slug
-    // function createSlug(title) {
-    //     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    // }
-
     return (
     <main>
         <article className="intro">
@@ -60,14 +55,14 @@ function SectionPost() {
             <div key={post.id}>
                 {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
                 <>
-                    <Link to={`/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link> 
+                    <Link to={`/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link> 
                     <p>Views: {post.views}</p>
                     <p>Replies: {post.replies}</p>
                 </>
                 : 
                 post.sub_forum_id === Number(sectionId) &&
                 <>
-                    <Link to={`/open/post/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
+                    <Link to={`/public/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
                     <p>Views: {post.views}</p>
                     <p>Replies: {post.replies}</p>
                 </>

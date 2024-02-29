@@ -1,9 +1,9 @@
 import Query from '../../model/Query.js';
-import { letterToIDRoleSwitch, IDToLetterRoleSwitch } from '../../utils/roleSwitch.js';
+import { letterToIDRoleSwitch } from '../../utils/roleSwitch.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res, next) => {
     try {
         const query = "SELECT * FROM users";
         const data = await Query.run(query);
@@ -15,15 +15,20 @@ export const getAllUsers = async (req, res) => {
     }
 }
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req, res, next) => {
     try {
-        const query = "SELECT username, email, role_id AS role, account_status FROM users WHERE id = ?";
+        const query = `
+            SELECT users.username, users.email, users.account_status, role.label AS role
+            FROM users 
+            JOIN role ON users.role_id = role.id
+            WHERE users.id = ?`;
+            console.log(query, req.params.userID)
         const [data] = await Query.runWithParams(query, [req.params.userID]);
         if (!data) {
             const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");
             return next(customError);
         }
-        data.role = IDToLetterRoleSwitch(data.role);
+        console.log(data);
         res.customSuccess(200, "Utilisateur modifié", data);
     }
     catch (error) {
@@ -32,7 +37,7 @@ export const getUserById = async (req, res) => {
     }
 }
 
-export const changeUserInfo = async (req, res) => {
+export const changeUserInfo = async (req, res, next) => {
     try {
         const {username, email, role, account_status} = req.body;
 

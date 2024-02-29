@@ -10,8 +10,14 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.user = action.payload;
-            state.isLogged = true;
+            if (Object.keys(action.payload).length !== 0) {
+                state.user = action.payload;
+                state.isLogged = true;
+                return;
+            } else {
+                state.user = {};
+                state.isLogged = false;
+            }
         },
         logout: (state) => {
             state.user = {};

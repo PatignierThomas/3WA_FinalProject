@@ -110,7 +110,6 @@ export const replyByPostId = async (req, res, next) => {
         }
 
         query += `ORDER BY post_reply.reply_date ASC`;
-        console.log(query);
         const data = await Query.runWithParams(query, [req.params.postID])
         data.map((reply) => {
             const reply_date = new Date(reply.reply_date);
