@@ -8,6 +8,7 @@ import Login from "../views/Auth/Login.jsx"
 import Register from "../views/Auth/Register.jsx"
 import Panel from "../views/admin/Panel.jsx"
 import ProtectedRoute from "./ProtectedRoute.jsx"
+import ProtectedRouteByAge from "./ProtectedRouteByAge.jsx"
 import ProtectedAdminRoute from "./ProtectedAdminRoute.jsx"
 import CreateGame from "../views/admin/ForumData/Game/CreateGame.jsx"
 import UpdateGame from "../views/admin/ForumData/Game/UpdateGame.jsx"
@@ -37,12 +38,12 @@ function Router() {
             <Route path="CGU" element={<TermsOfUse />} />
             <Route path="confidentialite" element={<PrivacyPolicy />} />
 
-            <Route path="jeu/:game/:gameId" element={<ProtectedRoute redirectPath="/connexion" child={<GameForum />}/> } />
-            <Route path="categorie/:section/:sectionId" element={<ProtectedRoute redirectPath="/connexion"child={<SectionPost />}/> }/>
-            <Route path="poste/:post/:postId" element={<ProtectedRoute redirectPath="/connexion" child={<SinglePost />}/> } />
+            <Route path="jeu/:game/:gameId" element={<ProtectedRouteByAge redirectPath="/" child={<GameForum />}/> } />
+            <Route path="categorie/:section/:sectionId" element={<ProtectedRouteByAge redirectPath="/" child={<SectionPost />}/> }/>
+            <Route path="poste/:post/:postId" element={<ProtectedRouteByAge redirectPath="/" child={<SinglePost />}/> } />
 
-            <Route path="new/:sectionId/create-post" element={<ProtectedRoute redirectPath="/connexion" child={<CreatePost />}/> } />
-            <Route path="edit/:postId/:postTitle" element={<ProtectedRoute redirectPath="/connexion" child={<UpdatePost />}/> } />
+            <Route path="new/:sectionId/create-post" element={<ProtectedRouteByAge redirectPath="/" child={<CreatePost />}/> } />
+            <Route path="edit/:postId/:postTitle" element={<ProtectedRouteByAge redirectPath="/" child={<UpdatePost />}/> } />
 
             <Route path="profil" element={<ProtectedRoute redirectPath="/connexion" child={<Profil />} />} />
 

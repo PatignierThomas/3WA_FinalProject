@@ -1,5 +1,5 @@
 import express from 'express';
-import { getStats, allSubject } from "../controllers/admin/data.js";
+import { getStats, allSubject } from "../controllers/admin/select.js";
 import { getAllUsers, getUserById, changeUserInfo } from "../controllers/admin/user.js";
 import { createGame, createSection } from "../controllers/admin/create.js";
 import { updateGame, updateSection } from "../controllers/admin/update.js";

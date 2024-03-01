@@ -115,7 +115,9 @@ export const postById = async (req, res, next) => {
                 commonQuery += `
                 WHERE post.id = ? AND post.status = 'ok'`
                 break;
-            case null || undefined:
+            case null:
+                // fall through
+            case undefined:
                 commonQuery += `
                 JOIN sub_forum ON post.sub_forum_id = sub_forum.id
                 JOIN game_section ON sub_forum.game_section_id = game_section.id

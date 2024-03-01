@@ -11,7 +11,6 @@ function Home() {
     const [age, setAge] = useState(0)
     
     // calculer l'age via la date de naissance de user 
-
     useEffect(() => {
         const today = new Date()
         const birthdate = new Date(user.birthdate)
@@ -22,10 +21,6 @@ function Home() {
         }
         setAge(age)
     }, [user.birthdate])
-
-    console.log(user)
-    console.log(age)
-    // redirect si lien coller dans l'url
     
     useEffect(() => {
         dispatch(fetchGames())

@@ -17,6 +17,7 @@ function ProtectedRoute({ child, redirectPath }) {
             } else {
                 navigate(redirectPath);
             }
+            
         }
          checkAuth();
     }, []);

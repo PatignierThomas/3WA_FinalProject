@@ -7,6 +7,7 @@ import { fetchPost } from '../../store/slices/post.js';
 import { useSelector } from 'react-redux';
 
 import TextEditor from './TextEditor.jsx'
+import useSubmitPost from '../../hooks/useSubmitPost.js';
 
 function UpdatePost() {
     const param = useParams()
@@ -35,7 +36,7 @@ function UpdatePost() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const url = await submitPost(param.postId)
+        const url = await useSubmitPost(images, param.postId, quillRef);
 
         const res = await fetch(`http://localhost:9001/api/v1/post/editPost/${param.postId}`, {
             method: 'PATCH',
@@ -50,36 +51,6 @@ function UpdatePost() {
             console.log('Post édité')
         }
     }
-
-    const submitPost = async (postId) => {
-        // Upload all images
-        const url = []
-        for (const image of images) {
-            const formData = new FormData();
-            formData.append('postId', postId);
-            formData.append('image', image.file);
-
-            const res = await fetch('http://localhost:9001/api/v1/file/upload/image', {
-                method: 'POST',
-                body: formData, // update with your image data
-                credentials: 'include'
-            });
-            const result = await res.json();
-            if(res.ok) {
-                url.push(result.data.url)
-            }
-
-            // Remove placeholder image
-            quillRef.current.getEditor().deleteText(image.range.index, 1);
-
-            // Insert uploaded image
-            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', result.data.url);
-
-            // Move cursor to right side of image (easier to continue typing)
-            quillRef.current.getEditor().setSelection(image.range.index + 1);
-        }
-        return url
-    };
 
     return (
     <form onSubmit={handleSubmit}>

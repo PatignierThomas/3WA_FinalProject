@@ -7,6 +7,7 @@ import slugify from 'slugify'
 
 import { fetchPost } from '../../store/slices/post.js'
 import { fetchReply } from '../../store/slices/reply.js'
+import useSubmitPost from '../../hooks/useSubmitPost.js'
 import TextEditor from './TextEditor.jsx'
 import PostContent from './PostContent.jsx'
 
@@ -32,7 +33,7 @@ function SinglePost() {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const url = await submitPost();
+        const url = await useSubmitPost(images, postId, quillRef)
 
         if (!editingReply) {
             const res = await fetch('http://localhost:9001/api/v1/reply/create', {
@@ -139,7 +140,6 @@ function SinglePost() {
         }
     }
 
-    
     const handleDeleteReply = async (replyId) => {
         const res = await fetch(`http://localhost:9001/api/v1/admin/deleteReply/${replyId}`,{
             method: 'DELETE',
@@ -196,37 +196,6 @@ function SinglePost() {
         setEditingReply(null)
         setValue('')
     }
-
-    const submitPost = async () => {
-        // Upload all images
-        const url = []
-        for (const image of images) {
-            const formData = new FormData();
-            formData.append('postId', postId);
-            formData.append('image', image.file);
-
-            const res = await fetch('http://localhost:9001/api/v1/file/upload/image', {
-                method: 'POST',
-                body: formData, // update with your image data
-                credentials: 'include'
-            });
-            const result = await res.json();
-            if(res.ok) {
-                url.push(result.data.url)
-            }
-            else console.log(data.error)
-
-            // Remove placeholder image
-            quillRef.current.getEditor().deleteText(image.range.index, 1);
-
-            // Insert uploaded image
-            quillRef.current.getEditor().insertEmbed(image.range.index, 'image', result.data.url);
-
-            // Move cursor to right side of image (easier to continue typing)
-            quillRef.current.getEditor().setSelection(image.range.index + 1);
-        }
-        return url
-    };
     
     return (
         <main>
