@@ -21,7 +21,6 @@ function Profil() {
             body: JSON.stringify(userInfo)
         })
         if (res.ok) {
-            // {error: "Mot de passe incorrect"}
             const data = await res.json()
         }
         else {
@@ -54,7 +53,6 @@ function Profil() {
         })
         if (res.ok) {
             const data = await res.json()
-            console.log(data)
         }
     }
 

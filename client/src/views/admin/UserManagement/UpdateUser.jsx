@@ -55,11 +55,11 @@ function UpdateUser() {
     <>
         <form onSubmit={changeUserInfo}>
             {message && <p>{message}</p>}
-            <label>Username</label>
+            <label htmlFor="username">Username</label>
             <input type="text" name="username" id="username" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>
-            <label>Email</label>
+            <label htmlFor="email">Email</label>
             <input type="email" name="email" id="email" value={user.email} onChange={e => setUser({...user, email: e.target.value})}/>
-            <label>Role</label>
+            <label htmlFor="role">Role</label>
             <select name="role" id="role" value={user.role} onChange={e => setUser({...user, role: e.target.value})}>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>

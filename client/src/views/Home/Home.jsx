@@ -30,7 +30,7 @@ function Home() {
         <main>
             <section className='intro'>
                 <h1>Home</h1>
-                <p>Welcome to the Forum</p>
+                <p>Bienvenue sur le Forum de Ctrl Freak Studio ! Ici vous pouvez communiquer avec notre communauté de joueurs et retrouver les dernières informations concernant nos jeux.</p>
             </section>
             <section className='public'>
             <h2>Public Games</h2>
@@ -38,7 +38,7 @@ function Home() {
                 .filter((data) => data.visibility === 'Public')
                 .map((data) => (
                 <article key={data.id}>
-                    <Link to={`/public/theme/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                    <Link to={`/commun/theme/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
                     <p>{data.description}</p>
                 </article>
                 ))}
@@ -50,7 +50,8 @@ function Home() {
                 .filter((data) => data.visibility === 'Private' && age >= data.minimal_age)
                 .map((data) => (
                     <article key={data.id}>
-                    <Link to={`/jeu/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                        <Link to={`/jeu/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                        <p>{data.description}</p>
                     </article>
                 ))}
             </section>

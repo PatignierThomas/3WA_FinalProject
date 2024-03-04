@@ -16,6 +16,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const datas = { 
                 email       : emailRef.current.value, 
@@ -48,7 +49,7 @@ function Login() {
             {error && <p>{error}</p>}
             <label htmlFor="email">Email :</label>
             <input ref={emailRef} type="email" name="email" id="email" />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mot de passe (au moins 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 symbole): </label>
             <input ref={passwordRef} type="password" name="password" id="password" />
             <label htmlFor="keepLoggedIn">Rester connecté</label>
             <input ref={keepLoggedInRef} type="checkbox" name="keepLoggedIn" id="keepLoggedIn" />

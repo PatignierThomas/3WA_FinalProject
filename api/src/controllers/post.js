@@ -1,10 +1,11 @@
 import Query from "../model/Query.js";
-import path, {dirname} from "path";
+import path, {dirname, format} from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
+import { formatDate } from "../utils/date.js";
 
 // get all the posts of one section, filtered by user role and sorted by the most recent activity or creation date
 export const postsBySection = async (req, res, next) => {
@@ -62,33 +63,36 @@ export const mostRecentPostOfCategory = async (req, res, next) => {
             pr.reply_date, 
             sub_forum.game_section_id, 
             sub_forum.id subID, 
-            users.username
-    
-        FROM post_reply pr
-        JOIN post p ON p.id = pr.post_id
+            users.username,
+            avatar.src
+        FROM post p
+        LEFT JOIN post_reply pr ON p.id = pr.post_id
         JOIN sub_forum on sub_forum.id = p.sub_forum_id
         JOIN users ON p.user_id = users.id
+        LEFT JOIN avatar ON avatar.user_id = users.id
         JOIN (
-            SELECT post_id, MAX(reply_date) as max_reply_date
-            FROM post_reply
-            WHERE status = 'ok'
-            GROUP BY post_id
-        ) pr_max ON pr.post_id = pr_max.post_id AND pr.reply_date = pr_max.max_reply_date
-        WHERE sub_forum.game_section_id = ?
-        ORDER BY pr.reply_date DESC;`;
-    
-        const data = await Query.runWithParams(query, [req.params.gameID])
-    
-        // filter the first post of each category
-        const filteredData = data.filter((post, index, self) => {
-            return index === self.findIndex((p) => (
-                p.subID === post.subID
-            ))
-        })
-    
-        res.customSuccess(200, "Posts", filteredData);
+            SELECT sub_forum.id as subID, MAX(IFNULL(pr.reply_date, p.creation_date)) as max_date
+            FROM post p
+            LEFT JOIN post_reply pr ON p.id = pr.post_id
+            JOIN sub_forum on sub_forum.id = p.sub_forum_id
+            WHERE sub_forum.game_section_id = ? AND (pr.status = 'ok' OR pr.status IS NULL)
+            GROUP BY sub_forum.id
+        ) sub_max ON sub_forum.id = sub_max.subID AND IFNULL(pr.reply_date, p.creation_date) = sub_max.max_date
+        ORDER BY IFNULL(pr.reply_date, p.creation_date) DESC;`;
+
+        const data = await Query.runWithParams(query, [req.params.gameID]);
+
+        for (const post of data) {
+            post.creation_date = formatDate(post.creation_date);
+            if (post.reply_date) {
+                post.reply_date = formatDate(post.reply_date);
+            }
+        }
+
+        res.customSuccess(200, "Posts", data);
     }
     catch (error) {
+        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }
@@ -125,7 +129,7 @@ export const postById = async (req, res, next) => {
                 break;
             }
 
-        const data = await Query.runWithParams(commonQuery, [req.params.postID])
+        const data = await Query.runWithParams(commonQuery, [req.params.postID]);
 
         if (data.length === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "Le post n'existe pas");

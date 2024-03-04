@@ -3,10 +3,10 @@ import slugify from 'slugify'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { fetchPostsBySection } from '../../store/slices/post.js'
+import { fetchPostsBySection } from '../../../store/slices/post.js'
 
 function SectionPost() {
-    const matchPublic = useMatch('/public/categorie/:section/:sectionId');
+    const matchPublic = useMatch('/commun/categorie/:section/:sectionId');
     const isPublicRoute = matchPublic != null;
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -62,7 +62,7 @@ function SectionPost() {
                 : 
                 post.sub_forum_id === Number(sectionId) &&
                 <>
-                    <Link to={`/public/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
+                    <Link to={`/commun/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
                     <p>Views: {post.views}</p>
                     <p>Replies: {post.replies}</p>
                 </>

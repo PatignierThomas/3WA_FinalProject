@@ -14,7 +14,7 @@ body {
 }
 
 header {
-  background-color: #363636;
+  background-color: #202020;
 }
 header nav {
   display: flex;
@@ -28,8 +28,8 @@ header nav a {
   font-size: 2.5rem;
   text-decoration: none;
 }
-header nav button {
-  background-color: #363636;
+header nav .cta-menu {
+  background-color: #202020;
   color: white;
   border: none;
   text-align: right;
@@ -51,7 +51,7 @@ header nav ul li {
   text-align: center;
   margin: 1rem;
   padding: 1rem;
-  background-color: #363636;
+  background-color: #202020;
 }
 header nav ul li:hover {
   background-color: #e5e5e5;
@@ -59,9 +59,20 @@ header nav ul li:hover {
 header nav ul li:hover a {
   color: black;
 }
+header nav ul li:hover button {
+  color: black;
+  background-color: #e5e5e5;
+}
 header nav ul li a {
   color: white;
   text-decoration: none;
+}
+header nav ul li button {
+  color: white;
+  font-size: 2.5rem;
+  padding: 1rem;
+  background-color: #202020;
+  border: none;
 }
 header nav ul.open {
   display: flex;
@@ -81,10 +92,11 @@ header nav ul.open {
 }
 
 main {
-  background-color: #e5e5e5;
+  background-color: #363636;
   color: #363636;
   padding: 1rem;
   min-height: 100vh;
+  background-image: url("../../img/1700.jpg");
 }
 main .intro {
   text-align: center;
@@ -92,29 +104,147 @@ main .intro {
   font-size: 2.5rem;
   background-color: #363636;
   color: #e5e5e5;
+  margin: 1rem 0;
 }
 main .public, main .private {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background-color: #363636;
   padding: 1rem;
 }
 main .public h2, main .private h2 {
   font-size: 2.5rem;
   width: 100%;
   text-align: center;
+  color: white;
 }
 main .public article, main .private article {
   background-color: #363636;
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #5e5e5e;
+  border-left: 0.5rem solid #920505;
+  box-shadow: 0 0 10px 0 #5e5e5e;
 }
 main .public article a, main .private article a {
-  color: #e5e5e5;
+  color: white;
   text-decoration: none;
+  font-size: 3rem;
 }
 main .public article p, main .private article p {
   color: #e5e5e5;
+}
+main .cat-list {
+  background-color: #363636;
+}
+main .cat-list article {
+  display: flex;
+  align-items: center;
+}
+main .cat-list article .cat-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+}
+main .cat-list article .cat-box a {
+  color: white;
+  text-decoration: none;
+  font-size: 2.5rem;
+  padding: 1rem;
+}
+main .cat-list article .cat-box p {
+  color: #e5e5e5;
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+main .cat-list article .post-box {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  width: 50%;
+}
+main .cat-list article .post-box a {
+  color: white;
+  text-decoration: none;
+  font-size: 2.5rem;
+  padding: 1rem;
+}
+main .cat-list article .post-box .recent-info {
+  display: flex;
+  align-items: center;
+}
+main .cat-list article .post-box .recent-info p {
+  color: #e5e5e5;
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+main .cat-list article .post-box .recent-info img {
+  width: 100%;
+  height: auto;
+  max-width: 30px;
+}
+main .post {
+  background-color: #363636;
+  padding: 1rem;
+}
+main .post h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  color: white;
+}
+main .post .post-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+main .post .post-info p {
+  font-size: 1.6rem;
+  color: white;
+}
+main .post .post-info .content {
+  width: 100%;
+  padding: 1rem;
+  font-size: 2.5rem;
+  color: white;
+}
+main .post .post-info .update {
+  text-align: right;
+}
+main .post .post-info img {
+  width: 100%;
+  height: auto;
+  max-width: 30px;
+}
+main .post .replies {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+main .post .replies .reply-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+main .post .replies .reply-info p {
+  font-size: 1.6rem;
+  color: #e5e5e5;
+}
+main .post .replies .reply-info img {
+  width: 100%;
+  height: auto;
+  max-width: 30px;
+}
+main .post .replies .reply-content {
+  padding: 1rem;
+  font-size: 2.5rem;
+  color: white;
 }
 main form {
   display: flex;
@@ -163,6 +293,56 @@ main form .error {
   color: red;
   font-size: 2.5rem;
 }
+main .CGU {
+  background-color: #363636;
+  color: white;
+  padding: 1rem;
+}
+main .CGU h2 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+main .CGU dt {
+  font-size: 2rem;
+  margin: 1rem;
+}
+main .CGU p:not(dd > p) {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .CGU dd {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .privacy {
+  background-color: #363636;
+  color: white;
+  padding: 1rem;
+}
+main .privacy h2 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+main .privacy p:not(dl > p) {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .privacy dl {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .privacy dl ul {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .privacy dl ul li {
+  font-size: 1.6rem;
+  margin: 1rem;
+}
+main .privacy dt {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
 
 footer {
   background-color: #363636;
@@ -170,6 +350,16 @@ footer {
   text-align: center;
   padding: 1rem;
   font-size: 1.6rem;
+}
+footer .Link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+footer .Link a {
+  color: white;
+  text-decoration: none;
+  padding: 1rem 1rem 0 1rem;
 }
 
 .password-match {

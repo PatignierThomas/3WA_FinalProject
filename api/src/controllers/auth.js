@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
-import { getAge } from "../utils/date.js";
 
 const dotenv = process.env;
 
@@ -17,12 +16,14 @@ export const register = async (req, res, next) => {
             const customError = new CustomError(403, "Missing fields", "Veuillez remplir tous les champs");
             return next(customError);
         }
-        if (username.length < 3 || username.length > 20) {
-            const customError = new CustomError(403, "Invalid username", "Le nom d'utilisateur doit contenir entre 3 et 20 caractères");
+        if (username.length < 3 || username.length > 50) {
+            const customError = new CustomError(403, "Invalid username", "Le nom d'utilisateur doit contenir entre 3 et 50 caractères");
             return next(customError);
         }
-        if (password.length < 8 || !/\d/.test(password) || !/[A-Z]/.test(password) || !/[!@#$%^&*]/.test(password) ) return res.status(403).json({error: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial"});
-    
+        if (!/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(password) ) {
+            const customError = new CustomError(403, "Invalid password", "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial");
+            return next(customError);
+        }    
         const checkUser = "SELECT * FROM users WHERE username = ? OR email = ?";
         const [data] = await Query.runWithParams(checkUser, [username, email]);
         if (data) {
@@ -53,17 +54,15 @@ export const login = async (req, res, next) => {
         // verify if email is actually a mail 
         const emailRegex = /\S+@\S+\.\S+/;
         if (!emailRegex.test(email)) {
-            console.log('email invalide')
-            const customError = new CustomError(403, "Invalid email", "Email invalide");
+            const customError = new CustomError(403, "Invalid email", "Veuillez entrer une adresse mail valide");
             return next(customError);
         }
 
         // and password is at least 8 characters long with at least one number, one uppercase letter and one special character
         // const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
         // if (!passwordRegex.test(password)) {
-        //     console.log('password invalide')
-        //     const customError = new CustomError(403, "Invalid password", "Mot de passe invalide");
-        //     return customError;
+        //     const customError = new CustomError(403, "Invalid password", "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial");
+        //     return next(customError);
         // }
 
         const query = `
@@ -84,8 +83,6 @@ export const login = async (req, res, next) => {
             return next(customError);
         }
 
-        // data.role_id = IDToLetterRoleSwitch(data.role_id);
-
         // store birthdate instead of age in the token
         const TOKEN = jwt.sign(
             // { id: data.id, username: data.username, role: data.role_id, age, keepLoggedIn, email: data.email}
@@ -105,7 +102,6 @@ export const login = async (req, res, next) => {
         res.customSuccess(200, "Connexion réussie", {id: data.id, username: data.username, role: data.label, birthdate: data.birthdate, email: data.email});
         }
     catch (error) {
-        console.log(error)
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return customError;
     }

@@ -31,13 +31,6 @@ function Register() {
             return;
         }
 
-        const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/
-
-        if (!passwordPattern.test(userInfo.password)) {
-            setError("Password must be at least 8 characters long, contain at least one number, one lowercase letter, one uppercase letter, and one symbol (e.g. !@#$%^&*)");
-            return;
-        }
-
         //check if the user is over 13
         const birthdate = new Date(userInfo.birthdate);
         const now = new Date();

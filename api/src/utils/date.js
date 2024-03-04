@@ -7,3 +7,8 @@ export const getAge = (birthdate) => {
     }
     return age;
 }
+
+export const formatDate = (date) => {
+    const options = { year: 'numeric', month: '2-digit', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+    return new Date(date).toLocaleDateString('fr-FR', options);
+}
