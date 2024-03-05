@@ -54,7 +54,7 @@ export const subjectByGameId = async (req, res, next) => {
 // get the number of posts in a category
 export const numberOfPostByCategory = async (req, res, next) => {
     try {
-        const query = "SELECT COUNT(*) as total FROM post WHERE sub_forum_id = ?";
+        const query = "SELECT COUNT(id) as total FROM post WHERE sub_forum_id = ?";
         const data = await Query.runWithParams(query, [req.params.sectionID]);
         res.customSuccess(200, "Nombre de posts", data);
     }

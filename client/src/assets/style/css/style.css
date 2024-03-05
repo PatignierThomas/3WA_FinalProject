@@ -219,31 +219,89 @@ main .post .post-info img {
   height: auto;
   max-width: 30px;
 }
-main .post .replies {
+main .reply {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 1rem;
+  color: white;
+  background-color: #363636;
+  border-top: 1px solid #e5e5e5;
 }
-main .post .replies .reply-info {
+main .reply .moderation button {
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+  background-color: #363636;
+  color: #e5e5e5;
+}
+main .reply .moderation button:hover {
+  background-color: #e5e5e5;
+  color: #363636;
+}
+main .reply .reply-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+main .reply .reply-info .user-info {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+main .reply .reply-info .content {
+  width: 100%;
   padding: 1rem;
 }
-main .post .replies .reply-info p {
-  font-size: 1.6rem;
-  color: #e5e5e5;
-}
-main .post .replies .reply-info img {
+main .reply .reply-info img {
   width: 100%;
   height: auto;
   max-width: 30px;
 }
-main .post .replies .reply-content {
+main .reply .reply-info .edit-info {
+  flex: 1 0 auto;
+  text-align: right;
+  font-size: 0.8em;
+  font-style: italic;
+}
+main .reply .reply-info .edit-info p {
+  margin: 0;
+}
+main .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 1rem;
-  font-size: 2.5rem;
+  background-color: #363636;
+  color: white;
+}
+main .pagination button {
+  color: white;
+  text-decoration: none;
+  padding: 1rem;
+}
+main .editor {
+  background-color: #363636;
+  color: white;
+  margin-top: 1rem;
+}
+main .editor .ql-toolbar .ql-stroke {
+  fill: none;
+  stroke: white;
+}
+main .editor .ql-toolbar .ql-fill {
+  fill: white;
+  stroke: none;
+}
+main .editor .ql-toolbar .ql-picker {
+  color: white;
+}
+main .editor .ql-toolbar .ql-picker-options {
+  background-color: #363636;
   color: white;
 }
 main form {

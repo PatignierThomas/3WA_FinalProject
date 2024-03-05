@@ -82,46 +82,64 @@ export const updateReply = async (req, res, next) => {
 // get all the replies of a post filtered by the user role and the reply status
 export const replyByPostId = async (req, res, next) => {
     try {
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 10;
+        const offset = `${(page - 1) * limit}`
         let query = `SELECT post_reply.id, post_reply.content, post_reply.reply_date, post_reply.last_update, post_reply.status, users.username, avatar.src
                        FROM post_reply 
                        JOIN users ON post_reply.user_id = users.id
                        LEFT JOIN avatar ON avatar.user_id = users.id
                        `;
+     
+        let countQuery = `SELECT COUNT(post_reply.id) as total
+        FROM post_reply
+        JOIN users ON post_reply.user_id = users.id
+        LEFT JOIN avatar ON avatar.user_id = users.id
+        `;
 
         switch (req.user?.role) {
             case "admin":
                 // fall through
             case "moderator":
-                query += `WHERE post_reply.post_id = ? `;
+                const filterAdmin = `WHERE post_reply.post_id = ? `;
+                query += filterAdmin;
+                countQuery += filterAdmin;
                 break;
             case "user":
-                query += `WHERE post_reply.post_id = ? AND post_reply.status = "ok"`;
+                const filterUser = `WHERE post_reply.post_id = ? AND post_reply.status = "ok" `;
+                query += filterUser;
+                countQuery += filterUser;
                 break;
             case null:
                 // fall through
             case undefined:
-                query += `
+                const filter = `
                 JOIN post ON post_reply.post_id = post.id
                 JOIN sub_forum ON post.sub_forum_id = sub_forum.id
                 JOIN game_section ON sub_forum.game_section_id = game_section.id
                 WHERE post_reply.post_id = ? AND post_reply.status = "ok" AND game_section.visibility = 'Public'
                 `;
+                query += filter;
+                countQuery += filter;
                 break;
         }
 
-        query += `ORDER BY post_reply.reply_date ASC`;
-        const data = await Query.runWithParams(query, [req.params.postID])
+        query += `ORDER BY post_reply.reply_date ASC LIMIT ? OFFSET ?`;
+        const data = await Query.runWithParams(query, [req.params.postID, limit, offset]);
+        const countResult = await Query.runWithParams(countQuery, [req.params.postID]);
+        const totalReplies = countResult[0].total;
         data.map((reply) => {
             const reply_date = new Date(reply.reply_date);
             reply.reply_date = reply_date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'});
-            if (reply.last_update === null) return;
+            if (reply.last_update === "Invalid Date") return;
             const last_update = new Date(reply.last_update);
             reply.last_update = last_update.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'});
         })
 
-        res.customSuccess(200, "Réponses", data);
+        res.customSuccess(200, "Réponses", {replies: data, total: totalReplies});
     }
     catch (error) {
+        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }

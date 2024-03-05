@@ -27,7 +27,6 @@ function Reply({reply, setValue, setEditingReply}) {
             credentials: 'include',
         })
         if (res.ok) {
-            console.log('Réponse supprimée')
             dispatch(fetchReply(postId))
         }
     }
@@ -41,7 +40,6 @@ function Reply({reply, setValue, setEditingReply}) {
             credentials: 'include',
         })
         if (res.ok) {
-            console.log('Réponse cachée')
             dispatch(fetchReply(postId))
         }
     }
@@ -55,7 +53,6 @@ function Reply({reply, setValue, setEditingReply}) {
             credentials: 'include',
         })
         if (res.ok) {
-            console.log('Réponse affichée')
             dispatch(fetchReply(postId))
         }
     }
@@ -66,21 +63,25 @@ function Reply({reply, setValue, setEditingReply}) {
     }
     
     return (
-        <article>
-        {((reply && user.username === reply.username) || user.role === "admin" || user.role === "moderator") && 
-            <Edit onClick={() => handleReplyEdit(reply)} />
-        }  
-        {((user.role === "admin" || user.role === "moderator") && !loading) &&
-            <Delete onClick={() => handleDeleteReply(reply.id)} />
-        }
-        {((user.role === "admin" || user.role === "moderator") && !loading) &&
-        (reply.status === "hidden" ? 
-        <Show onClick={() => handleShowReply(reply.id)} /> 
-        : <Hide onClick={() => handleHideReply(reply.id)} />
-        )}
-        <ReplyContent reply={reply} />
-    </article>
-  )
+        <article className='reply'>
+            <div className='moderation'>
+                {((reply && user.username === reply.username) || user.role === "admin" || user.role === "moderator") && 
+                    <Edit onClick={() => handleReplyEdit(reply)} />
+                }  
+                {((user.role === "admin" || user.role === "moderator") && !loading) &&
+                    <Delete onClick={() => handleDeleteReply(reply.id)} />
+                }
+                {((user.role === "admin" || user.role === "moderator") && !loading) &&
+                (reply.status === "hidden" ? 
+                <Show onClick={() => handleShowReply(reply.id)} /> 
+                : <Hide onClick={() => handleHideReply(reply.id)} />
+                )}
+            </div>
+            <div className='reply-info'>
+                <ReplyContent reply={reply} />
+            </div>
+        </article>
+    )
 }
 
 export default Reply

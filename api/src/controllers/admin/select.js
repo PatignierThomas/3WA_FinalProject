@@ -7,9 +7,9 @@ export const getStats = async (req, res) => {
     try {
         const stats = `
         SELECT 
-            (SELECT COUNT(*) FROM users) AS total_users,
-            (SELECT COUNT(*) FROM post) AS total_posts,
-            (SELECT COUNT(*) FROM post_reply) AS total_replies;
+            (SELECT COUNT(id) FROM users) AS total_users,
+            (SELECT COUNT(id) FROM post) AS total_posts,
+            (SELECT COUNT(id) FROM post_reply) AS total_replies;
         `;
         const data = await Query.run(stats);
         res.customSuccess(200, "Statistiques", data);

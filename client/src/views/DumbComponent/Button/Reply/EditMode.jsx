@@ -1,7 +1,7 @@
 import React from 'react'
 import PropType from 'prop-types'
 
-function EditMode(onClick) {
+function EditMode({onClick}) {
   return (
     <>
         <p>Mode édition</p>

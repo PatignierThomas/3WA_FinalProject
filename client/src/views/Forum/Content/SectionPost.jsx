@@ -40,8 +40,7 @@ function SectionPost() {
     return (
     <main>
         <article className="intro">
-            <h1>Section</h1>
-            <p>Section {param.section}</p>
+            <h1>{param.section.charAt(0).toUpperCase() + param.section.slice(1)}</h1>
         </article>
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
         <button onClick={handleNextPage} disabled={currentPage === numberOfPages}>Next</button>

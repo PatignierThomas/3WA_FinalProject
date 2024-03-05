@@ -1,5 +1,4 @@
 //mobile-first
-
 $color-primary: #363636;
 $color-header: #202020;
 $color-secondary: #e5e5e5;
@@ -272,40 +271,113 @@ main {
                 max-width: 30px;
             }
         }
+    }
 
-        .replies {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
+    .reply {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 1rem;
+        color: $color-text;
+        background-color: $color-primary;
+        border-top: 1px solid $color-secondary;
 
-            .reply-info {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+        .moderation {
+
+            button {
                 padding: 1rem;
-
-                p {
-                    font-size: 1.6rem;
-                    color: #e5e5e5;
-                }
-
-                img {
-                    width: 100%;
-                    height: auto;
-                    max-width: 30px;
-                }
-            }
-
-            .reply-content {
-                padding: 1rem;
+                margin: 1rem;
                 font-size: 2.5rem;
-                color: $color-text;
+                border: none;
+                background-color: #363636;
+                color: #e5e5e5;
+                
+                &:hover {
+                    background-color: $color-secondary;
+                    color: $color-primary;
+                }
             }
         }
+
+        .reply-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                width: 50%;
+            }
+
+            .content {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            img {
+                width: 100%;
+                height: auto;
+                max-width: 30px;
+            }
+            .edit-info {
+                flex: 1 0 auto;
+                text-align: right;
+                font-size: 0.8em;
+                font-style: italic;
     
+                p {
+                    margin: 0;
+                }
+            }
+        }
     }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        background-color: $color-primary;
+        color: $color-text;
+
+        button {
+            color: $color-text;
+            text-decoration: none;
+            padding: 1rem;
+        }
+    }
+
+    .editor {
+        background-color: $color-primary;
+        color: $color-text;
+        margin-top: 1rem;
+
+        .ql-toolbar .ql-stroke {
+            fill: none;
+            stroke: $color-text;
+        }
+        
+        .ql-toolbar .ql-fill {
+            fill: $color-text;
+            stroke: none;
+        }
+        
+        .ql-toolbar .ql-picker {
+            color: $color-text;
+        }
+
+        .ql-toolbar .ql-picker-options {
+            background-color: $color-primary;
+            color: $color-text;
+        }
+    }
+
+
+
 
 // End of Single Post + Reply page
 

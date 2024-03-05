@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import 'react-quill/dist/quill.snow.css'
 import slugify from 'slugify'
 
+
 import { fetchPost } from '../../../store/slices/post.js'
 import { fetchReply } from '../../../store/slices/reply.js'
 import useSubmitPost from '../../../hooks/useSubmitPost.js'
@@ -14,31 +15,37 @@ import ModerationButtons from '../ModerationButtons.jsx'
 import Edit from '../../DumbComponent/Button/Post/Edit.jsx'
 import Delete from '../../DumbComponent/Button/Post/Delete.jsx'
 import EditMode from '../../DumbComponent/Button/Reply/EditMode.jsx'
+import Pagination from '../../DumbComponent/Pagination.jsx'
 
-function SinglePost() {
+function Post() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { postId } = useParams()
-
+    
+    const [currentPage, setCurrentPage] = useState(1);
+    const replyPerPage = 3;
+    
     const { user, isLogged } = useSelector(state => state.user)
     const { posts, loading} = useSelector(state => state.post)
-    const { replies } = useSelector(state => state.reply)
+    const { replies, totalReplies } = useSelector(state => state.reply)
 
     const [images, setImages] = useState([])
     const [value, setValue] = useState('');
     const [editingReply, setEditingReply] = useState(null);
+
+
+    const numberOfPages = Math.ceil(totalReplies / replyPerPage);
     
     const quillRef = useRef();
-    
+
     useEffect(() => {
         dispatch(fetchPost(postId))
-        dispatch(fetchReply(postId))
-    }, [])
+        dispatch(fetchReply({postId, currentPage, replyPerPage}))
+    }, [currentPage, postId])
     
     const handleSubmit = async (e) => {
         e.preventDefault()
         const url = await useSubmitPost(images, postId, quillRef)
-
         if (!editingReply) {
             const res = await fetch('http://localhost:9001/api/v1/reply/create', {
                 method: 'POST',
@@ -48,9 +55,6 @@ function SinglePost() {
                 credentials: 'include',
                 body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
-            if (res.ok) {
-                console.log(quillRef.current.value)
-            }
         } 
         if (editingReply) {
             const res = await fetch(`http://localhost:9001/api/v1/data/post/editReply/${editingReply.id}`, {
@@ -61,11 +65,7 @@ function SinglePost() {
                 credentials: 'include',
                 body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
-            if (res.ok) {
-                console.log('Réponse éditée')
-            }
         }
-        
         dispatch(fetchReply(postId))
         setEditingReply(null)
         setValue('')
@@ -81,7 +81,6 @@ function SinglePost() {
             credentials: 'include',
         })
         if (res.ok) {
-            console.log("post has been deleted")
             navigate(-1);
         }
     }
@@ -92,7 +91,6 @@ function SinglePost() {
     }
     
     const cancel = () => {
-
         setEditingReply(null)
         setValue('')
     }
@@ -122,15 +120,18 @@ function SinglePost() {
                         <Reply key={reply.id} reply={reply} setValue={setValue} setEditingReply={setEditingReply}/>
                     );
                 })}
-                {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
-                <form onSubmit={handleSubmit}>
-                    {editingReply && <EditMode onClick={cancel} />}
-                    <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
-                    <button type="submit">{editingReply ? 'Modifier la réponse' : 'Répondre'}</button>
-                </form>}
             </section>
+            {replies.length !== 0 &&  
+                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} numberOfPages={numberOfPages}/>          
+            }
+            {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
+            <form onSubmit={handleSubmit} className='editor'>
+                {editingReply && <EditMode onClick={cancel} />}
+                <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
+                <button type="submit">{editingReply ? 'Modifier la réponse' : 'Répondre'}</button>
+            </form>}
         </main>
     )
 }
 
-export default SinglePost
+export default Post
