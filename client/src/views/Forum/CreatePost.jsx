@@ -31,7 +31,6 @@ function CreatePost() {
             console.log('Post crée')
         }
 
-        // Get the post ID
         const result = await res.json();
         const postId = result.data.id;
         
@@ -52,12 +51,13 @@ function CreatePost() {
     }
 
     return (
-    <form onSubmit={handleSubmit}>
-        <label>Titre</label>
-        <input ref={titleRef} type="text" name="title" id="title"/>
-        <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
-        <input type="submit" value="Créer" />
-    </form>
+        <form onSubmit={handleSubmit} className='editor'>
+            <legend>Créer un post</legend>
+            <label>Titre</label>
+            <input ref={titleRef} type="text" name="title" id="title"/>
+            <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
+            <input type="submit" value="Créer" />
+        </form>
     )
 }
 

@@ -33,27 +33,31 @@ function Home() {
                 <p>Bienvenue sur le Forum de Ctrl Freak Studio ! Ici vous pouvez communiquer avec notre communauté de joueurs et retrouver les dernières informations concernant nos jeux.</p>
             </section>
             <section className='public'>
-            <h2>Public Games</h2>
-            {games
-                .filter((data) => data.visibility === 'Public')
-                .map((data) => (
-                <article key={data.id}>
-                    <Link to={`/commun/theme/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
-                    <p>{data.description}</p>
-                </article>
-                ))}
+                <h2>Public Games</h2>
+                <ul>
+                {games
+                    .filter((data) => data.visibility === 'Public')
+                    .map((data) => (
+                    <li key={data.id}>
+                        <Link to={`/commun/theme/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
+                        <p>{data.description}</p>
+                    </li>
+                    ))}
+                </ul>
             </section>
         {isLogged && (
             <section className='private'>
                 <h2>Private Games</h2>
+                <ul>
                 {games
                 .filter((data) => data.visibility === 'Private' && age >= data.minimal_age)
                 .map((data) => (
-                    <article key={data.id}>
+                    <li key={data.id}>
                         <Link to={`/jeu/${slugify(data.game_name, {lower: true})}/${data.id}`}>{data.game_name}</Link>
                         <p>{data.description}</p>
-                    </article>
+                    </li>
                 ))}
+                </ul>
             </section>
         )}
       </main>

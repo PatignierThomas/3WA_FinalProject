@@ -24,7 +24,7 @@ export const getStats = async (req, res) => {
 export const allSubject = async (req, res, next) => {
     if (req.user) {
         try {
-            const query = ` SELECT sf.id, sf.subject, sf.status, sf.game_section_id, COUNT(post.id) as post_count
+            const query = ` SELECT sf.id, sf.subject, sf.status, sf.description, sf.game_section_id, COUNT(post.id) as post_count
                             FROM sub_forum sf
                             LEFT JOIN post ON sf.id = post.sub_forum_id
                             GROUP BY sf.id`;

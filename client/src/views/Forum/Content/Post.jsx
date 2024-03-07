@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import 'react-quill/dist/quill.snow.css'
 import slugify from 'slugify'
 
-
 import { fetchPost } from '../../../store/slices/post.js'
 import { fetchReply } from '../../../store/slices/reply.js'
 import useSubmitPost from '../../../hooks/useSubmitPost.js'
@@ -15,7 +14,7 @@ import ModerationButtons from '../ModerationButtons.jsx'
 import Edit from '../../DumbComponent/Button/Post/Edit.jsx'
 import Delete from '../../DumbComponent/Button/Post/Delete.jsx'
 import EditMode from '../../DumbComponent/Button/Reply/EditMode.jsx'
-import Pagination from '../../DumbComponent/Pagination.jsx'
+import Pagination from '../Pagination.jsx'
 
 function Post() {
     const dispatch = useDispatch()

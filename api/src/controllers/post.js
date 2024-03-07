@@ -7,43 +7,71 @@ import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
 import { formatDate } from "../utils/date.js";
 
-// get all the posts of one section, filtered by user role and sorted by the most recent activity or creation date
+// get posts of a section paginated, filtered by user role and sorted by the most recent activity or creation date
 export const postsBySection = async (req, res, next) => {
     try {
-        let commonQuery =  `SELECT post.id, post.title, post.status, post.views, post.sub_forum_id, COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
-                                MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 10;
+        const offset = `${(page - 1) * limit}`
+        let commonQuery =  `SELECT 
+                                post.id, 
+                                post.title, 
+                                post.status, 
+                                post.views, 
+                                post.sub_forum_id, 
+                                post.creation_date,
+                                users.username,
+                                avatar.src,
+                                COUNT(CASE WHEN post_reply.status = 'ok' THEN 1 END) as replies, 
+                                MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END) as latest_reply,
+                                GREATEST(COALESCE(MAX(CASE WHEN post_reply.status = 'ok' THEN post_reply.reply_date END), '0000-00-00'), post.creation_date) as most_recent_activity
                             FROM post 
-                            LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'`
+                            LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'
+                            JOIN users ON post.user_id = users.id
+                            LEFT JOIN avatar ON avatar.user_id = users.id
+                            `
+
+        let countQuery = `
+            SELECT COUNT(DISTINCT post.id) as total
+            FROM post
+            LEFT JOIN post_reply ON post.id = post_reply.post_id AND post_reply.status = 'ok'`;
 
         switch (req.user?.role) {
             case "admin":
                 // fall through
             case "moderator":
-                commonQuery += `
-                WHERE post.sub_forum_id = ?`;
+                const filterAdmin = `WHERE post.sub_forum_id = ? `;
+                commonQuery += filterAdmin;
+                countQuery += filterAdmin;
                 break;
             case "user":
-                commonQuery += `
-                WHERE post.sub_forum_id = ? AND post.status = 'ok'`
+                const filterUser = `WHERE post.sub_forum_id = ? AND post.status = 'ok' `;
+                commonQuery += filterUser;
+                countQuery += filterUser;
                 break;
             case null: 
                 // fall through
             case undefined:
-                commonQuery += `
+                const filter = `
                 JOIN sub_forum ON post.sub_forum_id = sub_forum.id
                 JOIN game_section ON sub_forum.game_section_id = game_section.id
-                WHERE post.status = 'ok' AND post.sub_forum_id = ? AND game_section.visibility = 'Public'`
+                WHERE post.status = 'ok' AND post.sub_forum_id = ? AND game_section.visibility = 'Public' `;
+                commonQuery += filter;
+                countQuery += filter;
                 break;
         }
 
         commonQuery += `
         GROUP BY post.id
-        ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC`;
+        ORDER BY GREATEST(COALESCE(latest_reply, '0000-00-00'), post.creation_date) DESC LIMIT ? OFFSET ?`;
 
-        const data = await Query.runWithParams(commonQuery, [req.params.sectionID])
-        res.customSuccess(200, "Posts", data);
+        const data = await Query.runWithParams(commonQuery, [req.params.sectionID, limit, offset]);
+        const [count] = await Query.runWithParams(countQuery, [req.params.sectionID]);
+        console.log(count);
+        res.customSuccess(200, "Posts", {posts: data, total: count.total});
     }
     catch (error) {
+        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }

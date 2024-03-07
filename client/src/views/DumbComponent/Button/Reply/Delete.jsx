@@ -3,7 +3,7 @@ import PropType from 'prop-types'
 
 function Delete({onClick}) {
     return (
-        <button onClick={onClick}>Supprimer la réponse</button>
+        <button onClick={onClick} className='action delete'>Supprimer la réponse</button>
     )
 }
 

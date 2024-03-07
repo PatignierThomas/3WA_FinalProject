@@ -18,6 +18,7 @@ html {
 body {
     font-family: 'Roboto', sans-serif;
     font-size: 1.6rem;
+    min-height: 100vh;
 }
 
 header {
@@ -114,8 +115,41 @@ main {
     background-color: $color-background;
     color: #363636;
     padding: 1rem;
-    min-height: 100vh;
     background-image: url("../../img/1700.jpg");
+    min-height: 90vh;
+
+    section {
+        background-color: $color-primary;
+    }
+
+    .action {
+        display: inline-block;
+        padding: 0.5em 1em;
+        text-decoration: none;
+        background: #3498db; /* Button color */
+        color: #fff; /* Text color */
+        border-radius: 50px;
+        box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    
+        &:hover {
+            background: #2980b9; /* Darker button color on hover */
+            box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+        }
+    
+        &:active {
+            box-shadow: none;
+            transform: translateY(2px); /* Button moves down slightly when clicked */
+        }
+    }
+
+    .action.delete {
+        background: #e74c3c; /* Button color */
+    
+        &:hover {
+            background: #c0392b; /* Darker button color on hover */
+        }
+    }
     
     
 // Home page
@@ -125,7 +159,7 @@ main {
         font-size: 2.5rem;
         background-color: #363636;
         color: #e5e5e5;
-        margin: 1rem 0;
+        margin: 1rem;
     }
 
     .public, .private {
@@ -142,7 +176,7 @@ main {
                 color: $color-text
             }
 
-            article {
+            li {
                 background-color: $color-primary;
                 margin: 1rem;
                 padding: 1rem;
@@ -179,9 +213,9 @@ main {
 
                 a {
                     color: $color-text;
-                    text-decoration: none;
                     font-size: 2.5rem;
                     padding: 1rem;
+                    cursor: pointer;
                 }
 
                 p {
@@ -199,9 +233,9 @@ main {
 
                 a {
                     color: $color-text;
-                    text-decoration: none;
                     font-size: 2.5rem;
                     padding: 1rem;
+                    cursor: pointer;
                 }
 
                 .recent-info {
@@ -227,6 +261,27 @@ main {
 // End of List of Category page
 
 // List of Post page
+
+    .post-list {
+        .post {
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            a {
+                color: $color-text;
+                text-decoration: none;
+                padding: 1rem;
+                font-size: 2.5rem;
+                cursor: pointer;
+            }
+    
+            p {
+                color: $color-text;
+                font-size: 1.5rem;
+                padding: 0 1rem;
+            }
+        }
+    }
 
 // End of List of Post page
 
@@ -352,7 +407,6 @@ main {
     }
 
     .editor {
-        background-color: $color-primary;
         color: $color-text;
         margin-top: 1rem;
 
@@ -381,34 +435,131 @@ main {
 
 // End of Single Post + Reply page
 
+// Admin panel 
+
+    .stats {
+
+        h1 {
+            font-size: 3rem;
+            color: $color-text;
+            padding: 1rem;
+        }
+
+        p {
+            font-size: 2.5rem;
+            color: $color-text;
+            padding: 1rem;
+        }
+    }
+
+    .crud {
+        padding-top: 1rem;
+
+        .crud-menu {
+            display:flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid $color-secondary;
+            margin: 1rem;
+            padding: 1rem;
+            color: $color-text;
+            transition: all 0.5s;
+    
+            &.active {
+                background-color: $color-secondary;
+                color: $color-primary;
+            }
+        }
+    
+        .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            visibility: hidden;
+            border-radius: 10px;
+        
+            &.active {
+                max-height: 700px; // Adjust this value as needed
+                visibility: visible;
+            }
+        }
+    }
+
+
+    .user-Management {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        color: $color-text;
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem;
+            color: $color-text;
+
+            th, td {
+                border: 1px solid $color-secondary;
+                padding: 1rem;
+                text-align: center;
+            }
+
+            th {
+                background-color: $color-primary;
+                color: $color-text;
+            }
+
+            tr:nth-child(even) {
+                background-color: $color-primary;
+                color: $color-text;
+                a {
+                    color: $color-text;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+            }
+
+            tr:nth-child(odd) {
+                background-color: $color-secondary;
+                color: black;
+                a {
+                    color: black;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+// End of Admin panel
+    
     form {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 1rem;
+        margin: 1rem;
+        background-color: #2c3e50;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 
-        input {
-            width: 100%;
-            padding: 1rem;
-            margin: 1rem;
+        legend {
             font-size: 2.5rem;
-            border: none;
-            background-color: #363636;
-            color: #e5e5e5;
+            color: $color-text;
         }
 
-        select {
-            width: 100%;
-            padding: 1rem;
-            margin: 1rem;
-            font-size: 2.5rem;
-            border: none;
-            background-color: #363636;
-            color: #e5e5e5;
+        label {
+            color: $color-text;
         }
 
-        textarea {
+        input, select, textarea, button {
             width: 100%;
             padding: 1rem;
             margin: 1rem;
@@ -416,16 +567,22 @@ main {
             border: none;
             background-color: #363636;
             color: #e5e5e5;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+
+            &:focus {
+                outline: none;
+                box-shadow: 0px 0px 10px #3498db;
+            }
         }
 
         button {
-            width: 100%;
-            padding: 1rem;
-            margin: 1rem;
-            font-size: 2.5rem;
-            border: none;
-            background-color: #363636;
-            color: #e5e5e5;
+            cursor: pointer;
+            background-color: #3498db;
+
+            &:hover {
+                background-color: #2980b9;
+            }
         }
 
         .error {

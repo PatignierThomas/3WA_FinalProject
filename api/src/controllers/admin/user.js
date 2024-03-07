@@ -5,11 +5,32 @@ import customSuccess from '../../utils/successRes.js';
 
 export const getAllUsers = async (req, res, next) => {
     try {
-        const query = "SELECT * FROM users";
-        const data = await Query.run(query);
-        res.customSuccess(200, "Utilisateurs", data);
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 10;
+        const offset = `${(page - 1) * limit}`
+        let query = `
+            SELECT id, username, email, role_id, account_status 
+            FROM users`;
+
+        let countQuery = `SELECT COUNT(id) AS total FROM users`;
+
+        if (req.query.search) {
+            query += ` WHERE username LIKE ?`;
+            countQuery += ` WHERE username LIKE ?`;
+            query += ` LIMIT ? OFFSET ?`
+            const count = await Query.runWithParams(countQuery, [`${req.query.search}%`]);
+            const searchData = await Query.runWithParams(query, [`${req.query.search}%`, limit, offset]);
+            res.customSuccess(200, "Utilisateurs", {user : searchData, count: count[0].total});
+        }
+        else {
+            query += ` LIMIT ? OFFSET ?`;
+            const data = await Query.runWithParams(query, [limit, offset]);
+            const count = await Query.runWithParams(countQuery, [limit, offset]);
+            res.customSuccess(200, "Utilisateurs", {user: data, count: count[0].total});
+        }
     }
     catch (error) {
+        console.log(error)
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }
@@ -22,7 +43,6 @@ export const getUserById = async (req, res, next) => {
             FROM users 
             JOIN role ON users.role_id = role.id
             WHERE users.id = ?`;
-            console.log(query, req.params.userID)
         const [data] = await Query.runWithParams(query, [req.params.userID]);
         if (!data) {
             const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");

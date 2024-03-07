@@ -22,7 +22,7 @@ export const deleteGame = async (req, res, next) => {
 export const deleteSection = async (req, res, next) => {
     try {
         const query = "DELETE FROM sub_forum WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.sectionID]);
+        const data = await Query.runWithParams(query, [req.body.sectionId]);
 
         if (data.affectedRows === 0) {
             const customError = new CustomError(404, "Not found", "Introuvable", "La section n'existe pas");

@@ -4,71 +4,79 @@ import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { fetchPostsBySection } from '../../../store/slices/post.js'
+import Pagination from '../Pagination.jsx'
 
 function SectionPost() {
     const matchPublic = useMatch('/commun/categorie/:section/:sectionId');
     const isPublicRoute = matchPublic != null;
 
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 25;
+    const postsPerPage = 10;
 
     const dispatch = useDispatch()
-    const { posts } = useSelector(state => state.post)
+    const { posts, total } = useSelector(state => state.post)
     const { user, isLogged } = useSelector(state => state.user)
     const { sectionId } = useParams()
     const param = useParams()
 
     useEffect(() => {
-        dispatch(fetchPostsBySection(param.sectionId))
-    }, [param.sectionId])
-
-    const numberOfPages = Math.ceil(posts.length / postsPerPage);
-    const paginatedPosts = posts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
-
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const handleNextPage = () => {
-        if (currentPage < numberOfPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
+        dispatch(fetchPostsBySection({sectionId, currentPage, postsPerPage}))
+    }, [param.sectionId, currentPage])
+    
+    const numberOfPages = Math.ceil(total / postsPerPage);
 
     return (
-    <main>
-        <article className="intro">
-            <h1>{param.section.charAt(0).toUpperCase() + param.section.slice(1)}</h1>
-        </article>
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
-        <button onClick={handleNextPage} disabled={currentPage === numberOfPages}>Next</button>
-        <div>
-            Page {currentPage} of {numberOfPages}
-        </div>
-        {(!isPublicRoute && isLogged) && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
-        {(isPublicRoute && user.role === "admin") && <Link to={`/new/${param.sectionId}/create-post` }>Create a post</Link>}
-        {paginatedPosts.map((post) => (
-            ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (user.role === "admin" || user.role === "moderator"))) &&
-            <div key={post.id}>
-                {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
-                <>
-                    <Link to={`/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link> 
-                    <p>Views: {post.views}</p>
-                    <p>Replies: {post.replies}</p>
-                </>
-                : 
-                post.sub_forum_id === Number(sectionId) &&
-                <>
-                    <Link to={`/commun/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
-                    <p>Views: {post.views}</p>
-                    <p>Replies: {post.replies}</p>
-                </>
-            }
-            </div>
-        ))}
-    </main>
+        <>
+            <section>
+                <h1 className='intro'>{param.section.charAt(0).toUpperCase() + param.section.slice(1)}</h1>
+            </section>
+            <section className='post-list'>
+            {(!isPublicRoute && isLogged) && <Link to={`/new/${param.sectionId}/create-post` } className='action'>Create a post</Link>}
+            {(isPublicRoute && user.role === "admin") && <Link to={`/new/${param.sectionId}/create-post` } className='action'>Create a post</Link>}
+            {posts.map((post) => (
+                ((post.status === "ok" || post.status === "locked") || (post.status === "hidden" && (user.role === "admin" || user.role === "moderator"))) &&
+                <div key={post.id} className='post'>
+                    {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
+                    <>
+                        <div className='post-yolo'>
+                            <Link to={`/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
+                            <p>{post.username}</p>
+                            {post.src 
+                                ? <img src={recentPost.src} alt={`Avatar de ${recentPost.username}`}/> 
+                                : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"} />
+                            }
+                        </div>
+
+                        <div className='post-info'>
+                            <p>Views: {post.views}</p>
+                            <p>Replies: {post.replies}</p>
+                            <p>Derniere activité: {post.most_recent_activity}</p>
+                        </div>
+                    </>
+                    : 
+                    post.sub_forum_id === Number(sectionId) &&
+                    <>
+                        <div className='post-yolo'>
+                            <Link to={`/commun/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
+                            <p>{post.username}</p>
+                            {post.src 
+                                ? <img src={recentPost.src} alt={`Avatar de ${recentPost.username}`}/> 
+                                : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"} />
+                            }
+                        </div>
+                        <div className='post-info'>
+                            <p>Views: {post.views}</p>
+                            <p>Replies: {post.replies}</p>
+                            {console.log(post.most_recent_activity)}
+                            <p>Derniere activité: {post.most_recent_activity}</p>
+                        </div>
+                    </>
+                }
+                </div>
+            ))}
+            <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} numberOfPages={numberOfPages}/>
+            </section>
+        </>
     )
 }
 

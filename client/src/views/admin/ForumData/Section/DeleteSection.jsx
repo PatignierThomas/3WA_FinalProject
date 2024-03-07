@@ -10,19 +10,18 @@ function DeleteSection() {
 
     const [formValues, setFormValues] = useState({})
     const [showModal, setShowModal] = useState(false)
-    const [selectedGameId, setSelectedGameId] = useState(null)
 
     useEffect(() => {
         dispatch(fetchGames())
         dispatch(fetchAllSections())
     }, [])
 
-    const handleChange = (gameId, field, value) => {
-        setFormValues(prev => ({ ...prev, [`${gameId}-${field}`]: value }))
+    const handleChange = (field, value) => {
+        setFormValues(prev => ({ ...prev, [field]: value }))
     }
 
     const handleDelete = async () => {
-        const sectionId = formValues[`${selectedGameId}-sectionId`]
+        const sectionId = formValues['sectionId']
         const res = await fetch(`http://localhost:9001/api/v1/admin/deleteSection/${sectionId}`, {
             method: 'DELETE',
             headers: {
@@ -37,42 +36,53 @@ function DeleteSection() {
         }
     }
 
-    const handleSubmit = (e, gameId) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
         setShowModal(true)
-        setSelectedGameId(gameId)
     }
 
     return (
         <>
-        <h2>Supprimer une section :</h2>
-        {games.map((game) => (
-            <form key={game.id} onSubmit={(e) => handleSubmit(e, game.id)} > 
-                <h2>{game.game_name}</h2>
-                <label htmlFor={`sectionName-${game.id}`}>Nom de la section :</label>
+            <legend>Supprimer une section :</legend>
+            <form onSubmit={handleSubmit}> 
+                <label htmlFor="gameId">Game:</label>
                 <select 
-                    name={`sectionName-${game.id}`} 
-                    id={`updateSectionName-${game.id}`}
-                    onChange={(e) => handleChange(game.id, 'sectionId', e.target.value)}
+                    name="gameId" 
+                    id="gameId"
+                    onChange={(e) => handleChange('gameId', e.target.value)}
                 >
                     <option value="">--Please choose an option--</option>
-                    {section
-                        .filter(sec => sec.game_section_id === game.id)
-                        .map((sec) => (
-                            <option key={sec.id} value={sec.id}>{sec.subject}</option>
-                        ))}
+                    {games.map((game) => (
+                        <option key={game.id} value={game.id}>{game.game_name}</option>
+                    ))}
                 </select>
+                {formValues.gameId && (
+                <>
+                    <label htmlFor="sectionId">Nom de la section :</label>
+                    <select 
+                        name="sectionId" 
+                        id="sectionId"
+                        onChange={(e) => handleChange('sectionId', e.target.value)}
+                    >
+                        <option value="">--Please choose an option--</option>
+                        {section
+                            .filter(sec => sec.game_section_id === Number(formValues.gameId))
+                            .map((sec) => (
+                                <option key={sec.id} value={sec.id}>{sec.subject}</option>
+                            ))}
+                    </select>
+                </>
+            )}
                 <button type="submit">Delete Section</button>
             </form>
-        ))}
-        {showModal && (
-            <div className="modal">
-                <p>Are you sure you want to delete this section?</p>
-                <button onClick={handleDelete}>Yes</button>
-                <button onClick={() => setShowModal(false)}>No</button>
-            </div>
-        )}
-    </>
+            {showModal && (
+                <div className="modal">
+                    <p>Are you sure you want to delete this section?</p>
+                    <button onClick={handleDelete}>Yes</button>
+                    <button onClick={() => setShowModal(false)}>No</button>
+                </div>
+            )}
+        </>
     )
 }
 

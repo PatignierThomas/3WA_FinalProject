@@ -37,7 +37,7 @@ export const allGames = async (req, res, next) => {
 // get all the subjects of one game
 export const subjectByGameId = async (req, res, next) => {
     try {
-        const query = `SELECT sf.id, sf.subject, sf.status, sf.game_section_id, COUNT(post.id) as post_count
+        const query = `SELECT sf.id, sf.subject, sf.status, sf.description, sf.game_section_id, COUNT(post.id) as post_count
                        FROM sub_forum sf
                        LEFT JOIN post ON sf.id = post.sub_forum_id
                        WHERE sf.game_section_id = ?

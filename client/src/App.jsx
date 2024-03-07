@@ -25,7 +25,9 @@ function App() {
   return (
     <>
         <Header />
-        <Router />
+        <main>
+            <Router />
+        </main>
         <Footer />
     </>
   )

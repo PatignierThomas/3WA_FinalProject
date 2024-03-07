@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import DeleteGame from './ForumData/Game/DeleteGame'
-import DeleteSection from './ForumData/Section/DeleteSection'
-import UpdateSection from './ForumData/Section/UpdateSection'
-import CreateGame from './ForumData/Game/CreateGame'
-import UpdateGame from './ForumData/Game/UpdateGame'
-import CreateSection from './ForumData/Section/CreateSection'
+import Pagination from '../Forum/Pagination'
+import FormToggle from './FormToggle'
+import UserBoard from './UserBoard'
+import SearchForm from './Searchbar'
 
 
 function Panel() {
     
     const [searchTerm, setSearchTerm] = useState('');
-    const [allUsers, setAllusers] = useState([])
+    const [paginatedUser, setPaginatedUser] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
+    const [numberOfPages, setNumberOfPages] = useState(0);
     const [data, setData] = useState(null)
     
     const itemsPerPage = 5; 
@@ -30,103 +29,48 @@ function Panel() {
             }
         }
         getStats()
-        getAllUsers()
     }, [])
 
-    const getAllUsers = async () => {
-        const res = await fetch('http://localhost:9001/api/v1/admin/all/users', {
+    useEffect(() => {
+    const getAllUsers = async (searchTerm = '', page = 1, limit = 5) => {
+        const res = await fetch(`http://localhost:9001/api/v1/admin/all/users?${searchTerm ? `search=${searchTerm}&` : ''}page=${page}&limit=${limit}`, {
             method: 'GET',
             credentials: 'include'
         })
         if (res.ok) {
             const result = await res.json()
-            setAllusers(result.data)
-        }
-    }
+            setPaginatedUser(result.data.user)
+            setNumberOfPages(Math.ceil(result.data.count / itemsPerPage))
+        }}
+        getAllUsers(searchTerm, currentPage, itemsPerPage)
+    }, [searchTerm, currentPage])
 
-    // Pagination and search
-
-    const filteredUsers = allUsers.filter((user) =>
-        user.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
     };
-
-    const paginatedUsers = filteredUsers.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    const handlePreviousPageTable = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
-    
-    const handleNextPageTable = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
-    };
-
-    const numberOfPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
     return (
         <>
-            <h1>Panel</h1>
-            {
-                data && data[0] && (
-                    <>
-                        <div>Nombre d'utilisateurs: {data[0].total_users}</div>
-                        <div>Nombre de posts: {data[0].total_posts}</div>
-                        <div>Nombre de réponses: {data[0].total_replies}</div>
-                    </>
-                )
-            }
+            <section className='stats'>
+                <h1>Panel</h1>
+                {
+                    data && data[0] && (
+                        <>
+                            <p>Nombre d'utilisateurs: {data[0].total_users}</p>
+                            <p>Nombre de réponses: {data[0].total_replies}</p>
+                            <p>Nombre de posts: {data[0].total_posts}</p>
+                        </>
+                    )
+                }
+            </section>
             
-            <CreateGame />
-            <UpdateGame />
-            <DeleteGame />
-            
-            <br></br>
-            <CreateSection />
-            <UpdateSection />
-            <DeleteSection />
+            <FormToggle />
 
             <section className='user-Management'>
-                <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-                <button onClick={handlePreviousPageTable}  disabled={currentPage === 1}>Previous</button>
-                <button onClick={handleNextPageTable} disabled={currentPage === numberOfPages}>Next</button>
-                <div>
-                    Page {currentPage} of {numberOfPages}
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr> 
-                    </thead>
-                    <tbody>
-                        {paginatedUsers.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.role_id}</td>
-                                <td>{user.account_status}</td>
-                                <td>
-                                    <Link to={`/admin/modifier-utilisateur/${user.id}`}>Modifier</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <h2>Gestion des utilisateurs</h2>
+                <SearchForm searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+                <UserBoard paginatedUser={paginatedUser} />
+                <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} numberOfPages={numberOfPages}/>
             </section>
         </>
     )

@@ -2,10 +2,10 @@ import React from 'react'
 import PropType from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBackwardStep, faChevronLeft, faChevronRight, faForwardStep } from '@fortawesome/free-solid-svg-icons'
-import First from './Button/Pagination/First'
-import Last from './Button/Pagination/Last'
-import Next from './Button/Pagination/Next'
-import Previous from './Button/Pagination/Previous'
+import First from '../DumbComponent/Button/Pagination/First'
+import Last from '../DumbComponent/Button/Pagination/Last'
+import Next from '../DumbComponent/Button/Pagination/Next'
+import Previous from '../DumbComponent/Button/Pagination/Previous'
 
 function Pagination({currentPage, setCurrentPage, numberOfPages}) {
 

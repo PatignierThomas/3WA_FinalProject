@@ -10,6 +10,7 @@ function CreateSection() {
     const { games } = useSelector(state => state.game)
     const [error, setError] = useState('')
     const sectionNameRef = useRef(null)
+    const descriptionRef = useRef(null)
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -17,6 +18,7 @@ function CreateSection() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const description = descriptionRef.current.value
         const sectionName = sectionNameRef.current.value
         const gameId = e.target.game_section_id.value
         const res = await fetch('http://localhost:9001/api/v1/admin/createSection', {
@@ -25,13 +27,13 @@ function CreateSection() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({ sectionName, gameId })
+            body: JSON.stringify({ sectionName, description, gameId })
         })
         const data = await res.json()
         if (res.ok) {
             console.log(data)
         } else {
-            setError(data.errors)
+            setError(data.errorMessage)
         }
     }
     return (
@@ -45,6 +47,12 @@ function CreateSection() {
                 name="gameName" 
                 id="gameName" 
             />
+            <label htmlFor='description'>Description :</label>
+            <textarea 
+                ref={descriptionRef}
+                name='description' 
+                id='description'
+                ></textarea>
             <label htmlFor="game_section_id">Jeu associé :</label>
             <select name="game_section_id" id="game_section_id">
                 {games.map((game) => (

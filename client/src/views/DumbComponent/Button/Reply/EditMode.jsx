@@ -5,7 +5,7 @@ function EditMode({onClick}) {
   return (
     <>
         <p>Mode édition</p>
-        <button onClick={onClick}>Annuler</button>
+        <button onClick={onClick} className='action'>Annuler</button>
     </>)
 }
 

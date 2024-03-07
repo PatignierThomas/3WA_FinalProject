@@ -33,12 +33,13 @@ function GameForum() {
             <section className="cat-list">
         {section.map((section) => 
             {const recentPost = recentPosts.find(post => post.subID === section.id);
-         return (
+        return (
             <article key={section.id}>
                 {(!isPublicRoute && section.game_section_id === Number(gameId)) ? 
                     <>
                     <div className='cat-box'>
                         <Link to={`/categorie/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
+                        <p>{section.description}</p>
                         <p>Posts: {section.post_count}</p>
                     </div>
                     <div className='post-box'>
@@ -58,6 +59,7 @@ function GameForum() {
                 <>
                     <div className='cat-box'>
                         <Link to={`/commun/categorie/${slugify(section.subject, {lower: true})}/${section.id}`}>{section.subject}</Link>
+                        <p>{section.description}</p>
                         <p>Posts: {section.post_count}</p>
                     </div>
                     <div className='post-box'>
@@ -65,7 +67,7 @@ function GameForum() {
                         {recentPost && 
                         <div className='recent-info'>
                             {recentPost.src ? <img src={recentPost.src} alt={`Avatar de ${recentPost.username}`} /> 
-                            : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"}></img>
+                            : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"} />
                             } 
                             <p>{recentPost.username}</p> 
                             <p>{recentPost.creation_date}</p>

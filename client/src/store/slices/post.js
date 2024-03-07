@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async (sectionId) => {
-    const response = await fetch(`http://localhost:9001/api/v1/post/section/${sectionId}`, {
+const fetchPostsBySection = createAsyncThunk("post/fetchPosts", async ({sectionId, currentPage, postsPerPage}) => {
+    const response = await fetch(`http://localhost:9001/api/v1/post/section/${sectionId}?page=${currentPage}&limit=${postsPerPage}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -40,6 +40,7 @@ const mostRecentPost = createAsyncThunk("post/mostRecentPost", async (gameId) =>
 
 const initialState = {
     posts: [],
+    total: 0,
     loading: false,
     error: null,
 };
@@ -55,7 +56,8 @@ const postSlice = createSlice({
             })
             .addCase(fetchPostsBySection.fulfilled, (state, action) => {
                 state.loading = false;
-                state.posts = action.payload.data;
+                state.posts = action.payload.data.posts;
+                state.total = action.payload.data.total;
             })
             .addCase(fetchPostsBySection.rejected, (state, action) => {
                 state.loading = false;
