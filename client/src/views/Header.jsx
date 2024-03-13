@@ -35,8 +35,9 @@ function Header() {
         <header>
             <nav>
                 <div className='brand'>
-                    <img src={logo} alt="Logo de Ctrl Freak"/>
-                    <Link to="/"> Ctrl Freak Studio</Link>
+                    <Link to="/"> 
+                        <img src={logo} alt="Logo de Ctrl Freak"/> Ctrl Freak Studio
+                    </Link>
                 </div>
                 <button
                     className="cta-menu"
@@ -47,14 +48,14 @@ function Header() {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <ul className={isMenuOpen ? 'open' : ''}>
-                    <li><Link to="/">Accueil</Link></li>
-                    {user.role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
-                    {!isLogged ? <li><Link to="/inscription">Créer un compte</Link></li> : null} 
+                    <Link to="/"><li>Accueil</li></Link>
+                    {user.role === 'admin' ? <Link to="/admin"><li>Admin</li></Link> : null}
+                    {!isLogged ? <Link to="/inscription"><li>Créer un compte</li></Link> : null} 
                     {isLogged ? 
-                    <li><button onClick={handleLogout}>Se déconnecter</button></li> : 
-                    <li><Link to="/connexion">Se connecter</Link></li>
+                    <button onClick={handleLogout}><li>Se déconnecter</li></button> : 
+                    <Link to="/connexion"><li>Se connecter</li></Link>
                     }
-                    {isLogged ? <li><Link to={`/profil`}>Profil</Link></li> : null}
+                    {isLogged ? <Link to={`/profil`}><li>Profil</li></Link> : null}
                 </ul>
             </nav>
         </header>

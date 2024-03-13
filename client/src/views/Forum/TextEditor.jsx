@@ -4,7 +4,6 @@ import 'react-quill/dist/quill.snow.css'
 import PropTypes from 'prop-types'
 
 function TextEditor({ value, setValue, quillRef, images, setImages}) {
-
     const imageHandler = useCallback(() => {
         const input = document.createElement('input');
 
@@ -23,7 +22,7 @@ function TextEditor({ value, setValue, quillRef, images, setImages}) {
                 // The result attribute contains the Data URL
                 const url = reader.result;
 
-                // Save current cursor state
+                // Save current cursor state DON'T REMOVE works with hooks useSubmitPost
                 const range = quillRef.current.getEditor().getSelection(true);
 
                 // Insert the selected image
@@ -50,7 +49,7 @@ function TextEditor({ value, setValue, quillRef, images, setImages}) {
                 [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
                 [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                 [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                [{ 'font': [] }],
+                // [{ 'font': [] }],
                 [{ 'align': [] }],
                 ['clean'],                                         // remove formatting button
                 ['link', 'image', 'video']                         // link and image, video

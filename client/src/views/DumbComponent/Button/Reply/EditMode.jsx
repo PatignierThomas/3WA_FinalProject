@@ -5,7 +5,7 @@ function EditMode({onClick}) {
   return (
     <>
         <p>Mode édition</p>
-        <button onClick={onClick} className='action'>Annuler</button>
+        <button onClick={onClick} aria-label="Annuler l'édition de la réponse" className='action'>Annuler</button>
     </>)
 }
 

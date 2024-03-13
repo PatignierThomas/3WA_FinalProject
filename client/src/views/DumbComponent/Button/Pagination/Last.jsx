@@ -5,7 +5,7 @@ import { faForwardStep } from '@fortawesome/free-solid-svg-icons'
 
 function Last({onClick}, currentPage) {
     return (
-        <button onClick={onClick} disabled={currentPage === 1}><FontAwesomeIcon icon={faForwardStep} /></button>
+        <button aria-label="Dernière page" onClick={onClick} disabled={currentPage === 1}><FontAwesomeIcon icon={faForwardStep} /></button>
     )
 }
 

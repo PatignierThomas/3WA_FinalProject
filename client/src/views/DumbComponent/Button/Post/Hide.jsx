@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 function Hide({onClick}) {
     return (
-        <button onClick={onClick} className='action'>Masquer</button>
+        <button aria-label="Masquer" onClick={onClick} className='action'>Masquer</button>
     )
 }
 

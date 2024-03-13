@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import "react-quill/dist/quill.core.css"
 
 function PostContent({post}) {
     return (
@@ -10,7 +11,7 @@ function PostContent({post}) {
             : <img src={post.src} alt={`Avatar de ${post.username}`} />}
             <p>écrit par {post.username}</p>
             <p>{post.creation_date}</p>
-            <div dangerouslySetInnerHTML={{ __html: post.content }} className='content' />
+            <div dangerouslySetInnerHTML={{ __html: post.content }} className='content ql-editor' />
             {post.last_update && <p className='update'>Dernière modification le {post.last_update}</p>}
         </article>
     )

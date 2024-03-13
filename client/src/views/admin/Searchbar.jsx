@@ -6,7 +6,7 @@ const SearchForm = ({ searchTerm, handleSearchChange }) => {
         <>
             <input
                 type="text"
-                placeholder="Search"
+                placeholder="Rechercher un utilisateur..."
                 value={searchTerm}
                 onChange={handleSearchChange}
             />

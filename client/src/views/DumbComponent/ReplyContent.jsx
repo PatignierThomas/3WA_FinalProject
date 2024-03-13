@@ -11,7 +11,7 @@ function ReplyContent({reply}) {
                 <p>{reply.username}</p>
             </div>
             <p>{reply.reply_date}</p>
-            <div dangerouslySetInnerHTML={{ __html: reply.content }} className='content'/>
+            <div dangerouslySetInnerHTML={{ __html: reply.content }} className='content ql-editor'/>
             <div className='edit-info'>
                 {reply.last_update !== "Invalid Date" ?  <p>Modifié le {reply.last_update}</p> : null}
             </div>

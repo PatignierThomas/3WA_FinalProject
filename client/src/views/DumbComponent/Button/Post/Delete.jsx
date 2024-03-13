@@ -3,7 +3,7 @@ import PropType from 'prop-types'
 
 function Delete({onClick}) {
     return (
-        <button onClick={onClick} className='action delete'>Supprimer</button>
+        <button aria-label="Supprimer" onClick={onClick} className='action delete'>Supprimer</button>
     )
 }
 

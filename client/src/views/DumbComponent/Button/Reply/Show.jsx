@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 function Show({onClick}) {
     return (
-        <button onClick={onClick} className='action'>Show</button>
+        <button aria-label="Afficher la réponse" onClick={onClick} className='action'>Afficher</button>
     )
 }
 

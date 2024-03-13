@@ -5,7 +5,7 @@ import { faBackwardStep } from '@fortawesome/free-solid-svg-icons'
 
 function First({onClick}, currentPage) {
     return (
-        <button onClick={onClick} disabled={currentPage === 1}><FontAwesomeIcon icon={faBackwardStep} /></button>
+        <button aria-label="Retour à la première page" onClick={onClick} disabled={currentPage === 1}><FontAwesomeIcon icon={faBackwardStep} /></button>
     )
 }
 

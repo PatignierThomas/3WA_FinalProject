@@ -103,7 +103,7 @@ function Post() {
 
     return (
         <>
-            <section className="post">
+            <section className="individual-post">
                 {loading && <p>Chargement...</p>}
                 { (posts[0] && (user.username === posts[0].username || (user.role === "admin" || user.role === "moderator"))  && !loading) && (
                     <Edit onClick={handleEdit} />

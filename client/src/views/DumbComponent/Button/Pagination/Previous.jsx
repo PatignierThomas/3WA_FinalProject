@@ -5,7 +5,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 function Previous({onClick}, currentPage, numberOfPages) {
     return (
-        <button onClick={onClick} disabled={currentPage === numberOfPages}><FontAwesomeIcon icon={faChevronLeft} /></button>
+        <button aria-label="page précédente" onClick={onClick} disabled={currentPage === numberOfPages}><FontAwesomeIcon icon={faChevronLeft} /></button>
     )
 }
 

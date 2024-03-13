@@ -52,7 +52,7 @@ function UpdatePost() {
     }
 
     return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='editor'>
         <label>Titre</label>
         <input type="text" name="title" id="title" value={title} onChange={e => setTitle(e.target.value)} />
         <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>

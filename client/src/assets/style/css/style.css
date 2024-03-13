@@ -4,12 +4,24 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Open-Sans";
+  src: url("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Open-Sans-Italic";
+  src: url("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
 html {
   font-size: 62.5%;
 }
 
 body {
-  font-family: "Roboto", sans-serif;
+  font-family: "Open-Sans", sans-serif;
   font-size: 1.6rem;
   min-height: 100vh;
   background-image: url("../../img/1700.jpg");
@@ -34,6 +46,8 @@ header nav .brand img {
   padding: 1rem;
 }
 header nav .brand a {
+  display: flex;
+  align-items: center;
   color: white;
   padding: 1rem;
   font-size: 2.5rem;
@@ -58,34 +72,36 @@ header nav ul {
   width: 100%;
   padding: 0;
 }
-header nav ul li {
+header nav ul a {
   width: 100%;
   text-align: center;
   margin: 1rem;
   padding: 1rem;
   background-color: #202020;
+  text-decoration: none;
 }
-header nav ul li a {
+header nav ul a li {
   color: white;
   text-decoration: none;
   font-size: 2.5rem;
 }
-header nav ul li button {
+header nav ul a:hover {
+  background-color: #e5e5e5;
+}
+header nav ul a:hover li {
+  color: black;
+}
+header nav ul button {
   color: white;
   font-size: 2.5rem;
   padding: 1rem;
   background-color: #202020;
   border: none;
+  width: 100%;
 }
-header nav ul li:hover {
+header nav ul button:hover {
   background-color: #e5e5e5;
-}
-header nav ul li:hover a {
   color: black;
-}
-header nav ul li:hover button {
-  color: black;
-  background-color: #e5e5e5;
 }
 header nav ul.open {
   display: flex;
@@ -157,8 +173,8 @@ main .action {
   padding: 0.5em 1em;
   margin: 0.5em;
   text-decoration: none;
-  background: #0f82af; /* Button color */
-  color: #222222; /* Text color */
+  background: #0f82af;
+  color: #222222;
   border-radius: 50px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -238,7 +254,7 @@ main .intro {
   text-align: center;
   padding: 2rem;
   font-size: 2.5rem;
-  background-color: #292c2e;
+  background-color: #363636;
   color: white;
   margin: 1rem 0;
 }
@@ -297,7 +313,7 @@ main .public ul li a, main .private ul li a {
   font-size: 3rem;
 }
 main .public ul li p, main .private ul li p {
-  color: #e5e5e5;
+  color: white;
 }
 main .cat-list {
   background-color: #363636;
@@ -399,6 +415,7 @@ main .post-list .post {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #363636;
 }
 main .post-list .post .post-yolo {
   display: flex;
@@ -422,6 +439,20 @@ main .post-list .post .post-yolo p {
 main .post-list .post .post-yolo img {
   max-width: 30px;
 }
+main .post-list .post .post-info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+}
+main .post-list .post .post-info p {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.6rem;
+  color: white;
+  width: 100%;
+}
 main .post-list .post a {
   color: white;
   text-decoration: none;
@@ -434,39 +465,40 @@ main .post-list .post p {
   font-size: 1.5rem;
   padding: 0 1rem;
 }
-main .post {
+main .individual-post {
   background-color: #363636;
   padding: 1rem;
 }
-main .post h2 {
+main .individual-post h2 {
   font-size: 2.5rem;
   text-align: center;
   color: white;
 }
-main .post .post-info {
+main .individual-post .post-info {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
   padding: 1rem;
-  width: 50%;
 }
-main .post .post-info p {
+main .individual-post .post-info > p {
   font-size: 1.6rem;
   color: white;
   width: 100%;
 }
-main .post .post-info .content {
+main .individual-post .post-info .content {
   width: 100%;
   padding: 1rem;
   font-size: 2.5rem;
   color: white;
 }
-main .post .post-info .update {
+main .individual-post .post-info .update {
   font-size: 1rem;
   font-style: italic;
   text-align: right;
 }
-main .post .post-info img {
+main .individual-post .post-info img {
   width: 100%;
   height: auto;
   max-width: 30px;
@@ -610,14 +642,6 @@ main .user-Management table th {
   background-color: #363636;
   color: white;
 }
-main .user-Management table tbody tr td:nth-child(2) {
-  content: "...";
-}
-@media (min-width: 768px) {
-  main .user-Management table tbody tr td:nth-child(2) {
-    content: none;
-  }
-}
 main .user-Management table tr:nth-child(even) {
   background-color: #363636;
   color: white;
@@ -628,11 +652,11 @@ main .user-Management table tr:nth-child(even) a {
   cursor: pointer;
 }
 main .user-Management table tr:nth-child(odd) {
-  background-color: #e5e5e5;
-  color: black;
+  background-color: #292c2e;
+  color: white;
 }
 main .user-Management table tr:nth-child(odd) a {
-  color: black;
+  color: white;
   text-decoration: none;
 }
 @media (min-width: 768px) {

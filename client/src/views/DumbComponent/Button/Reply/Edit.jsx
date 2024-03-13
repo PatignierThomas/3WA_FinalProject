@@ -3,7 +3,7 @@ import PropType from 'prop-types'
 
 function Edit({onClick}) {
     return (
-        <button onClick={onClick} className='action'>Editer la réponse</button>
+        <button aria-label="éditer la réponse" onClick={onClick} className='action'>Editer la réponse</button>
     )
 }
 
