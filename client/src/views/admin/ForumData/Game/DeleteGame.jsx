@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchGames } from '../../../../store/slices/game'
 
+import DeleteModal from '../../../DumbComponent/DeleteModal.jsx'
+
 function DeleteGame() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
     const gameIdRef = useRef(null)
     const [showModal, setShowModal] = useState(false)
+    const [msg, setMsg] = useState('')
+    const [error, setError] = useState('')
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -14,6 +18,8 @@ function DeleteGame() {
 
     const handleDelete = async (e) => {
         e.preventDefault()
+        setError('')
+        setMsg('')
         const gameID = gameIdRef.current.value
         const res = await fetch(`http://localhost:9001/api/v1/admin/deleteGame/${gameID}`, {
             method: 'DELETE',
@@ -22,8 +28,15 @@ function DeleteGame() {
             },
             credentials: 'include',
         })
+        const data = await res.json()
         if (res.ok) {
-            console.log('Jeu supprimé')
+            setShowModal(false)
+            setMsg(data.message)
+            dispatch(fetchGames())
+        }
+        else {
+            setShowModal(false)
+            setError(data.errors)
         }
     }
 
@@ -37,6 +50,8 @@ function DeleteGame() {
     <>
         <form onSubmit={handleSubmit}>
             <legend>Supprimer un jeu</legend>
+            {msg && <p className='success'>{msg}</p>}
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="gameId">Nom du jeu :</label>
             <select ref={gameIdRef} name="gameId" id="deleteGameId">
                 {
@@ -50,11 +65,7 @@ function DeleteGame() {
             <input type="submit" value="Supprimer" />
         </form>
         {showModal && (
-            <div>
-                <p>Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
-                <button onClick={handleDelete}>Oui</button>
-                <button onClick={() => setShowModal(false)}>Non</button>
-            </div>
+            <DeleteModal handleDelete={handleDelete} setShowModal={setShowModal} />
         )}
     </>
     )

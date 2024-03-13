@@ -6,6 +6,7 @@ import { logout } from "../store/slices/user.js";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import logo from "../assets/img/logo.jpg";
 
 function Header() {
     const dispatch = useDispatch()
@@ -33,7 +34,10 @@ function Header() {
     return (
         <header>
             <nav>
-                <Link to="/">Ctrl Freak Studio</Link>
+                <div className='brand'>
+                    <img src={logo} alt="Logo de Ctrl Freak"/>
+                    <Link to="/"> Ctrl Freak Studio</Link>
+                </div>
                 <button
                     className="cta-menu"
                     onClick={handleToggleMenu}
@@ -45,7 +49,7 @@ function Header() {
                 <ul className={isMenuOpen ? 'open' : ''}>
                     <li><Link to="/">Accueil</Link></li>
                     {user.role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
-                    {!isLogged ? <li><Link to="/inscription">Crée un compte</Link></li> : null} 
+                    {!isLogged ? <li><Link to="/inscription">Créer un compte</Link></li> : null} 
                     {isLogged ? 
                     <li><button onClick={handleLogout}>Se déconnecter</button></li> : 
                     <li><Link to="/connexion">Se connecter</Link></li>

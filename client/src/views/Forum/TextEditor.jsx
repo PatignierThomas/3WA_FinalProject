@@ -66,7 +66,6 @@ function TextEditor({ value, setValue, quillRef, images, setImages}) {
     )
 }
 
-// Vite prop's reception
 TextEditor.propTypes = {
     value: PropTypes.string,
     setValue: PropTypes.func,

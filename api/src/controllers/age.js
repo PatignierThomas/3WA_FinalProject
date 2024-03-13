@@ -9,7 +9,6 @@ export const gameRestriction = async (req, res, next) => {
         const query = "SELECT minimal_age FROM game_section WHERE id = ?";
         const [data] = await Query.runWithParams(query, [req.params.gameID]);
         req.user.birthdate = new Date(req.user.birthdate);
-        console.log(data.minimal_age, getAge(req.user.birthdate))
         if (data.minimal_age > getAge(req.user.birthdate)) {
             const customError = new CustomError(403, "Forbidden", "Vous n'avez pas l'âge requis pour accéder à ce jeu");
             return next(customError);

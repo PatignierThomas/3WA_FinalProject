@@ -6,10 +6,13 @@ function CreateGame() {
     const gameAgeRef = useRef(null)
     const visibilityRef = useRef(null)
     const descriptionRef = useRef(null)
+    const [msg, setMsg] = useState('')
     const [error, setError] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        setMsg('')
         const gameName = gameNameRef.current.value
         const gameAge = gameAgeRef.current.value
         const visibility = visibilityRef.current.value
@@ -24,7 +27,7 @@ function CreateGame() {
         })
         const data = await res.json()
         if (res.ok) {
-            console.log(data)
+            setMsg(data.message)
         } else {
             setError(data.errors)
         }
@@ -33,7 +36,8 @@ function CreateGame() {
     return (
         <form onSubmit={handleSubmit}>
             <legend>Créer un jeu</legend>
-            {error && <p>{error}</p>}
+            {msg && <p className='success'>{msg}</p>}
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="gameName">Nom du jeu :</label>
             <input 
                 ref={gameNameRef}

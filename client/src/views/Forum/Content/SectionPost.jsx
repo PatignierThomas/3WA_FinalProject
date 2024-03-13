@@ -42,15 +42,15 @@ function SectionPost() {
                             <Link to={`/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
                             <p>{post.username}</p>
                             {post.src 
-                                ? <img src={recentPost.src} alt={`Avatar de ${recentPost.username}`}/> 
+                                ? <img src={post.src} alt={`Avatar de ${post.username}`}/> 
                                 : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"} />
                             }
                         </div>
 
                         <div className='post-info'>
-                            <p>Views: {post.views}</p>
-                            <p>Replies: {post.replies}</p>
-                            <p>Derniere activité: {post.most_recent_activity}</p>
+                            <p>{post.views} vues</p>
+                            <p>{post.replies} réponses</p>
+                            <p>il y a {post.most_recent_activity}</p>
                         </div>
                     </>
                     : 
@@ -65,10 +65,9 @@ function SectionPost() {
                             }
                         </div>
                         <div className='post-info'>
-                            <p>Views: {post.views}</p>
-                            <p>Replies: {post.replies}</p>
-                            {console.log(post.most_recent_activity)}
-                            <p>Derniere activité: {post.most_recent_activity}</p>
+                            <p>{post.views} vues</p>
+                            <p>{post.replies} réponses</p>
+                            <p>il y a {post.most_recent_activity}</p>
                         </div>
                     </>
                 }

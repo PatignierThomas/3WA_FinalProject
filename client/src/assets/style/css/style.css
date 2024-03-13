@@ -12,6 +12,7 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 1.6rem;
   min-height: 100vh;
+  background-image: url("../../img/1700.jpg");
 }
 
 header {
@@ -19,23 +20,33 @@ header {
 }
 header nav {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
-header nav a {
+header nav .brand {
+  display: flex;
+  align-items: center;
+  width: 66%;
+}
+header nav .brand img {
+  width: 100%;
+  max-width: 100px;
+  padding: 1rem;
+}
+header nav .brand a {
   color: white;
-  width: 50%;
-  text-align: left;
   padding: 1rem;
   font-size: 2.5rem;
   text-decoration: none;
+  vertical-align: middle;
 }
 header nav .cta-menu {
   background-color: #202020;
   color: white;
   border: none;
   text-align: right;
-  width: 50%;
   padding: 1rem;
+  padding-right: 3rem;
   font-size: 3rem;
 }
 header nav ul {
@@ -54,6 +65,18 @@ header nav ul li {
   padding: 1rem;
   background-color: #202020;
 }
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 2.5rem;
+}
+header nav ul li button {
+  color: white;
+  font-size: 2.5rem;
+  padding: 1rem;
+  background-color: #202020;
+  border: none;
+}
 header nav ul li:hover {
   background-color: #e5e5e5;
 }
@@ -63,17 +86,6 @@ header nav ul li:hover a {
 header nav ul li:hover button {
   color: black;
   background-color: #e5e5e5;
-}
-header nav ul li a {
-  color: white;
-  text-decoration: none;
-}
-header nav ul li button {
-  color: white;
-  font-size: 2.5rem;
-  padding: 1rem;
-  background-color: #202020;
-  border: none;
 }
 header nav ul.open {
   display: flex;
@@ -86,34 +98,73 @@ header nav ul.open {
     align-items: center;
   }
 }
+@media (min-width: 1024px) {
+  header nav ul {
+    flex-direction: row;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  header nav ul li {
+    width: auto;
+  }
+  header nav ul li a {
+    font-size: 2rem;
+  }
+  header nav ul li button {
+    font-size: 2rem;
+  }
+  header nav ul li:hover {
+    background-color: #202020;
+  }
+  header nav ul li:hover a {
+    color: white;
+    background-color: #202020;
+    cursor: pointer;
+  }
+  header nav ul li:hover button {
+    color: white;
+    background-color: #202020;
+    cursor: pointer;
+  }
+}
 @media (min-width: 768px) {
   header nav .cta-menu {
     display: none;
   }
 }
+@media (min-width: 1024px) {
+  header nav {
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
 
 main {
-  background-color: #363636;
+  background-color: #292c2e;
   color: #363636;
   padding: 1rem;
-  background-image: url("../../img/1700.jpg");
   min-height: 90vh;
+  max-width: 1440px;
+  margin: 0 auto;
 }
 main section {
-  background-color: #363636;
+  background-color: #292c2e;
 }
 main .action {
   display: inline-block;
   padding: 0.5em 1em;
+  margin: 0.5em;
   text-decoration: none;
-  background: #3498db; /* Button color */
-  color: #fff; /* Text color */
+  background: #0f82af; /* Button color */
+  color: #222222; /* Text color */
   border-radius: 50px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 main .action:hover {
-  background: #2980b9; /* Darker button color on hover */
+  background: #0765a3; /* Darker button color on hover */
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
 }
 main .action:active {
@@ -122,23 +173,105 @@ main .action:active {
 }
 main .action.delete {
   background: #e74c3c; /* Button color */
+  color: #fff;
 }
 main .action.delete:hover {
   background: #c0392b; /* Darker button color on hover */
+  color: #fff;
+}
+main .success {
+  color: #2ecc71;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+}
+main .error {
+  color: #e74c3c;
+  padding: 1rem;
+  margin: 1rem;
+  text-align: center;
+}
+main .modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+main .modal p {
+  color: #fff;
+}
+main .modal .modal-content {
+  background-color: #363636;
+  padding: 1rem;
+}
+main .modal .modal-content .modal-btn {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+main .modal .modal-content .modal-btn button {
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 2.5rem;
+  border: none;
+}
+main .modal .modal-content .modal-btn button:hover {
+  background-color: #e5e5e5;
+  color: #363636;
+}
+main .modal .modal-content .positive {
+  background-color: #2ecc71;
+  color: #fff;
+}
+main .modal .modal-content .negative {
+  background-color: #e74c3c;
+  color: #fff;
 }
 main .intro {
   text-align: center;
   padding: 2rem;
   font-size: 2.5rem;
+  background-color: #292c2e;
+  color: white;
+  margin: 1rem 0;
+}
+@media (min-width: 1024px) {
+  main .intro {
+    padding: 1rem 15rem;
+  }
+}
+main .register {
+  text-align: center;
+  padding: 2rem;
+  font-size: 2.5rem;
   background-color: #363636;
   color: #e5e5e5;
-  margin: 1rem;
+  margin: 1rem 0;
+}
+main .register a {
+  color: #1b75d0;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 2.5rem;
+  padding: 1rem;
+}
+@media (min-width: 1024px) {
+  main .register {
+    padding: 1rem 15rem;
+  }
 }
 main .public, main .private {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  background-color: #363636;
+  background-color: #292c2e;
   padding: 1rem;
 }
 main .public h2, main .private h2 {
@@ -147,7 +280,10 @@ main .public h2, main .private h2 {
   text-align: center;
   color: white;
 }
-main .public li, main .private li {
+main .public ul, main .private ul {
+  list-style: none;
+}
+main .public ul li, main .private ul li {
   background-color: #363636;
   margin: 1rem;
   padding: 1rem;
@@ -155,68 +291,136 @@ main .public li, main .private li {
   border-left: 0.5rem solid #920505;
   box-shadow: 0 0 10px 0 #5e5e5e;
 }
-main .public li a, main .private li a {
+main .public ul li a, main .private ul li a {
   color: white;
   text-decoration: none;
   font-size: 3rem;
 }
-main .public li p, main .private li p {
+main .public ul li p, main .private ul li p {
   color: #e5e5e5;
 }
 main .cat-list {
   background-color: #363636;
 }
-main .cat-list article {
+main .cat-list .section-list .top-description {
   display: flex;
-  align-items: center;
+  justify-content: space-around;
+  color: white;
+  border: 1px solid #e5e5e5;
 }
-main .cat-list article .cat-box {
+main .cat-list .section-list .top-description h3 {
+  font-size: 2.5rem;
+  padding: 1rem;
+  width: 50%;
+  border: 1px solid #e5e5e5;
+}
+main .cat-list .section-list li {
+  display: flex;
+}
+main .cat-list .section-list li .cat-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 50%;
+  border: 1px solid #e5e5e5;
 }
-main .cat-list article .cat-box a {
-  color: white;
-  font-size: 2.5rem;
-  padding: 1rem;
-  cursor: pointer;
-}
-main .cat-list article .cat-box p {
-  color: #e5e5e5;
-  font-size: 1.5rem;
-  padding: 1rem;
-}
-main .cat-list article .post-box {
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  width: 50%;
-}
-main .cat-list article .post-box a {
-  color: white;
-  font-size: 2.5rem;
-  padding: 1rem;
-  cursor: pointer;
-}
-main .cat-list article .post-box .recent-info {
+main .cat-list .section-list li .cat-box div {
   display: flex;
   align-items: center;
+  width: 70%;
+  flex-wrap: wrap;
 }
-main .cat-list article .post-box .recent-info p {
+main .cat-list .section-list li .cat-box div p {
+  color: white;
+  font-style: italic;
+  font-size: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+main .cat-list .section-list li .cat-box a {
+  color: white;
+  font-size: 2rem;
+  padding: 1rem;
+  cursor: pointer;
+}
+main .cat-list .section-list li .cat-box p {
+  color: white;
+  font-size: 1.5rem;
+  padding: 1rem;
+  width: 30%;
+}
+main .cat-list .section-list li .post-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  border: 1px solid #e5e5e5;
+}
+main .cat-list .section-list li .post-box a {
+  color: white;
+  font-size: 2rem;
+  padding: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+main .cat-list .section-list li .post-box .recent-info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 50%;
+}
+main .cat-list .section-list li .post-box .recent-info p {
   color: #e5e5e5;
   font-size: 1.5rem;
   padding: 1rem;
 }
-main .cat-list article .post-box .recent-info img {
+main .cat-list .section-list li .post-box .recent-info p:first-of-type {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+main .cat-list .section-list li .post-box .recent-info p:last-of-type {
+  display: none;
+}
+@media (min-width: 768px) {
+  main .cat-list .section-list li .post-box .recent-info p:last-of-type {
+    display: block;
+  }
+}
+main .cat-list .section-list li .post-box .recent-info img {
   width: 100%;
   height: auto;
+  min-width: 20px;
   max-width: 30px;
 }
 main .post-list .post {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+main .post-list .post .post-yolo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+}
+main .post-list .post .post-yolo a {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+main .post-list .post .post-yolo p {
+  width: 50%;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+main .post-list .post .post-yolo img {
+  max-width: 30px;
 }
 main .post-list .post a {
   color: white;
@@ -241,14 +445,15 @@ main .post h2 {
 }
 main .post .post-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  flex-wrap: wrap;
   padding: 1rem;
+  width: 50%;
 }
 main .post .post-info p {
   font-size: 1.6rem;
   color: white;
+  width: 100%;
 }
 main .post .post-info .content {
   width: 100%;
@@ -257,6 +462,8 @@ main .post .post-info .content {
   color: white;
 }
 main .post .post-info .update {
+  font-size: 1rem;
+  font-style: italic;
   text-align: right;
 }
 main .post .post-info img {
@@ -274,18 +481,6 @@ main .reply {
   background-color: #363636;
   border-top: 1px solid #e5e5e5;
 }
-main .reply .moderation button {
-  padding: 1rem;
-  margin: 1rem;
-  font-size: 2.5rem;
-  border: none;
-  background-color: #363636;
-  color: #e5e5e5;
-}
-main .reply .moderation button:hover {
-  background-color: #e5e5e5;
-  color: #363636;
-}
 main .reply .reply-info {
   display: flex;
   justify-content: space-between;
@@ -298,14 +493,14 @@ main .reply .reply-info .user-info {
   align-items: center;
   width: 50%;
 }
-main .reply .reply-info .content {
-  width: 100%;
-  padding: 1rem;
-}
-main .reply .reply-info img {
+main .reply .reply-info .user-info img {
   width: 100%;
   height: auto;
   max-width: 30px;
+}
+main .reply .reply-info .content {
+  width: 100%;
+  padding: 1rem;
 }
 main .reply .reply-info .edit-info {
   flex: 1 0 auto;
@@ -321,13 +516,15 @@ main .pagination {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-color: #363636;
+  background-color: #292c2e;
   color: white;
 }
 main .pagination button {
   color: white;
+  background-color: #2b2a33;
   text-decoration: none;
   padding: 1rem;
+  margin: 0.5rem;
 }
 main .editor {
   color: white;
@@ -395,23 +592,31 @@ main .user-Management {
   color: white;
 }
 main .user-Management h2 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   text-align: center;
 }
 main .user-Management table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1rem;
+  margin: 1rem 0;
   color: white;
 }
 main .user-Management table th, main .user-Management table td {
   border: 1px solid #e5e5e5;
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
 }
 main .user-Management table th {
   background-color: #363636;
   color: white;
+}
+main .user-Management table tbody tr td:nth-child(2) {
+  content: "...";
+}
+@media (min-width: 768px) {
+  main .user-Management table tbody tr td:nth-child(2) {
+    content: none;
+  }
 }
 main .user-Management table tr:nth-child(even) {
   background-color: #363636;
@@ -429,6 +634,17 @@ main .user-Management table tr:nth-child(odd) {
 main .user-Management table tr:nth-child(odd) a {
   color: black;
   text-decoration: none;
+}
+@media (min-width: 768px) {
+  main .user-Management h2 {
+    font-size: 2.5rem;
+  }
+  main .user-Management table {
+    margin: 1rem;
+  }
+  main .user-Management table th, main .user-Management table td {
+    padding: 1rem;
+  }
 }
 main form {
   display: flex;
@@ -470,9 +686,12 @@ main form button {
 main form button:hover {
   background-color: #2980b9;
 }
-main form .error {
-  color: red;
+main form a {
+  color: #1b75d0;
+  text-decoration: underline;
+  cursor: pointer;
   font-size: 2.5rem;
+  padding: 1rem;
 }
 main .CGU {
   background-color: #363636;
@@ -526,7 +745,7 @@ main .privacy dt {
 }
 
 footer {
-  background-color: #363636;
+  background-color: #202020;
   color: white;
   text-align: center;
   padding: 1rem;
@@ -541,14 +760,6 @@ footer .Link a {
   color: white;
   text-decoration: none;
   padding: 1rem 1rem 0 1rem;
-}
-
-.password-match {
-  border-color: green;
-}
-
-.password-not-match {
-  border-color: red;
 }
 
 /*# sourceMappingURL=style.css.map */

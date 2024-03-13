@@ -63,8 +63,6 @@ const upload = (req, res, next) => {
         req.files = req.files.map(file => {
             return file.path.split("public")[1].split("\\").join("/");
         });
-    console.log(req.body.postId)
-    console.log("multer")
     next();
     });
 }

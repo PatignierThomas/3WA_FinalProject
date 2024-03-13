@@ -10,6 +10,8 @@ function UpdateGame() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
     const [selectedGame, setSelectedGame] = useState({})
+    const [msg, setMsg] = useState('')
+    const [error, setError] = useState('')
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -21,6 +23,8 @@ function UpdateGame() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        setMsg('')
         const gameId = selectedGame.id
         const gameName = selectedGame.game_name
         const gameAge = selectedGame.minimal_age
@@ -35,9 +39,12 @@ function UpdateGame() {
             credentials: 'include',
             body: JSON.stringify({ gameName, gameAge, visibility, description})
         })
+        const data = await res.json()
         if (res.ok) {
-            const data = await res.json()
-            console.log(data)
+            setMsg(data.message)
+        }
+        else {
+            setError(data.errors)
         }
     }
 
@@ -50,6 +57,8 @@ function UpdateGame() {
     return (
         <form onSubmit={handleSubmit}>
             <legend>Modifier un jeu :</legend>
+            {msg && <p className='success'>{msg}</p>}
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="gameName">Nom du jeu :</label>
             <select onChange={handleGameChange} name="gameName" id="updateGameName">
                 <option value="">--Please choose an option--</option>

@@ -27,13 +27,20 @@ function Home() {
     }, [])
 
     return (
-        <main>
+        <>
             <section className='intro'>
                 <h1>Home</h1>
                 <p>Bienvenue sur le Forum de Ctrl Freak Studio ! Ici vous pouvez communiquer avec notre communauté de joueurs et retrouver les dernières informations concernant nos jeux.</p>
             </section>
+            {!isLogged && (
+                <section className='register'>
+                    <h2>Rejoignez-nous !</h2>
+                    <p>Vous n'êtes pas encore inscrit ? Rejoignez-nous dès maintenant pour pouvoir accéder aux forums de nos jeux et participer à nos événements !</p>
+                    <Link to='/connexion'>S'inscrire</Link>
+                </section>
+            )}
             <section className='public'>
-                <h2>Public Games</h2>
+                <h2>Annonces et événements</h2>
                 <ul>
                 {games
                     .filter((data) => data.visibility === 'Public')
@@ -47,7 +54,7 @@ function Home() {
             </section>
         {isLogged && (
             <section className='private'>
-                <h2>Private Games</h2>
+                <h2>Nos jeux</h2>
                 <ul>
                 {games
                 .filter((data) => data.visibility === 'Private' && age >= data.minimal_age)
@@ -60,7 +67,7 @@ function Home() {
                 </ul>
             </section>
         )}
-      </main>
+      </>
     )
 }
 

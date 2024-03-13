@@ -48,7 +48,6 @@ function UpdatePost() {
         })
         if (res.ok) {
             navigate(-1)
-            console.log('Post édité')
         }
     }
 

@@ -3,7 +3,7 @@ import PropType from 'prop-types'
 
 function Show({onCLick}) {
     return (
-        <button onClick={onCLick} className='action'>Show</button>
+        <button onClick={onCLick} className='action'>Afficher</button>
     )
 }
 

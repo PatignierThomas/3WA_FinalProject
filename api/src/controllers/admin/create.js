@@ -16,7 +16,7 @@ export const createGame = async (req, res, next) => {
 
         const query = "INSERT INTO game_section (game_name, description, minimal_age, visibility) VALUES (?, ?, ?, ?)";
         const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.body.visibility]);
-        res.customSuccess(201, "Jeux créé", "Le jeux a bien été créé", data);
+        res.customSuccess(201, "Jeu créé", "Le jeu a bien été créé", data);
     }
     catch (error) {
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
@@ -35,7 +35,6 @@ export const createSection = async (req, res, next) => {
         res.customSuccess(201, "Section créée", "La section a bien été créée", data);
     }
     catch (error) {
-        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }

@@ -2,7 +2,7 @@ import React from 'react'
 
 function Unlock({onClick}) {
     return (
-        <button onClick={onClick} className='action'>Unlock</button>
+        <button onClick={onClick} className='action'>Déverrouiller</button>
     )
 }
 

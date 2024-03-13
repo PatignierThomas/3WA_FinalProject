@@ -62,7 +62,7 @@ export const deleteAvatar = async (req, res, next) => {
             const filePath = path.join(__dirname, '../..', url.pathname);
             fs.unlink(filePath, (err) => {
                 if (err) {
-                    console.error(`Failed to delete file: ${err}`);
+                    console.log(`Failed to delete file: ${err}`);
                 } else {
                     console.log(`File deleted: ${filePath}`);
                 }

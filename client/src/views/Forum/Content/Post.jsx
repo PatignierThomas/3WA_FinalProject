@@ -15,6 +15,7 @@ import Edit from '../../DumbComponent/Button/Post/Edit.jsx'
 import Delete from '../../DumbComponent/Button/Post/Delete.jsx'
 import EditMode from '../../DumbComponent/Button/Reply/EditMode.jsx'
 import Pagination from '../Pagination.jsx'
+import DeleteModal from '../../DumbComponent/DeleteModal.jsx'
 
 function Post() {
     const dispatch = useDispatch()
@@ -32,6 +33,7 @@ function Post() {
     const [value, setValue] = useState('');
     const [editingReply, setEditingReply] = useState(null);
 
+    const [showModal, setShowModal] = useState(false)
 
     const numberOfPages = Math.ceil(totalReplies / replyPerPage);
     
@@ -56,7 +58,7 @@ function Post() {
             })
         } 
         if (editingReply) {
-            const res = await fetch(`http://localhost:9001/api/v1/data/post/editReply/${editingReply.id}`, {
+            const res = await fetch(`http://localhost:9001/api/v1/reply/edit/${editingReply.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -65,7 +67,7 @@ function Post() {
                 body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
         }
-        dispatch(fetchReply(postId))
+        dispatch(fetchReply({postId, currentPage, replyPerPage}))
         setEditingReply(null)
         setValue('')
         setImages([])
@@ -79,9 +81,14 @@ function Post() {
             },
             credentials: 'include',
         })
+        setShowModal(false)
         if (res.ok) {
             navigate(-1);
         }
+    }
+
+    const handleShowModal = () => {
+        setShowModal(true)
     }
 
     // format url to avoid spaces and special characters
@@ -95,7 +102,7 @@ function Post() {
     }
 
     return (
-        <main>
+        <>
             <section className="post">
                 {loading && <p>Chargement...</p>}
                 { (posts[0] && (user.username === posts[0].username || (user.role === "admin" || user.role === "moderator"))  && !loading) && (
@@ -106,7 +113,7 @@ function Post() {
                     <ModerationButtons />
                 )}
                 { (user.role === "admin" && !loading) && (
-                    <Delete onClick={handleDeletePost} />
+                    <Delete onClick={handleShowModal} />
                 )}
                 {!loading && posts.length > 0 && (
                     <PostContent post={posts[0]}/>
@@ -115,8 +122,14 @@ function Post() {
             <section className="replies">
                 {(user.role === "admin" || user.role === "moderator" ? replies : replies.filter(reply => reply.status === "ok")).map((reply) => {
                     return (
-                        // lift state up to handle editing reply
-                        <Reply key={reply.id} reply={reply} setValue={setValue} setEditingReply={setEditingReply}/>
+                        <Reply 
+                            key={reply.id} 
+                            reply={reply} 
+                            setValue={setValue} 
+                            setEditingReply={setEditingReply}
+                            currentPage={currentPage}
+                            replyPerPage={replyPerPage}
+                        />
                     );
                 })}
             </section>
@@ -129,7 +142,10 @@ function Post() {
                 <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
                 <button type="submit">{editingReply ? 'Modifier la réponse' : 'Répondre'}</button>
             </form>}
-        </main>
+            {showModal && (
+                <DeleteModal handleDelete={handleDeletePost} setShowModal={setShowModal} />
+            )}
+        </>
     )
 }
 

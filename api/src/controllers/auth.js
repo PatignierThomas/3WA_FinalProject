@@ -31,7 +31,7 @@ export const register = async (req, res, next) => {
             return next(customError);
         }
     
-        const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const date = new Date();
     
         const insertUser = "INSERT INTO users (username, birthdate, email, password, account_creation_date, account_status, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
@@ -74,7 +74,6 @@ export const login = async (req, res, next) => {
         const [data] = await Query.runWithParams(query, values);
 
         if (!data || !(await bcrypt.compare(password, data.password))) {
-            console.log('email ou mot de passe incorrect')
             const customError = new CustomError(401, "Invalid credentials", "Email ou mot de passe incorrect");
             return next(customError);
         }

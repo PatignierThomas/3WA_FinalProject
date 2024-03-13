@@ -30,7 +30,6 @@ export const getAllUsers = async (req, res, next) => {
         }
     }
     catch (error) {
-        console.log(error)
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }
@@ -48,7 +47,6 @@ export const getUserById = async (req, res, next) => {
             const customError = new CustomError(404, "Not found", "Introuvable", "L'utilisateur n'existe pas");
             return next(customError);
         }
-        console.log(data);
         res.customSuccess(200, "Utilisateur modifié", data);
     }
     catch (error) {

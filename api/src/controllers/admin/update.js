@@ -25,7 +25,6 @@ export const updateGame = async (req, res) => {
 
 export const updateSection = async (req, res, next) => {
     try {
-        console.log(req.body);
         if (!req.body.sectionName || !req.body.description || !req.body.gameId ) {
             const customError = new CustomError(400, "Bad request", "Requête invalide", "Veuillez remplir tous les champs");
             return next(customError);
@@ -40,7 +39,6 @@ export const updateSection = async (req, res, next) => {
         res.customSuccess(200, "Section modifiée", "La section a bien été modifiée", data);
     }
     catch (error) {
-        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }

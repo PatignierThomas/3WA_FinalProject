@@ -8,6 +8,7 @@ function CreateSection() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
+    const [msg, setMsg] = useState('')
     const [error, setError] = useState('')
     const sectionNameRef = useRef(null)
     const descriptionRef = useRef(null)
@@ -18,6 +19,8 @@ function CreateSection() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setError('')
+        setMsg('')
         const description = descriptionRef.current.value
         const sectionName = sectionNameRef.current.value
         const gameId = e.target.game_section_id.value
@@ -31,16 +34,17 @@ function CreateSection() {
         })
         const data = await res.json()
         if (res.ok) {
-            console.log(data)
+            setMsg(data.message)
         } else {
-            setError(data.errorMessage)
+            setError(data.errors)
         }
     }
     return (
         <form onSubmit={handleSubmit}>
             <legend>Créer une catégorie :</legend>
+            {msg && <p className='success'>{msg}</p>}
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="sectionName">Nom de la catégorie :</label>
-            {error && <p>{error}</p>}
             <input 
                 ref={sectionNameRef}
                 type="text" 

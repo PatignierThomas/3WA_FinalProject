@@ -3,13 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchGames } from '../../../../store/slices/game'
 import { fetchAllSections } from '../../../../store/slices/section'
 
+import DeleteModal from '../../../DumbComponent/DeleteModal.jsx'
+
 function DeleteSection() {
     const dispatch = useDispatch()
     const { section } = useSelector(state => state.section)
     const { games } = useSelector(state => state.game)
-
     const [formValues, setFormValues] = useState({})
     const [showModal, setShowModal] = useState(false)
+    const [msg, setMsg] = useState('')
+    const [error, setError] = useState('')
+
 
     useEffect(() => {
         dispatch(fetchGames())
@@ -30,9 +34,15 @@ function DeleteSection() {
             credentials: 'include',
             body: JSON.stringify({ sectionId })
         })
+        const data = await res.json()
         if (res.ok) {
             setShowModal(false)
+            setMsg(data.message)
             dispatch(fetchAllSections())
+        }
+        else {
+            setShowModal(false)
+            setError(data.errors)
         }
     }
 
@@ -43,8 +53,10 @@ function DeleteSection() {
 
     return (
         <>
-            <legend>Supprimer une section :</legend>
             <form onSubmit={handleSubmit}> 
+                <legend>Supprimer une section :</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
                 <label htmlFor="gameId">Game:</label>
                 <select 
                     name="gameId" 
@@ -76,11 +88,7 @@ function DeleteSection() {
                 <button type="submit">Delete Section</button>
             </form>
             {showModal && (
-                <div className="modal">
-                    <p>Are you sure you want to delete this section?</p>
-                    <button onClick={handleDelete}>Yes</button>
-                    <button onClick={() => setShowModal(false)}>No</button>
-                </div>
+                <DeleteModal handleDelete={handleDelete} setShowModal={setShowModal} />
             )}
         </>
     )

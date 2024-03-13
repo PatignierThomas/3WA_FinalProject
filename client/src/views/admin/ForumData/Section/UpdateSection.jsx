@@ -7,6 +7,7 @@ function UpdateSection() {
     const dispatch = useDispatch()
     const { games } = useSelector(state => state.game)
     const { section } = useSelector(state => state.section)
+    const [msg, setMsg] = useState('')
     const [error, setError] = useState(null)
 
     const [formValues, setFormValues] = useState({})
@@ -36,11 +37,14 @@ function UpdateSection() {
             credentials: 'include',
             body: JSON.stringify({ gameId, sectionName, description })
         })
-        if (!res.ok) {
-            setError(result.errors)
-            return
-        }
         const result = await res.json()
+        if (res.ok) {
+            setMsg(result.message)
+            dispatch(fetchAllSections())
+        }
+        else {
+            setError(result.errors)
+        }
     }
 
     const handleSectionChange = (e, gameId) => {
@@ -72,6 +76,8 @@ function UpdateSection() {
     return (
         <form onSubmit={(e) => handleSubmit(e, selectedGame)}>
             <legend>Modifier une section :</legend>
+            {msg && <p className='success'>{msg}</p>}
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="game">Game:</label>
             <select id="game" onChange={handleGameChange}>
                 <option value="">--Please choose a game--</option>

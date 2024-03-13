@@ -46,7 +46,6 @@ function CreatePost() {
         })
         if (nextRes.ok) {
             navigate(-1)
-            console.log('Post created')
         }
     }
 

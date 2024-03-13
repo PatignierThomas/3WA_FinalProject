@@ -11,7 +11,7 @@ function PostContent({post}) {
             <p>écrit par {post.username}</p>
             <p>{post.creation_date}</p>
             <div dangerouslySetInnerHTML={{ __html: post.content }} className='content' />
-            {post.last_update && <p className='update'>Modifié le {post.last_update}</p>}
+            {post.last_update && <p className='update'>Dernière modification le {post.last_update}</p>}
         </article>
     )
 }

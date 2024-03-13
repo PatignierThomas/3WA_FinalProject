@@ -10,9 +10,20 @@ import customSuccess from "../utils/successRes.js";
 // create a reply and return the id of the new reply
 export const createReply = async (req, res, next) => {
     try {
+
+        // check if post is locked or hidden
+
+        const checkPost = "SELECT status FROM post WHERE id = ?";
+        const [checkPostData] = await Query.runWithParams(checkPost, [req.body.postId]);
+        if (checkPostData.status === "locked" || checkPostData.status === "hidden") {
+            const customError = new CustomError(403, "Unauthorized", "Unauthorized", "Vous ne pouvez pas répondre à ce post");
+            return next(customError);
+        }
+
+        
         const { content, postId, url } = req.body;
         const query = "INSERT INTO post_reply (content, reply_date, status, post_id, user_id) VALUES (?, ?, ?, ?, ?)";
-        const values = [content, new Date().toISOString().slice(0, 19).replace('T', ' '), "ok", postId, req.user.id];
+        const values = [content, new Date(), "ok", postId, req.user.id];
         const data = await Query.runWithParams(query, values);
         for (const image of url) {
             const imageQuery = "UPDATE image SET reply_id = ? WHERE url = ?";
@@ -57,7 +68,7 @@ export const updateReply = async (req, res, next) => {
                 const filePath = path.join(__dirname, '../..', url.pathname);
                 fs.unlink(filePath, (err) => {
                     if (err) {
-                        console.error(`Failed to delete file: ${err}`);
+                        console.log(`Failed to delete file: ${err}`);
                     } else {
                         console.log(`File deleted: ${filePath}`);
                     }
@@ -139,7 +150,6 @@ export const replyByPostId = async (req, res, next) => {
         res.customSuccess(200, "Réponses", {replies: data, total: totalReplies});
     }
     catch (error) {
-        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }

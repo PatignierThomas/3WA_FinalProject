@@ -27,7 +27,7 @@ function Register() {
         e.preventDefault();
         setPasswordsMatch(userInfo.password === confirmPassword);
         if (!passwordsMatch) {
-            setError("Passwords do not match");
+            setError("Les mots de passe ne correspondent pas");
             return;
         }
 
@@ -64,6 +64,7 @@ function Register() {
     return (
         <form onSubmit={handleSubmit}>
             <legend>S'inscrire</legend>
+            {error && <p className='error'>{error}</p>}
             <label htmlFor="username">Nom d'utilisateur :</label>
             <input 
                 type="text" 
@@ -103,7 +104,6 @@ function Register() {
             />
 
             <input type="submit" value="S'inscrire" />
-            {error && <p>{error}</p>}
         </form>
     )
 }

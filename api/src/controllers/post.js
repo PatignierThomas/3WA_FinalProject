@@ -5,7 +5,7 @@ import fs from "fs";
 
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
-import { formatDate } from "../utils/date.js";
+import { formatDate, TimeAgo } from "../utils/date.js";
 
 // get posts of a section paginated, filtered by user role and sorted by the most recent activity or creation date
 export const postsBySection = async (req, res, next) => {
@@ -67,11 +67,16 @@ export const postsBySection = async (req, res, next) => {
 
         const data = await Query.runWithParams(commonQuery, [req.params.sectionID, limit, offset]);
         const [count] = await Query.runWithParams(countQuery, [req.params.sectionID]);
-        console.log(count);
+        data.forEach(post => {
+            post.creation_date = formatDate(post.creation_date);
+            post.most_recent_activity = TimeAgo(post.most_recent_activity);
+            if (post.latest_reply) {
+                post.latest_reply = formatDate(post.latest_reply);
+            }
+        });
         res.customSuccess(200, "Posts", {posts: data, total: count.total});
     }
     catch (error) {
-        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }
@@ -120,7 +125,6 @@ export const mostRecentPostOfCategory = async (req, res, next) => {
         res.customSuccess(200, "Posts", data);
     }
     catch (error) {
-        console.log(error);
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
         return next(customError);
     }
@@ -130,7 +134,15 @@ export const mostRecentPostOfCategory = async (req, res, next) => {
 export const postById = async (req, res, next) => {
     try {
         let commonQuery = `
-            SELECT post.id, post.title, post.content, post.status, post.creation_date, post.last_update, users.username, avatar.src
+            SELECT 
+                post.id, 
+                post.title, 
+                post.content, 
+                post.status, 
+                post.creation_date,
+                post.last_update, 
+                users.username, 
+                avatar.src
             FROM post
             JOIN users ON post.user_id = users.id
             LEFT JOIN avatar ON avatar.user_id = users.id
@@ -170,10 +182,8 @@ export const postById = async (req, res, next) => {
         if (data.length > 0) {
             const creation_date = new Date(data[0].creation_date);
             data[0].creation_date = creation_date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            if (!data[0].last_update === null) {
-                const last_update = new Date(data[0].last_update);
-                data[0].last_update = last_update.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-            }
+            const last_update = new Date(data[0].last_update);
+            data[0].last_update = last_update.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
             res.customSuccess(200, "Post", data);
         } 
         else {
@@ -213,7 +223,6 @@ export const updatePost = async (req, res, next) => {
 
         const check = "SELECT id, user_id, status FROM post WHERE id = ?";
         const [checkData] = await Query.runWithParams(check, [req.params.postID]);
-        console.log(checkData);
         if (req.user.role !== "admin" && (checkData.user_id !== req.user.id || checkData.status === "locked" || checkData.status === "hidden")) {
             return res.customSuccess(403, "Unauthorized", {error: "Unauthorized"});
         }
@@ -241,7 +250,7 @@ export const updatePost = async (req, res, next) => {
                 const filePath = path.join(__dirname, '../..', url.pathname);
                 fs.unlink(filePath, (err) => {
                     if (err) {
-                        console.error(`Failed to delete file: ${err}`);
+                        console.log(`Failed to delete file: ${err}`);
                     } else {
                         console.log(`File deleted: ${filePath}`);
                     }
@@ -267,8 +276,31 @@ export const updatePost = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
     try {
         const { content, sectionId, title } = req.body;
+
+        if ( !content || !sectionId || !title) {
+            const customError = new CustomError(400, "Bad request", "Requête invalide", "Tous les champs doivent être remplis");
+            return next(customError);
+        }
+
+        const check = `
+            SELECT game_section.visibility
+            FROM sub_forum 
+            JOIN game_section ON sub_forum.game_section_id = game_section.id 
+            WHERE sub_forum.id = ?`;
+
+        const section = await Query.runWithParams(check, [sectionId]);
+
+        if (!section.length) {
+            const customError = new CustomError(400, "Bad request", "Requête invalide", "La section n'existe pas");
+            return next(customError);
+        }
+
+        if (section[0].visibility === 'Public' && req.user.role !== 'admin') {
+            const customError = new CustomError(403, "Forbidden", "Accès refusé", "Vous devez être administrateur pour créer un post dans cette section");
+            return next(customError);
+        }
     
-        const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const now = new Date()
     
         const query = "INSERT INTO post (title, content, creation_date, last_update, status, sub_forum_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         const values = [title, content, now, now, "ok", sectionId, req.user.id];

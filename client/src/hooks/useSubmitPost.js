@@ -14,7 +14,6 @@ export default async function useSubmitPost(images, postId, quillRef) {
         if(res.ok) {
             url.push(result.data.url)
         }
-        else console.log(data.error)
 
         // Remove placeholder image
         quillRef.current.getEditor().deleteText(image.range.index, 1);
