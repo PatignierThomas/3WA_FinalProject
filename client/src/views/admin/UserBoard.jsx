@@ -7,7 +7,7 @@ function UserBoard({paginatedUser}) {
         <table>
             <thead>
                 <tr>
-                    <th>Username</th>
+                    <th>Nom d'utilisateur</th>
                     <th>Email</th>
                     <th>Role</th>
                     <th>Status</th>

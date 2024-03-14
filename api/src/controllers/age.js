@@ -1,9 +1,9 @@
 import Query from "../model/Query.js";
-
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
 import { getAge } from "../utils/date.js";
 
+// check if the user has the age to access the game
 export const gameRestriction = async (req, res, next) => {
     try {
         const query = "SELECT minimal_age FROM game_section WHERE id = ?";
@@ -21,6 +21,7 @@ export const gameRestriction = async (req, res, next) => {
     }
 }
 
+// check if the user has the age to access the section
 export const sectionRestriction = async (req, res, next) => {
     try {
         const query = `
@@ -42,6 +43,7 @@ export const sectionRestriction = async (req, res, next) => {
     }
 }
 
+// check if the user has the age to access the post
 export const postRestriction = async (req, res, next) => {
     try {
         const query = `

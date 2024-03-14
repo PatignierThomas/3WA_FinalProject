@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { lockPost, unlockPost, hidePost, hideReply, showPost, showReply } from "../controllers/moderation/moderation.js";
 
 const moderatorRouter = express.Router();

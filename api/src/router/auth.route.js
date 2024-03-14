@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { login, register, logout, checkToken } from "../controllers/auth.js";
 import tokenChecker from "../middlewares/checkAuth.js";
 import { gameRestriction, sectionRestriction, postRestriction } from "../controllers/age.js";

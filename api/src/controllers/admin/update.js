@@ -2,6 +2,7 @@ import Query from '../../model/Query.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
+// update a game, check if the form is filled and if the age is above 13
 export const updateGame = async (req, res) => {
     try {
         if (req.body.gameName === "" || req.body.description === "" || req.body.gameAge === "") {
@@ -15,7 +16,7 @@ export const updateGame = async (req, res) => {
         }
         const query = "UPDATE game_section SET game_name = ?, description = ?, minimal_age = ? WHERE id = ?";
         const data = await Query.runWithParams(query, [req.body.gameName, req.body.description, req.body.gameAge, req.params.gameID]);
-        res.json(data);
+        res.customSuccess(200, "Jeu modifié", "Le jeu a bien été modifié", data);
     }
     catch (error) {
         const customError = new CustomError(500, "Database error", "Erreur serveur", error);
@@ -23,6 +24,7 @@ export const updateGame = async (req, res) => {
     }
 }
 
+// update a section, check if the form is filled and return an error if the section does not exist
 export const updateSection = async (req, res, next) => {
     try {
         if (!req.body.sectionName || !req.body.description || !req.body.gameId ) {

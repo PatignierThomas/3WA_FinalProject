@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { uploadImage, uploadAvatar, deleteAvatar} from "../controllers/upload.js";
-
 import auth from "../middlewares/auth.js";
 import upload from '../middlewares/multer.js';
 

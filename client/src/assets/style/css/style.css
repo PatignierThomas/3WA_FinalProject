@@ -5,8 +5,8 @@
 }
 
 @font-face {
-  font-family: "Open-Sans";
-  src: url("./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf") format("truetype");
+  font-family: "OpenSans";
+  src: local("OpenSans"), url("./assets/fonts/OpenSans-VariableFont_wdth.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  font-family: "Open-Sans", sans-serif;
+  font-family: "OpenSans", sans-serif;
   font-size: 1.6rem;
   min-height: 100vh;
   background-image: url("../../img/1700.jpg");
@@ -72,36 +72,38 @@ header nav ul {
   width: 100%;
   padding: 0;
 }
-header nav ul a {
+header nav ul li {
   width: 100%;
   text-align: center;
-  margin: 1rem;
-  padding: 1rem;
+  margin: 2rem;
   background-color: #202020;
-  text-decoration: none;
 }
-header nav ul a li {
+header nav ul li a {
+  display: block;
   color: white;
   text-decoration: none;
   font-size: 2.5rem;
+  padding: 1rem;
 }
-header nav ul a:hover {
+header nav ul li:hover {
   background-color: #e5e5e5;
 }
-header nav ul a:hover li {
+header nav ul li:hover a {
   color: black;
+  cursor: pointer;
 }
-header nav ul button {
+header nav ul li:hover button {
+  background-color: #e5e5e5;
+  color: black;
+  cursor: pointer;
+}
+header nav ul li button {
   color: white;
   font-size: 2.5rem;
   padding: 1rem;
   background-color: #202020;
   border: none;
   width: 100%;
-}
-header nav ul button:hover {
-  background-color: #e5e5e5;
-  color: black;
 }
 header nav ul.open {
   display: flex;
@@ -129,19 +131,6 @@ header nav ul.open {
   }
   header nav ul li button {
     font-size: 2rem;
-  }
-  header nav ul li:hover {
-    background-color: #202020;
-  }
-  header nav ul li:hover a {
-    color: white;
-    background-color: #202020;
-    cursor: pointer;
-  }
-  header nav ul li:hover button {
-    color: white;
-    background-color: #202020;
-    cursor: pointer;
   }
 }
 @media (min-width: 768px) {
@@ -417,35 +406,42 @@ main .post-list .post {
   align-items: center;
   background-color: #363636;
 }
-main .post-list .post .post-yolo {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 50%;
-}
-main .post-list .post .post-yolo a {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-main .post-list .post .post-yolo p {
-  width: 50%;
-  text-align: right;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-main .post-list .post .post-yolo img {
-  max-width: 30px;
-}
 main .post-list .post .post-info {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 50%;
 }
+main .post-list .post .post-info > svg {
+  width: 100%;
+  height: auto;
+  max-width: 30px;
+  color: white;
+  margin: 0.5rem;
+}
+main .post-list .post .post-info a {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 main .post-list .post .post-info p {
+  width: 50%;
+  text-align: right;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+main .post-list .post .post-info img {
+  max-width: 30px;
+}
+main .post-list .post .post-stat {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+}
+main .post-list .post .post-stat p {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -498,7 +494,7 @@ main .individual-post .post-info .update {
   font-style: italic;
   text-align: right;
 }
-main .individual-post .post-info img {
+main .individual-post .post-info > img {
   width: 100%;
   height: auto;
   max-width: 30px;
@@ -671,17 +667,23 @@ main .user-Management table tr:nth-child(odd) a {
   }
 }
 main form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  margin: 1rem;
   background-color: #2c3e50;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
+main form fieldset {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  margin: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
 main form legend {
+  margin: auto;
+  padding: 1rem;
   font-size: 2.5rem;
   color: white;
 }
@@ -689,7 +691,7 @@ main form label {
   color: white;
 }
 main form input, main form select, main form textarea, main form button {
-  width: 100%;
+  width: 70%;
   padding: 1rem;
   margin: 1rem;
   font-size: 2.5rem;
@@ -702,6 +704,9 @@ main form input, main form select, main form textarea, main form button {
 main form input:focus, main form select:focus, main form textarea:focus, main form button:focus {
   outline: none;
   box-shadow: 0px 0px 10px #3498db;
+}
+main form .quill {
+  width: 70%;
 }
 main form button {
   cursor: pointer;

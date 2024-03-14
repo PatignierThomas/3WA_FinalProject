@@ -13,6 +13,9 @@ export const postsBySection = async (req, res, next) => {
         const page = req.query.page ? req.query.page : 1;
         const limit = req.query.limit ? req.query.limit : 10;
         const offset = `${(page - 1) * limit}`
+
+        // CASE is used to get the most recent reply date if their status is 'ok'
+        // GREATEST function is used to get the most recent date between the creation date and the latest reply date
         let commonQuery =  `SELECT 
                                 post.id, 
                                 post.title, 
@@ -219,7 +222,15 @@ export const singlePostInfo = async (req, res, next) => {
 // update the post
 export const updatePost = async (req, res, next) => {
     try {
-        const { title, content } = req.body;
+        let { title, content } = req.body;
+
+        // React quill adds an empty paragraph when the editor is empty
+        content = content.replace("<p><br></p>", "");
+
+        if ( !title || !content )  {
+            const customError = new CustomError(400, "Bad request", "Requête invalide", "Tous les champs doivent être remplis");
+            return next(customError);
+        }
 
         const check = "SELECT id, user_id, status FROM post WHERE id = ?";
         const [checkData] = await Query.runWithParams(check, [req.params.postID]);
@@ -227,9 +238,8 @@ export const updatePost = async (req, res, next) => {
             return res.customSuccess(403, "Unauthorized", {error: "Unauthorized"});
         }
 
-        //compare image url with the one in the database
-        //if the url is not in the database, delete the image from the server
-        //if the url is in the database, do nothing
+
+        // Get the image url from the content stored in the database
         const imageQuery = "SELECT url FROM image WHERE post_id = ?";
         const imageResult = await Query.runWithParams(imageQuery, [req.params.postID]);
 
@@ -238,7 +248,7 @@ export const updatePost = async (req, res, next) => {
         const regex = new RegExp(`http:\/\/localhost:9001\/public\/assets\/img\/post\/${checkData.id}\/\\w+\\.\\w+`, 'g');
         const url = req.body.content.match(regex) || [];
 
-        // Compare the url with the one in the database
+        // Compare the url(s) with the one(s) in the database
         // If the url is not in the database, delete the image from the server
         for (const image of imageResult) {
             if (!url.includes(image.url)) {
@@ -275,7 +285,10 @@ export const updatePost = async (req, res, next) => {
 // create a post and return the id of the new post
 export const createPost = async (req, res, next) => {
     try {
-        const { content, sectionId, title } = req.body;
+        let { content, sectionId, title } = req.body;
+
+        // React quill adds an empty paragraph when the editor is empty
+        content = content.replace("<p><br></p>", "");
 
         if ( !content || !sectionId || !title) {
             const customError = new CustomError(400, "Bad request", "Requête invalide", "Tous les champs doivent être remplis");

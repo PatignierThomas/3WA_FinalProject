@@ -58,32 +58,38 @@ function Profil() {
     return ( 
     <>
         <form onSubmit={handleSubmit}>
-        {error && <p>{error}</p>}
-            <legend>Profil</legend>
-            <label htmlFor="email">Adresse email :</label>
-            <input type="email" name="email" id="email" value={userInfo.email} onChange={e => setUserInfo({...userInfo, email: e.target.value})}/>
+            <fieldset>
+                {error && <p>{error}</p>}
+                <legend>Profil</legend>
+                <label htmlFor="email">Adresse email :</label>
+                <input type="email" name="email" id="email" value={userInfo.email} onChange={e => setUserInfo({...userInfo, email: e.target.value})}/>
 
-            <label name="currenPassword">Mot de passe</label>
-            <input type="password" name="currentPassword" id="password" onChange={e => setUserInfo({...userInfo, currentPassword: e.target.value})}/>
+                <label name="currenPassword">Mot de passe</label>
+                <input type="password" name="currentPassword" id="password" onChange={e => setUserInfo({...userInfo, currentPassword: e.target.value})}/>
 
-            <label name="newPassword">Nouveau mot de passe</label>
-            <input type="password" name="newPassword" id="new-password" onChange={e => setUserInfo({...userInfo, newPassword: e.target.value})}/>
+                <label name="newPassword">Nouveau mot de passe</label>
+                <input type="password" name="newPassword" id="new-password" onChange={e => setUserInfo({...userInfo, newPassword: e.target.value})}/>
 
-            <label name="confirm-password">Confirmer le mot de passe</label>
-            <input type="password" name="confirmPassword" id="confirm-password" />
+                <label name="confirm-password">Confirmer le mot de passe</label>
+                <input type="password" name="confirmPassword" id="confirm-password" />
 
-            <button type="submit">Enregistrer</button>
+                <button type="submit">Enregistrer</button>
+            </fieldset>
         </form>
         
         <form onSubmit={handleAvatar} encType='multipart/form-data'>
-            <legend>Ajouter un avatar</legend>
-            <input type="file" name="image" id="image" />
-            <button type="submit">Ajouter</button>
+            <fieldset>
+                <legend>Ajouter un avatar</legend>
+                <input type="file" name="image" id="image" />
+                <button type="submit">Ajouter</button>
+            </fieldset>
         </form>
 
         <form onSubmit={handleDeleteAvatar}>
-            <legend>Supprimer l'avatar</legend>
-            <button type="submit">Supprimer</button>
+            <fieldset>
+                <legend>Supprimer l'avatar</legend>
+                <button type="submit">Supprimer</button>
+            </fieldset>
         </form>
     </>
     )

@@ -48,14 +48,14 @@ function Header() {
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <ul className={isMenuOpen ? 'open' : ''}>
-                    <Link to="/"><li>Accueil</li></Link>
-                    {user.role === 'admin' ? <Link to="/admin"><li>Admin</li></Link> : null}
-                    {!isLogged ? <Link to="/inscription"><li>Créer un compte</li></Link> : null} 
+                    <li><Link to="/">Accueil</Link></li>
+                    {user.role === 'admin' ? <li><Link to="/admin">Admin</Link></li> : null}
+                    {!isLogged ? <li><Link to="/inscription">Créer un compte</Link></li> : null} 
                     {isLogged ? 
-                    <button onClick={handleLogout}><li>Se déconnecter</li></button> : 
-                    <Link to="/connexion"><li>Se connecter</li></Link>
+                    <li><button onClick={handleLogout}>Se déconnecter</button></li> : 
+                    <li><Link to="/connexion">Se connecter</Link></li>
                     }
-                    {isLogged ? <Link to={`/profil`}><li>Profil</li></Link> : null}
+                    {isLogged ? <li><Link to={`/profil`}>Profil</Link></li> : null}
                 </ul>
             </nav>
         </header>

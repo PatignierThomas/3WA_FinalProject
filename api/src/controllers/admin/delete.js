@@ -2,6 +2,7 @@ import Query from '../../model/Query.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
+// delete a game and cascade all elements related to it
 export const deleteGame = async (req, res, next) => {
     try {
         const query = "DELETE FROM game_section WHERE id = ?";
@@ -19,6 +20,7 @@ export const deleteGame = async (req, res, next) => {
     }
 }
 
+// delete a section and cascade all elements related to it
 export const deleteSection = async (req, res, next) => {
     try {
         const query = "DELETE FROM sub_forum WHERE id = ?";
@@ -36,6 +38,7 @@ export const deleteSection = async (req, res, next) => {
     }
 }
 
+// delete a post and cascade all elements related to it
 export const deletePost = async (req, res, next) => {
     try {
         const query = "DELETE FROM post WHERE id = ?";
@@ -53,6 +56,7 @@ export const deletePost = async (req, res, next) => {
     }
 }
 
+// delete a reply
 export const deleteReply = async (req, res, next) => {
     try {
         const query = "DELETE FROM post_reply WHERE id = ?";

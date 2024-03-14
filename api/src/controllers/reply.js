@@ -10,9 +10,17 @@ import customSuccess from "../utils/successRes.js";
 // create a reply and return the id of the new reply
 export const createReply = async (req, res, next) => {
     try {
+        let { content, postId, url } = req.body;
+
+        // React quill adds an empty paragraph when the editor is empty
+        content = content.replace("<p><br></p>", "");
+
+        if (!content) {
+            const customError = new CustomError(400, "Bad request", "Requête invalide", "Vous devez écrire un contenu pour votre réponse");
+            return next(customError);
+        }
 
         // check if post is locked or hidden
-
         const checkPost = "SELECT status FROM post WHERE id = ?";
         const [checkPostData] = await Query.runWithParams(checkPost, [req.body.postId]);
         if (checkPostData.status === "locked" || checkPostData.status === "hidden") {
@@ -21,7 +29,7 @@ export const createReply = async (req, res, next) => {
         }
 
         
-        const { content, postId, url } = req.body;
+        
         const query = "INSERT INTO post_reply (content, reply_date, status, post_id, user_id) VALUES (?, ?, ?, ?, ?)";
         const values = [content, new Date(), "ok", postId, req.user.id];
         const data = await Query.runWithParams(query, values);
@@ -40,24 +48,30 @@ export const createReply = async (req, res, next) => {
 // update the reply of a post
 export const updateReply = async (req, res, next) => {
     try {
+        let { content } = req.body;
+        // React quill adds an empty paragraph when the editor is empty
+        content = content.replace("<p><br></p>", "");
+        if (!req.body.content) {
+            const customError = new CustomError(400, "Bad request", "Requête invalide", "Vous devez écrire un contenu pour votre réponse");
+            return next(customError);
+        }
+
         const check = "SELECT status, post_id, user_id FROM post_reply WHERE id = ?";
         const [checkData] = await Query.runWithParams(check, [req.params.replyID]);
         if (req.user.role !== "admin" && (checkData.user_id !== req.user.id || checkData.status === "locked" || checkData.status === "hidden")) {
             return res.customSuccess(403, "Unauthorized", {error: "Unauthorized"});
         }
 
-        //compare image url with the one in the database
-        //if the url is not in the database, delete the image from the server
-        //if the url is in the database, do nothing
+        // Get the image url from the content stored in the database
         const imageQuery = "SELECT url FROM image WHERE reply_id = ?";
         const imageResult = await Query.runWithParams(imageQuery, [req.params.replyID]);
 
 
         // Get the image url from the content
         const regex = new RegExp(`http:\/\/localhost:9001\/public\/assets\/img\/post\/${checkData.post_id}\/\\w+\\.\\w+`, 'g');
-        const url = req.body.content.match(regex) || [];
+        const url = content.match(regex) || [];
 
-        // Compare the url with the one in the database
+        // Compare the url(s) with the one(s) in the database
         // If the url is not in the database, delete the image from the server
         for (const image of imageResult) {
             if (!url.includes(image.url)) {
@@ -81,7 +95,7 @@ export const updateReply = async (req, res, next) => {
         }
 
         const query = "UPDATE post_reply SET content = ?, last_update = ? WHERE id = ?";
-        const data = await Query.runWithParams(query, [req.body.content, new Date(), req.params.replyID]);
+        const data = await Query.runWithParams(query, [content, new Date(), req.params.replyID]);
         res.customSuccess(200, "Réponse modifiée", data);
     }
     catch (error) {

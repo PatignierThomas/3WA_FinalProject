@@ -35,35 +35,37 @@ function CreateGame() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <legend>Créer un jeu</legend>
-            {msg && <p className='success'>{msg}</p>}
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="gameName">Nom du jeu :</label>
-            <input 
-                ref={gameNameRef}
-                type="text" 
-                name="gameName" 
-                id="createGameName" 
-            />
-            <label htmlFor="gameAge">Age minimum :</label>
-            <input 
-                ref={gameAgeRef}
-                type="number" 
-                name="gameAge"
-                defaultValue="13"
-                id="createGameAge"
-                min="13"
-            />
-            <label htmlFor="visibility">Visibilité :</label>
-            <select ref={visibilityRef} name="visibility" id="visibility">
-                <option value="Public">Public</option>
-                <option value="Private">Private</option>
-            </select>
+            <fieldset>
+                <legend>Créer un jeu</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="gameName">Nom du jeu :</label>
+                <input 
+                    ref={gameNameRef}
+                    type="text" 
+                    name="gameName" 
+                    id="createGameName" 
+                />
+                <label htmlFor="gameAge">Age minimum :</label>
+                <input 
+                    ref={gameAgeRef}
+                    type="number" 
+                    name="gameAge"
+                    defaultValue="13"
+                    id="createGameAge"
+                    min="13"
+                />
+                <label htmlFor="visibility">Visibilité :</label>
+                <select ref={visibilityRef} name="visibility" id="visibility">
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                </select>
 
-            <label htmlFor="description">Description :</label>
-            <textarea ref={descriptionRef} name="description" id="description"></textarea>
+                <label htmlFor="description">Description :</label>
+                <textarea ref={descriptionRef} name="description" id="description"></textarea>
 
-            <input type="submit" value="Créer" />
+                <input type="submit" value="Créer" />
+            </fieldset>
         </form>
     )
 }

@@ -54,38 +54,40 @@ function DeleteSection() {
     return (
         <>
             <form onSubmit={handleSubmit}> 
-                <legend>Supprimer une section :</legend>
-                {msg && <p className='success'>{msg}</p>}
-                {error && <p className='error'>{error}</p>}
-                <label htmlFor="gameId">Game:</label>
-                <select 
-                    name="gameId" 
-                    id="gameId"
-                    onChange={(e) => handleChange('gameId', e.target.value)}
-                >
-                    <option value="">--Please choose an option--</option>
-                    {games.map((game) => (
-                        <option key={game.id} value={game.id}>{game.game_name}</option>
-                    ))}
-                </select>
-                {formValues.gameId && (
-                <>
-                    <label htmlFor="sectionId">Nom de la section :</label>
+                <fieldset>
+                    <legend>Supprimer une section :</legend>
+                    {msg && <p className='success'>{msg}</p>}
+                    {error && <p className='error'>{error}</p>}
+                    <label htmlFor="gameId">Game:</label>
                     <select 
-                        name="sectionId" 
-                        id="sectionId"
-                        onChange={(e) => handleChange('sectionId', e.target.value)}
+                        name="gameId" 
+                        id="gameId"
+                        onChange={(e) => handleChange('gameId', e.target.value)}
                     >
                         <option value="">--Please choose an option--</option>
-                        {section
-                            .filter(sec => sec.game_section_id === Number(formValues.gameId))
-                            .map((sec) => (
-                                <option key={sec.id} value={sec.id}>{sec.subject}</option>
-                            ))}
+                        {games.map((game) => (
+                            <option key={game.id} value={game.id}>{game.game_name}</option>
+                        ))}
                     </select>
-                </>
-            )}
-                <button type="submit">Delete Section</button>
+                    {formValues.gameId && (
+                    <>
+                        <label htmlFor="sectionId">Nom de la section :</label>
+                        <select 
+                            name="sectionId" 
+                            id="sectionId"
+                            onChange={(e) => handleChange('sectionId', e.target.value)}
+                        >
+                            <option value="">--Please choose an option--</option>
+                            {section
+                                .filter(sec => sec.game_section_id === Number(formValues.gameId))
+                                .map((sec) => (
+                                    <option key={sec.id} value={sec.id}>{sec.subject}</option>
+                                ))}
+                        </select>
+                    </>
+                )}
+                    <button type="submit">Delete Section</button>
+                </fieldset>
             </form>
             {showModal && (
                 <DeleteModal handleDelete={handleDelete} setShowModal={setShowModal} />

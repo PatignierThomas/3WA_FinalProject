@@ -28,8 +28,8 @@ $button-color: #222222;
 }
 
 @font-face {
-    font-family: 'Open-Sans';
-    src: url('./assets/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+    font-family: 'OpenSans';
+    src: local("OpenSans"), url('./assets/fonts/OpenSans-VariableFont_wdth.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -41,12 +41,14 @@ $button-color: #222222;
     font-style: italic;
 }
 
+
+
 html {
     font-size: 62.5%;
 }
 
 body {
-    font-family: 'Open-Sans', sans-serif;
+    font-family: 'OpenSans', sans-serif;
     font-size: 1.6rem;
     min-height: 100vh;
     background-image: url("../../img/1700.jpg");
@@ -102,43 +104,44 @@ header {
             width: 100%;
             padding: 0;
 
-            a {
+            li {
                 width: 100%;
                 text-align: center;
-                margin: 1rem;
-                padding: 1rem;
+                margin: 2rem;
                 background-color: $color-header;
-                text-decoration: none;
                 
-                li {
+                a {
+                    display: block; 
                     color: $color-text;
                     text-decoration: none;
                     font-size: 2.5rem;
+                    padding: 1rem;
                 }
 
                 &:hover {
                     background-color: $color-secondary;
     
-                    li {
+                    a {
                         color: black;
+                        cursor: pointer;
+                    }
+
+                    button {
+                        background-color: $color-secondary;
+                        color: black;
+                        cursor: pointer;
                     }
                 }
-            }
 
-            button {
-                color: $color-text;
-                font-size: 2.5rem;
-                padding: 1rem;
-                background-color: $color-header;
-                border: none;
-                width: 100%;
-
-                &:hover {
-                    background-color: $color-secondary;
-                    color: black;
+                button {
+                    color: $color-text;
+                    font-size: 2.5rem;
+                    padding: 1rem;
+                    background-color: $color-header;
+                    border: none;
+                    width: 100%;
                 }
-            }
-            
+            } 
         }
 
         ul.open {
@@ -168,20 +171,6 @@ header {
                     }
                     button {
                         font-size: 2rem;
-                    }
-
-                    &:hover {
-                        background-color: $color-header;
-                        a {
-                            color: $color-text;
-                            background-color: $color-header;
-                            cursor: pointer;
-                        }
-                        button {
-                            color: $color-text;
-                            background-color: $color-header;
-                            cursor: pointer;
-                        }
                     }
                 }
             }
@@ -512,11 +501,19 @@ main {
             align-items: center;
             background-color: $color-primary;
 
-            .post-yolo {
+            .post-info {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 width: 50%;
+
+                > svg {
+                    width: 100%;
+                    height: auto;
+                    max-width: 30px;
+                    color: $color-text;
+                    margin: 0.5rem;
+                }
 
                 a {
                     width: 100%;
@@ -534,7 +531,7 @@ main {
                 }
             }
 
-            .post-info {
+            .post-stat {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
@@ -605,7 +602,7 @@ main {
                 text-align: right;
             }
 
-            img {
+            > img {
                 width: 100%;
                 height: auto;
                 max-width: 30px;
@@ -752,58 +749,6 @@ main {
         }
     }
 
-
-    // .user-Management {
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     justify-content: center;
-    //     padding: 1rem;
-    //     color: $color-text;
-
-    //     h2 {
-    //         font-size: 2.5rem;
-    //         text-align: center;
-    //     }
-
-    //     table {
-    //         width: 100%;
-    //         border-collapse: collapse;
-    //         margin: 1rem;
-    //         color: $color-text;
-
-    //         th, td {
-    //             border: 1px solid $color-secondary;
-    //             padding: 1rem;
-    //             text-align: center;
-    //         }
-
-    //         th {
-    //             background-color: $color-primary;
-    //             color: $color-text;
-    //         }
-
-    //         tr:nth-child(even) {
-    //             background-color: $color-primary;
-    //             color: $color-text;
-    //             a {
-    //                 color: $color-text;
-    //                 text-decoration: none;
-    //                 cursor: pointer;
-    //             }
-    //         }
-
-    //         tr:nth-child(odd) {
-    //             background-color: $color-secondary;
-    //             color: black;
-    //             a {
-    //                 color: black;
-    //                 text-decoration: none;
-    //             }
-    //         }
-    //     }
-    // }
-
     .user-Management {
         display: flex;
         flex-direction: column;
@@ -872,17 +817,24 @@ main {
 // End of Admin panel
     
     form {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem;
-        margin: 1rem;
         background-color: $form-background;
         border-radius: 10px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 
+        fieldset {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            margin: 1rem;
+            width: 100%;
+            box-sizing: border-box; // add this line
+        }
+
         legend {
+            margin: auto;
+            padding: 1rem;
             font-size: 2.5rem;
             color: $color-text;
         }
@@ -892,7 +844,7 @@ main {
         }
 
         input, select, textarea, button {
-            width: 100%;
+            width: 70%;
             padding: 1rem;
             margin: 1rem;
             font-size: 2.5rem;
@@ -906,6 +858,10 @@ main {
                 outline: none;
                 box-shadow: 0px 0px 10px #3498db;
             }
+        }
+
+        .quill {
+            width:70%;
         }
 
         button {

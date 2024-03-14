@@ -46,15 +46,18 @@ function Login() {
     }
     return (
         <form onSubmit={handleSubmit}>
-            {error && <p>{error}</p>}
-            <label htmlFor="email">Email :</label>
-            <input ref={emailRef} type="email" name="email" id="email" />
-            <label htmlFor="password">Mot de passe (au moins 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 symbole): </label>
-            <input ref={passwordRef} type="password" name="password" id="password"/>
-            <label htmlFor="keepLoggedIn">Rester connecté</label>
-            <input ref={keepLoggedInRef} type="checkbox" name="keepLoggedIn" id="keepLoggedIn" />
-            <input type="submit" value="Se connecter" />
-            <Link to="/inscription">S'inscrire</Link>
+            <fieldset>
+                <legend>Connexion</legend>
+                {error && <p>{error}</p>}
+                <label htmlFor="email">Email :</label>
+                <input ref={emailRef} type="email" name="email" id="email" />
+                <label htmlFor="password">Mot de passe (au moins 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 symbole): </label>
+                <input ref={passwordRef} type="password" name="password" id="password"/>
+                <label htmlFor="keepLoggedIn">Rester connecté</label>
+                <input ref={keepLoggedInRef} type="checkbox" name="keepLoggedIn" id="keepLoggedIn" />
+                <input type="submit" value="Se connecter" />
+                <Link to="/inscription">S'inscrire</Link>
+            </fieldset>
         </form>
     )
 }

@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { createReply, updateReply, replyByPostId } from "../controllers/reply.js";
-
 import auth from "../middlewares/auth.js";
 import checkToken from '../middlewares/checkAuth.js';
 

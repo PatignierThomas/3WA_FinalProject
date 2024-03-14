@@ -2,6 +2,7 @@ import Query from '../../model/Query.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
+// create a new game, check if the form is filled and if the age is above 13
 export const createGame = async (req, res, next) => {
     try {
         if (req.body.gameName === "" || req.body.description === "" || req.body.gameAge === "" || req.body.visibility === "") {
@@ -24,6 +25,7 @@ export const createGame = async (req, res, next) => {
     }
 }
 
+// create a new section, check if the form is filled
 export const createSection = async (req, res, next) => {
     try {
         if (req.body.sectionName === "" || req.body.gameId === "" || req.body.description === "") {

@@ -3,6 +3,8 @@ import slugify from 'slugify'
 import { Link, useParams, useMatch } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLock, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { fetchPostsBySection } from '../../../store/slices/post.js'
 import Pagination from '../Pagination.jsx'
 
@@ -38,7 +40,9 @@ function SectionPost() {
                 <div key={post.id} className='post'>
                     {(!isPublicRoute && post.sub_forum_id === Number(sectionId)) ?
                     <>
-                        <div className='post-yolo'>
+                        <div className='post-info'>
+                            {post.status === "locked" && <FontAwesomeIcon icon={faLock} />}
+                            {post.status === "hidden" && <FontAwesomeIcon icon={faEyeSlash} />}
                             <Link to={`/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
                             <p>{post.username}</p>
                             {post.src 
@@ -47,7 +51,7 @@ function SectionPost() {
                             }
                         </div>
 
-                        <div className='post-info'>
+                        <div className='post-stat'>
                             <p>{post.views} vues</p>
                             <p>{post.replies} réponses</p>
                             <p>il y a {post.most_recent_activity}</p>
@@ -56,7 +60,9 @@ function SectionPost() {
                     : 
                     post.sub_forum_id === Number(sectionId) &&
                     <>
-                        <div className='post-yolo'>
+                        <div className='post-info'>
+                            {post.status === "locked" && <FontAwesomeIcon icon={faLock} />}
+                            {post.status === "hidden" && <FontAwesomeIcon icon={faEyeSlash} />}
                             <Link to={`/commun/poste/${slugify(post.title, {lower: true})}/${post.id}`}>{post.title}</Link>
                             <p>{post.username}</p>
                             {post.src 
@@ -64,7 +70,7 @@ function SectionPost() {
                                 : <img src={"http://localhost:9001/public/assets/img/avatar/default.png"} alt={"Avatar par défault"} />
                             }
                         </div>
-                        <div className='post-info'>
+                        <div className='post-stat'>
                             <p>{post.views} vues</p>
                             <p>{post.replies} réponses</p>
                             <p>il y a {post.most_recent_activity}</p>

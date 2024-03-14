@@ -75,51 +75,53 @@ function UpdateSection() {
 
     return (
         <form onSubmit={(e) => handleSubmit(e, selectedGame)}>
-            <legend>Modifier une section :</legend>
-            {msg && <p className='success'>{msg}</p>}
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="game">Game:</label>
-            <select id="game" onChange={handleGameChange}>
-                <option value="">--Please choose a game--</option>
-                {games.map((game) => (
-                    <option key={game.id} value={game.id}>{game.game_name}</option>
-                ))}
-            </select>
-            {selectedGame && (
-                <>
-                    {error && <p>{error}</p>}
-                    <label htmlFor="sectionName">Nom de la section :</label>
-                    <select 
-                        name="sectionId" 
-                        id="updateSectionName"
-                        onChange={handleSectionChange}
-                    >
-                        <option value="">--Please choose an option--</option>
-                        {section
-                            .filter(sec => sec.game_section_id === Number(selectedGame))
-                            .map((sec) => (
-                                <option key={sec.id} value={sec.id}>{sec.subject}</option>
-                            ))}
-                    </select>
-                    <label htmlFor="newName">Nouveau nom :</label>
-                    <input 
-                        type="text" 
-                        name="newName" 
-                        id="newName"
-                        value={formValues['newName']}
-                        onChange={(e) => handleChange('newName', e.target.value)}
-                    />
-                    <label htmlFor="newDescription">Nouvelle description :</label>
-                    <textarea 
-                        name="newDescription"
-                        id="newDescription"
-                        value={formValues['newDescription'] || ''}
-                        onChange={(e) => handleChange('newDescription', e.target.value)}
-                    ></textarea>
-                    <button type="submit">Update Section</button>
-                </>
-        )}
-    </form>
+            <fieldset>
+                <legend>Modifier une section :</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="game">Game:</label>
+                <select id="game" onChange={handleGameChange}>
+                    <option value="">--Please choose a game--</option>
+                    {games.map((game) => (
+                        <option key={game.id} value={game.id}>{game.game_name}</option>
+                    ))}
+                </select>
+                {selectedGame && (
+                    <>
+                        {error && <p>{error}</p>}
+                        <label htmlFor="sectionName">Nom de la section :</label>
+                        <select 
+                            name="sectionId" 
+                            id="updateSectionName"
+                            onChange={handleSectionChange}
+                        >
+                            <option value="">--Please choose an option--</option>
+                            {section
+                                .filter(sec => sec.game_section_id === Number(selectedGame))
+                                .map((sec) => (
+                                    <option key={sec.id} value={sec.id}>{sec.subject}</option>
+                                ))}
+                        </select>
+                        <label htmlFor="newName">Nouveau nom :</label>
+                        <input 
+                            type="text" 
+                            name="newName" 
+                            id="newName"
+                            value={formValues['newName']}
+                            onChange={(e) => handleChange('newName', e.target.value)}
+                        />
+                        <label htmlFor="newDescription">Nouvelle description :</label>
+                        <textarea 
+                            name="newDescription"
+                            id="newSectionDescription"
+                            value={formValues['newDescription'] || ''}
+                            onChange={(e) => handleChange('newDescription', e.target.value)}
+                        ></textarea>
+                        <button type="submit">Update Section</button>
+                    </>
+                )}
+            </fieldset>
+        </form>
     )
 }
 

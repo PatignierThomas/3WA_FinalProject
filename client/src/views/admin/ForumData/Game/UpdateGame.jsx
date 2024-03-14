@@ -40,6 +40,7 @@ function UpdateGame() {
             body: JSON.stringify({ gameName, gameAge, visibility, description})
         })
         const data = await res.json()
+        console.log(data)
         if (res.ok) {
             setMsg(data.message)
         }
@@ -56,48 +57,50 @@ function UpdateGame() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <legend>Modifier un jeu :</legend>
-            {msg && <p className='success'>{msg}</p>}
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="gameName">Nom du jeu :</label>
-            <select onChange={handleGameChange} name="gameName" id="updateGameName">
-                <option value="">--Please choose an option--</option>
-                {games.map((data) => (
-                    <option key={data.id} value={data.id}>{data.game_name}</option>
-                ))}
-            </select>
-            <label htmlFor="newName">Nouveau nom :</label>
-            <input 
-                type="text" 
-                name="newName" 
-                id="updateGameName"
-                value={selectedGame.game_name || ''}
-                onChange={(e) => setSelectedGame({...selectedGame, game_name: e.target.value})}
-            />
-            <label htmlFor="gameAge">Age minimal :</label>
-            <input 
-                type="number" 
-                name="gameAge" 
-                id="updateGameAge"
-                min="13"
-                value={selectedGame.minimal_age|| ''}
-                onChange={(e) => setSelectedGame({...selectedGame, minimal_age: e.target.value})}
-            />
-            <label htmlFor="visibility">Visibilité :</label>
-            <select name="visibility" id="visibility" value={selectedGame.visibility || ''} onChange={(e) => setSelectedGame({...selectedGame, visibility: e.target.value})}>
-                <option value="Public">Public</option>
-                <option value="Private">Private</option>
-            </select>
+            <fieldset>
+                <legend>Modifier un jeu :</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="gameName">Nom du jeu :</label>
+                <select onChange={handleGameChange} name="gameName" id="updateGameName">
+                    <option value="">--Please choose an option--</option>
+                    {games.map((data) => (
+                        <option key={data.id} value={data.id}>{data.game_name}</option>
+                    ))}
+                </select>
+                <label htmlFor="newName">Nouveau nom :</label>
+                <input 
+                    type="text" 
+                    name="newName" 
+                    id="newName"
+                    value={selectedGame.game_name || ''}
+                    onChange={(e) => setSelectedGame({...selectedGame, game_name: e.target.value})}
+                />
+                <label htmlFor="gameAge">Age minimal :</label>
+                <input 
+                    type="number" 
+                    name="gameAge" 
+                    id="updateGameAge"
+                    min="13"
+                    value={selectedGame.minimal_age|| ''}
+                    onChange={(e) => setSelectedGame({...selectedGame, minimal_age: e.target.value})}
+                />
+                <label htmlFor="visibility">Visibilité :</label>
+                <select name="visibility" id="updateVisibility" value={selectedGame.visibility || ''} onChange={(e) => setSelectedGame({...selectedGame, visibility: e.target.value})}>
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                </select>
 
-            <label htmlFor="description">Description :</label>
-            <textarea 
-                name="description" 
-                id="description" 
-                value={selectedGame.description || ''} 
-                onChange={(e) => setSelectedGame({...selectedGame, description: e.target.value})}
-            >
-            </textarea>
-            <input type="submit" value="Modifier" />
+                <label htmlFor="description">Description :</label>
+                <textarea 
+                    name="description" 
+                    id="updateDescription" 
+                    value={selectedGame.description || ''} 
+                    onChange={(e) => setSelectedGame({...selectedGame, description: e.target.value})}
+                >
+                </textarea>
+                <input type="submit" value="Modifier" />
+            </fieldset>
         </form>
     )
 }

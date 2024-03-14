@@ -1,8 +1,8 @@
 import Query from '../../model/Query.js';
-import { letterToIDRoleSwitch } from '../../utils/roleSwitch.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
+// return the count of all the users, posts and replies
 export const getStats = async (req, res) => {
     try {
         const stats = `
@@ -38,32 +38,9 @@ export const allSubject = async (req, res, next) => {
     }
 }
 
-export const getAllUsers = async (req, res) => {
-    try {
-        const query = "SELECT * FROM users";
-        const data = await Query.run(query);
-        res.customSuccess(200, "Utilisateurs", data);
-    }
-    catch (error) {
-        const customError = new CustomError(500, "Database error", "Erreur serveur", error);
-        return next(customError);
-    }
-}
-
-// UNUSED
 // will generate a random password and update the user's password
 // then send the new password to the user's email
 // OR it could send a mail to the user with a link to reset the password
-
-// export const resetUserPassword = async (req, res) => {
-//     const newPassword = "1234";
-//     const hash = await bcrypt.hash(newPassword, Number(dotenv.SALT));
-
-//     const updateUser = "UPDATE users SET password = ? WHERE id = ?";
-//     const result = await Query.runWithParams(updateUser, [hash, req.params.id]);
-
-//     res.json({result});
-// }
 
 
 

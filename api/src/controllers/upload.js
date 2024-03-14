@@ -13,7 +13,7 @@ export const uploadImage = async (req, res, next) => {
     try {
         const url = `http://localhost:9001/public${req.files[0]}`;
         const query = "INSERT INTO image (url) VALUES (?)";
-        const data = await Query.runWithParams(query, [url]);
+        await Query.runWithParams(query, [url]);
         res.customSuccess(200, "Image uploadée", {url});
     }
     catch (error) {

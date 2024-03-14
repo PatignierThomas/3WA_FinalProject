@@ -23,11 +23,11 @@ function FormToggle() {
             <div onClick={() => setShowCreateGame(!showCreateGame)} className={`crud-menu ${showCreateGame ? 'active' : ''}`}>
                 {showCreateGame ? 
                 <>
-                <h2>Hide Create Game</h2>
+                <h2>Masquer la création d'un nouveau jeu</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Create Game</h2>
+                <h2>Afficher la création d'un nouveau jeu</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>
@@ -38,11 +38,11 @@ function FormToggle() {
             <div onClick={() => setShowUpdateGame(!showUpdateGame)} className={`crud-menu ${showUpdateGame ? 'active' : ''}`}>
                 {showUpdateGame ? 
                 <>
-                <h2>Hide Update Game</h2>
+                <h2>Masquer l'édition d'un jeu</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Update Game</h2>
+                <h2>Afficher l'édition d'un jeu</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>
@@ -53,11 +53,11 @@ function FormToggle() {
             <div onClick={() => setShowDeleteGame(!showDeleteGame)} className={`crud-menu ${showDeleteGame ? 'active' : ''}`}>
                 {showDeleteGame ? 
                 <>
-                <h2>Hide Delete Game</h2>
+                <h2>Masquer la suppression d'un jeu</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Delete Game</h2>
+                <h2>Afficher la suppression d'un jeu</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>
@@ -68,11 +68,11 @@ function FormToggle() {
             <div onClick={() => setShowCreateSection(!showCreateSection)} className={`crud-menu ${showCreateSection ? 'active' : ''}`}>
                 {showCreateSection ? 
                 <>
-                <h2>Hide Create Section</h2>
+                <h2>Masquer la création d'une nouvelle catégorie</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Create Section</h2>
+                <h2>Afficher la création d'une nouvelle catégorie</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>
@@ -83,11 +83,11 @@ function FormToggle() {
             <div onClick={() => setShowUpdateSection(!showUpdateSection)} className={`crud-menu ${showUpdateSection ? 'active' : ''}`}>
                 {showUpdateSection ? 
                 <>
-                <h2>Hide Update Section</h2>
+                <h2>Masquer l'édition d'une catégorie</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Update Section</h2>
+                <h2>Afficher l'édition d'une catégorie</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>
@@ -98,11 +98,11 @@ function FormToggle() {
             <div onClick={() => setShowDeleteSection(!showDeleteSection)} className={`crud-menu ${showDeleteSection ? 'active' : ''}`}>
                 {showDeleteSection ? 
                 <>
-                <h2>Hide Delete Section</h2>
+                <h2>Masquer la suppression d'une catégorie</h2>
                 <FontAwesomeIcon icon={faChevronDown} />
                 </> : 
                 <>
-                <h2>Show Delete Section</h2>
+                <h2>Afficher la suppression d'une catégorie</h2>
                 <FontAwesomeIcon icon={faChevronRight} />
                 </>}
             </div>

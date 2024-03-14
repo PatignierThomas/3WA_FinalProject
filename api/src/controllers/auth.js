@@ -8,6 +8,9 @@ import customSuccess from "../utils/successRes.js";
 
 const dotenv = process.env;
 
+// check for missing fields and if the username is already taken
+// then hash the password and insert the user in the database
+// return a success message
 export const register = async (req, res, next) => {
     try {
         const { username, email, password, birthdate } = req.body;
@@ -33,7 +36,9 @@ export const register = async (req, res, next) => {
     
         const date = new Date();
     
-        const insertUser = "INSERT INTO users (username, birthdate, email, password, account_creation_date, account_status, role_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const insertUser = `INSERT INTO users 
+                            (username, birthdate, email, password, account_creation_date, account_status, role_id) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?)`;
         
         const hash = await bcrypt.hash(password, Number(dotenv.SALT));
     
@@ -48,6 +53,11 @@ export const register = async (req, res, next) => {
     }
 }
 
+// check if the email exists and if the password match the criteria
+// then create a token and store it in a cookie
+// if keepLoggedIn is true, the cookie will be persistent
+// else it will be a session cookie
+// return a success message with the user's id, username and role
 export const login = async (req, res, next) => {
     try {
         const { email, password, keepLoggedIn } = req.body;
@@ -106,11 +116,13 @@ export const login = async (req, res, next) => {
     }
 }
 
+// clear the cookie and return a success message
 export const logout = (req, res) => {
     res.clearCookie("TK_AUTH");
     res.customSuccess(200, "Déconnexion réussie", "Déconnexion réussie");
 }
 
+// check if the token is valid and return the user's id, username, role and birthdate
 export const checkToken = (req, res) => {
     if (req.user) return res.customSuccess(200, "Token valide", {id: req.user.id, username: req.user.username, role: req.user.role, birthdate: req.user.birthdate, email : req.user.email});
     res.customSuccess(200, "No Token");

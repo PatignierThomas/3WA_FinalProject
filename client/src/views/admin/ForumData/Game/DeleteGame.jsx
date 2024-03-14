@@ -49,20 +49,22 @@ function DeleteGame() {
     return (
     <>
         <form onSubmit={handleSubmit}>
-            <legend>Supprimer un jeu</legend>
-            {msg && <p className='success'>{msg}</p>}
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="gameId">Nom du jeu :</label>
-            <select ref={gameIdRef} name="gameId" id="deleteGameId">
-                {
-                    games.map((game) => {
-                        return (
-                            <option key={game.id} value={game.id}>{game.game_name}</option>
-                        )
-                    })
-                }
-            </select>
-            <input type="submit" value="Supprimer" />
+            <fieldset>
+                <legend>Supprimer un jeu</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="gameId">Nom du jeu :</label>
+                <select ref={gameIdRef} name="gameId" id="deleteGameId">
+                    {
+                        games.map((game) => {
+                            return (
+                                <option key={game.id} value={game.id}>{game.game_name}</option>
+                            )
+                        })
+                    }
+                </select>
+                <input type="submit" value="Supprimer" />
+            </fieldset>
         </form>
         {showModal && (
             <DeleteModal handleDelete={handleDelete} setShowModal={setShowModal} />

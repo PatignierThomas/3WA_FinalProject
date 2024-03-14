@@ -1,4 +1,5 @@
 import express from 'express';
+
 import authRouter from "./auth.route.js";
 import dataRouter from "./data.route.js";
 import adminRouter from "./admin.route.js";

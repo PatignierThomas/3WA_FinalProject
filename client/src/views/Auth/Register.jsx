@@ -63,47 +63,49 @@ function Register() {
     }
     return (
         <form onSubmit={handleSubmit}>
-            <legend>S'inscrire</legend>
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="username">Nom d'utilisateur :</label>
-            <input 
-                type="text" 
-                name="username" 
-                id="username" 
-                onChange={handleChange}
-            />
-            <label htmlFor="email">Email :</label>
-            <input 
-                type="email" 
-                name="email" 
-                id="email" 
-                onChange={handleChange}
-            />
-            <label htmlFor="password">Mot de passe :</label>
-            <input 
-                type="password" 
-                name="password" 
-                id="password" 
-                onChange={handleChange} 
-                className={userInfo.password && confirmPassword && passwordsMatch ? 'password-match' : ''}
-            />
-            <label htmlFor="password">Confirmer mot de passe :</label>
-            <input 
-                type="password"
-                name="confirmPassword" 
-                id="confirmPassword" 
-                onChange={handleConfirmPasswordChange} 
-                className={userInfo.password && confirmPassword && passwordsMatch ? 'password-match' : ''}
-            />
-            <label htmlFor="birthdate">Date de naissance :</label>
-            <input 
-                type="date" 
-                name="birthdate" 
-                id="birthdate" 
-                onChange={handleChange}
-            />
+            <fieldset>
+                <legend>S'inscrire</legend>
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="username">Nom d'utilisateur :</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username" 
+                    onChange={handleChange}
+                />
+                <label htmlFor="email">Email :</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    onChange={handleChange}
+                />
+                <label htmlFor="password">Mot de passe :</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    onChange={handleChange} 
+                    className={userInfo.password && confirmPassword && passwordsMatch ? 'password-match' : ''}
+                />
+                <label htmlFor="password">Confirmer mot de passe :</label>
+                <input 
+                    type="password"
+                    name="confirmPassword" 
+                    id="confirmPassword" 
+                    onChange={handleConfirmPasswordChange} 
+                    className={userInfo.password && confirmPassword && passwordsMatch ? 'password-match' : ''}
+                />
+                <label htmlFor="birthdate">Date de naissance :</label>
+                <input 
+                    type="date" 
+                    name="birthdate" 
+                    id="birthdate" 
+                    onChange={handleChange}
+                />
 
-            <input type="submit" value="S'inscrire" />
+                <input type="submit" value="S'inscrire" />
+            </fieldset>
         </form>
     )
 }

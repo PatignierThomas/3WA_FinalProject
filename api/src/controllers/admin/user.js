@@ -3,6 +3,8 @@ import { letterToIDRoleSwitch } from '../../utils/roleSwitch.js';
 import CustomError from '../../utils/customError/errorHandler.js';
 import customSuccess from '../../utils/successRes.js';
 
+
+// return a object with the number of users linked to the size of the pagination and the total number of users
 export const getAllUsers = async (req, res, next) => {
     try {
         const page = req.query.page ? req.query.page : 1;
@@ -35,6 +37,8 @@ export const getAllUsers = async (req, res, next) => {
     }
 }
 
+
+// return the user's information
 export const getUserById = async (req, res, next) => {
     try {
         const query = `
@@ -55,6 +59,7 @@ export const getUserById = async (req, res, next) => {
     }
 }
 
+// change the user's information and return the new user's information
 export const changeUserInfo = async (req, res, next) => {
     try {
         const {username, email, role, account_status} = req.body;

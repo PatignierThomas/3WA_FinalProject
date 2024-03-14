@@ -1,18 +1,16 @@
 import Query from "../model/Query.js";
-import bcrypt from "bcrypt";
 import "dotenv/config";
-import path, {dirname} from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
 
-//get all games to logged user and public games to non-logged user
+// get all games to logged user and public games to non-logged user
 export const allGames = async (req, res, next) => {
     if (req.user) {
         try {
-            const query = "SELECT id, game_name, description, minimal_age, visibility FROM game_section ORDER BY visibility DESC, game_name ASC";
+            const query = `
+                SELECT id, game_name, description, minimal_age, visibility 
+                FROM game_section 
+                ORDER BY visibility DESC, game_name ASC`;
             const data = await Query.run(query)
             res.customSuccess(200, "Jeux", data);
         } 
@@ -23,7 +21,10 @@ export const allGames = async (req, res, next) => {
     }
     else {
         try {
-            const query = "SELECT id, game_name, description, minimal_age, visibility FROM game_section WHERE visibility = 'Public' ORDER BY game_name ASC";
+            const query = `
+                SELECT id, game_name, description, minimal_age, visibility 
+                FROM game_section WHERE visibility = 'Public' 
+                ORDER BY game_name ASC`;
             const data = await Query.run(query)
             res.customSuccess(200, "Jeux", data);
         }

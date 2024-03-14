@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { fetchPost } from '../../store/slices/post.js';
 import { useSelector } from 'react-redux';
 
 import TextEditor from './TextEditor.jsx'
@@ -16,6 +13,7 @@ function UpdatePost() {
     const [title, setTitle] = useState('')
     const [value, setValue] = useState('')
     const [images, setImages] = useState([])
+    const [error, setError] = useState(null)
     const quillRef = useRef()
 
     useEffect(() => {
@@ -46,18 +44,26 @@ function UpdatePost() {
             credentials: 'include',
             body: JSON.stringify({ title, content: quillRef.current.value, url})
         })
+        const data = await res.json()
         if (res.ok) {
             navigate(-1)
+        }
+        else {
+            setError(data.errors)
         }
     }
 
     return (
-    <form onSubmit={handleSubmit} className='editor'>
-        <label>Titre</label>
-        <input type="text" name="title" id="title" value={title} onChange={e => setTitle(e.target.value)} />
-        <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
-        <input type="submit" value="Editer" />
-    </form>
+        <form onSubmit={handleSubmit} className='editor'>
+            <fieldset>
+                <legend>Editer un post</legend>
+                {error && <p>{error}</p>}
+                <label>Titre</label>
+                <input type="text" name="title" id="title" value={title} onChange={e => setTitle(e.target.value)} />
+                <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
+                <input type="submit" value="Editer" />
+            </fieldset>
+        </form>
     )
 }
 

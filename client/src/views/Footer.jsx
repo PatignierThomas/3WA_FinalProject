@@ -5,10 +5,10 @@ function Footer() {
   return (
     <footer>
         <p>Ctrl Freak Studio</p>
-        <section className='Link'>
+        <div className='Link'>
             <Link to="/CGU">Term of use</Link>
             <Link to="/confidentialite">Privacy policy</Link>
-        </section>
+        </div>
     </footer>
   )
 }

@@ -41,30 +41,32 @@ function CreateSection() {
     }
     return (
         <form onSubmit={handleSubmit}>
-            <legend>Créer une catégorie :</legend>
-            {msg && <p className='success'>{msg}</p>}
-            {error && <p className='error'>{error}</p>}
-            <label htmlFor="sectionName">Nom de la catégorie :</label>
-            <input 
-                ref={sectionNameRef}
-                type="text" 
-                name="gameName" 
-                id="gameName" 
-            />
-            <label htmlFor='description'>Description :</label>
-            <textarea 
-                ref={descriptionRef}
-                name='description' 
-                id='description'
-                ></textarea>
-            <label htmlFor="game_section_id">Jeu associé :</label>
-            <select name="game_section_id" id="game_section_id">
-                {games.map((game) => (
-                    <option key={game.id} value={game.id}>{game.game_name}</option>
-                ))}
-            </select>
+            <fieldset>
+                <legend>Créer une catégorie :</legend>
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
+                <label htmlFor="sectionName">Nom de la catégorie :</label>
+                <input 
+                    ref={sectionNameRef}
+                    type="text" 
+                    name="gameName" 
+                    id="gameName" 
+                />
+                <label htmlFor='description'>Description :</label>
+                <textarea 
+                    ref={descriptionRef}
+                    name='description' 
+                    id='newSectionDescription'
+                    ></textarea>
+                <label htmlFor="game_section_id">Jeu associé :</label>
+                <select name="game_section_id" id="game_section_id">
+                    {games.map((game) => (
+                        <option key={game.id} value={game.id}>{game.game_name}</option>
+                    ))}
+                </select>
 
-            <input type="submit" value="Créer" />
+                <input type="submit" value="Créer" />
+            </fieldset>
         </form>
     )
 }
