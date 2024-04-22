@@ -4,6 +4,9 @@ import 'react-quill/dist/quill.snow.css'
 import PropTypes from 'prop-types'
 
 function TextEditor({ value, setValue, quillRef, images, setImages}) {
+    // This function is called when the user clicks on the image button in the toolbar
+    // It opens a file input dialog and allows the user to select an image
+    // The selected image is then inserted into the editor
     const imageHandler = useCallback(() => {
         const input = document.createElement('input');
 

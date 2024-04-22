@@ -28,8 +28,6 @@ export const createReply = async (req, res, next) => {
             return next(customError);
         }
 
-        
-        
         const query = "INSERT INTO post_reply (content, reply_date, status, post_id, user_id) VALUES (?, ?, ?, ?, ?)";
         const values = [content, new Date(), "ok", postId, req.user.id];
         const data = await Query.runWithParams(query, values);
@@ -82,9 +80,8 @@ export const updateReply = async (req, res, next) => {
                 const filePath = path.join(__dirname, '../..', url.pathname);
                 fs.unlink(filePath, (err) => {
                     if (err) {
-                        console.log(`Failed to delete file: ${err}`);
-                    } else {
-                        console.log(`File deleted: ${filePath}`);
+                        const customError = new CustomError(500, "File error", "Erreur serveur", err);
+                        next(customError);
                     }
                 });
             }

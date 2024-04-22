@@ -54,24 +54,27 @@ function UpdateUser() {
     return (
     <>
         <form onSubmit={changeUserInfo}>
-            {message && <p>{message}</p>}
-            <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" value={user.username} onChange={e => setUser({...user, username: e.target.value})}/>
-            <label htmlFor="email">Email</label>
-            <input type="email" name="email" id="email" value={user.email} onChange={e => setUser({...user, email: e.target.value})}/>
-            <label htmlFor="role">Role</label>
-            <select name="role" id="role" value={user.role} onChange={e => setUser({...user, role: e.target.value})}>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                <option value="moderator">Moderator</option>
-                <option value="developer">Developer</option>
-            </select>
-            <label>Account Status</label>
-            <select name="account_status" id="account_status" value={user.account_status} onChange={e => setUser({...user, account_status: e.target.value})}>
-                <option value="ok">Ok</option>
-                <option value="banned">Banned</option>
-            </select>
-            <button type="submit">Update</button>
+            <fieldset>
+                <legend>Modifier un utilisateur</legend>
+                {message && <p className='success'>{message}</p>}
+                <label htmlFor="username">Username</label>
+                <input type="text" name="username" id="username" value={user.username || ''} onChange={e => setUser({...user, username: e.target.value})}/>
+                <label htmlFor="email">Email</label>
+                <input type="email" name="email" id="email" value={user.email || ''} onChange={e => setUser({...user, email: e.target.value})}/>
+                <label htmlFor="role">Role</label>
+                <select name="role" id="role" value={user.role || ''} onChange={e => setUser({...user, role: e.target.value})}>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="developer">Developer</option>
+                </select>
+                <label>Account Status</label>
+                <select name="account_status" id="account_status" value={user.account_status || ''} onChange={e => setUser({...user, account_status: e.target.value})}>
+                    <option value="ok">Ok</option>
+                    <option value="banned">Banned</option>
+                </select>
+                <button type="submit">Update</button>
+            </fieldset>
         </form>
 
         {/* <button name="resetPassword" onClick={handleReset}>Reset password</button> */}

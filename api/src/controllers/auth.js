@@ -27,7 +27,7 @@ export const register = async (req, res, next) => {
             const customError = new CustomError(403, "Invalid password", "Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial");
             return next(customError);
         }    
-        const checkUser = "SELECT * FROM users WHERE username = ? OR email = ?";
+        const checkUser = "SELECT id FROM users WHERE username = ? OR email = ?";
         const [data] = await Query.runWithParams(checkUser, [username, email]);
         if (data) {
             const customError = new CustomError(403, "User already exists", "Un utilisateur avec ce nom d'utilisateur ou cette adresse mail existe déjà");
@@ -101,7 +101,7 @@ export const login = async (req, res, next) => {
         );
 
         if (keepLoggedIn) {
-            // Set a persistent cookie if keepLoggedIn is true
+            // Set a persistent cookie if keepLoggedIn is true (30 days)
             res.cookie("TK_AUTH", TOKEN, { httpOnly: true, maxAge: 2592000000, sameSite: 'lax', secure: true });
         } else {
             // Set a session cookie if keepLoggedIn is false

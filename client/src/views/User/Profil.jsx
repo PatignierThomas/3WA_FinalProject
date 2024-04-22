@@ -5,6 +5,7 @@ function Profil() {
     const { user } = useSelector(state => state.user)
     const [userInfo, setUserInfo] = useState(user)
     const [error, setError] = useState(null);
+    const [msg, setMsg] = useState(null);
 
     useEffect(() => {
         setUserInfo(user)
@@ -22,6 +23,7 @@ function Profil() {
         })
         if (res.ok) {
             const data = await res.json()
+            setMsg(data.message)
         }
         else {
             const data = await res.json()
@@ -41,6 +43,7 @@ function Profil() {
         })
         if (res.ok) {
             const result = await res.json()
+            setMsg(result.message)
         }
     }
 
@@ -52,6 +55,7 @@ function Profil() {
         })
         if (res.ok) {
             const data = await res.json()
+            setMsg(data.message)
         }
     }
 
@@ -59,7 +63,8 @@ function Profil() {
     <>
         <form onSubmit={handleSubmit}>
             <fieldset>
-                {error && <p>{error}</p>}
+                {msg && <p className='success'>{msg}</p>}
+                {error && <p className='error'>{error}</p>}
                 <legend>Profil</legend>
                 <label htmlFor="email">Adresse email :</label>
                 <input type="email" name="email" id="email" value={userInfo.email} onChange={e => setUserInfo({...userInfo, email: e.target.value})}/>
@@ -79,6 +84,7 @@ function Profil() {
         
         <form onSubmit={handleAvatar} encType='multipart/form-data'>
             <fieldset>
+                {msg && <p className='success'>{msg}</p>}
                 <legend>Ajouter un avatar</legend>
                 <input type="file" name="image" id="image" />
                 <button type="submit">Ajouter</button>
@@ -87,6 +93,7 @@ function Profil() {
 
         <form onSubmit={handleDeleteAvatar}>
             <fieldset>
+                {msg && <p className='success'>{msg}</p>}
                 <legend>Supprimer l'avatar</legend>
                 <button type="submit">Supprimer</button>
             </fieldset>

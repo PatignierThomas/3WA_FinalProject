@@ -34,6 +34,7 @@ function Post() {
     const [editingReply, setEditingReply] = useState(null);
 
     const [showModal, setShowModal] = useState(false)
+    const [error, setError] = useState(null)
 
     const numberOfPages = Math.ceil(totalReplies / replyPerPage);
     
@@ -56,6 +57,10 @@ function Post() {
                 credentials: 'include',
                 body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
+            const data = await res.json()
+            if (!res.ok) {
+                setError(data.errors)
+            }
         } 
         if (editingReply) {
             const res = await fetch(`http://localhost:9001/api/v1/reply/edit/${editingReply.id}`, {
@@ -66,6 +71,10 @@ function Post() {
                 credentials: 'include',
                 body: JSON.stringify({ postId, url, content: quillRef.current.value})
             })
+            const data = await res.json()
+            if (!res.ok) {
+                setError(data.errors)
+            }
         }
         dispatch(fetchReply({postId, currentPage, replyPerPage}))
         setEditingReply(null)
@@ -139,6 +148,7 @@ function Post() {
             {(!loading && posts[0] && posts[0].status !== "locked" && isLogged) &&
             <form onSubmit={handleSubmit} className='editor'>
                 {editingReply && <EditMode onClick={cancel} />}
+                {error && <p>{error}</p>}
                 <TextEditor value={value} setValue={setValue} quillRef={quillRef} images={images} setImages={setImages}/>
                 <button type="submit">{editingReply ? 'Modifier la réponse' : 'Répondre'}</button>
             </form>}

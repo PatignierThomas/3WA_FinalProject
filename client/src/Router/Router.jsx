@@ -41,8 +41,8 @@ function Router() {
 
             <Route path="profil" element={<ProtectedRoute redirectPath="/connexion" child={<Profil />} />} />
 
-            <Route path="admin" element={<ProtectedAdminRoute redirectPath="/connexion" child={<Panel />} />} />
-            <Route path="admin/modifier-utilisateur/:userId" element={<ProtectedAdminRoute redirectPath="/connexion" child={<UpdateUser />} />} />
+            <Route path="admin" element={<ProtectedAdminRoute redirectPath="/" child={<Panel />} />} />
+            <Route path="admin/modifier-utilisateur/:userId" element={<ProtectedAdminRoute redirectPath="/" child={<UpdateUser />} />} />
  
             <Route path="*" element={<Error_404 />} />
       </Routes>

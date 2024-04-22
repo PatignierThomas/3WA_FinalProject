@@ -1,7 +1,5 @@
 import React from 'react'
 import PropType from 'prop-types'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBackwardStep, faChevronLeft, faChevronRight, faForwardStep } from '@fortawesome/free-solid-svg-icons'
 import First from '../DumbComponent/Button/Pagination/First'
 import Last from '../DumbComponent/Button/Pagination/Last'
 import Next from '../DumbComponent/Button/Pagination/Next'

@@ -1,6 +1,5 @@
 import Query from '../../model/Query.js';
 import CustomError from '../../utils/customError/errorHandler.js';
-import customSuccess from '../../utils/successRes.js';
 
 // delete a game and cascade all elements related to it
 export const deleteGame = async (req, res, next) => {

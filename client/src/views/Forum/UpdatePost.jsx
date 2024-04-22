@@ -33,7 +33,7 @@ function UpdatePost() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
+        
         const url = await useSubmitPost(images, param.postId, quillRef);
 
         const res = await fetch(`http://localhost:9001/api/v1/post/editPost/${param.postId}`, {

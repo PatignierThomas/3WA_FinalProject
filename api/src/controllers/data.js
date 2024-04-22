@@ -15,6 +15,7 @@ export const allGames = async (req, res, next) => {
             res.customSuccess(200, "Jeux", data);
         } 
         catch (error) {
+            console.log(error)
             const customError = new CustomError(500, "Database error", "Erreur serveur", error);
             return next(customError);
         }
@@ -29,6 +30,7 @@ export const allGames = async (req, res, next) => {
             res.customSuccess(200, "Jeux", data);
         }
         catch (error) {
+            console.log(error)
             const customError = new CustomError(500, "Database error", "Erreur serveur", error);
             return next(customError);
         }

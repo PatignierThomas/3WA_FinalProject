@@ -81,7 +81,7 @@ function Reply({reply, setValue, setEditingReply, currentPage, replyPerPage}) {
                     <Show onClick={() => handleShowReply(reply.id)} /> 
                     : <Hide onClick={() => handleHideReply(reply.id)} />
                     )}
-                    {((user.role === "admin" || user.role === "moderator") && !loading) &&
+                    {(user.role === "admin" && !loading) &&
                         <Delete onClick={handleShowModal} />
                     }
                 </div>

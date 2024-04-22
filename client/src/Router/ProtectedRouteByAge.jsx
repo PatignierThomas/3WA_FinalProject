@@ -20,8 +20,8 @@ function ProtectedRouteByAge({ child, redirectPath }) {
                         credentials: "include",
                     });
                     if (res.status === 403) {
-                        
                         navigate(redirectPath);
+                        return;
                     }
                     setIsAuthenticated(true);
                 }
@@ -31,6 +31,7 @@ function ProtectedRouteByAge({ child, redirectPath }) {
                     });
                     if (res.status === 403) {
                         navigate(redirectPath);
+                        return;
                     }
                     setIsAuthenticated(true);
                 }
@@ -40,6 +41,7 @@ function ProtectedRouteByAge({ child, redirectPath }) {
                     });
                     if (res.status === 403) {
                         navigate(redirectPath);
+                        return;
                     }
                     setIsAuthenticated(true);
                 }

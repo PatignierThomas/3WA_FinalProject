@@ -1,3 +1,6 @@
+// upload images to the server
+// return an array of urls
+// insert uploaded image in the quill editor
 export default async function useSubmitPost(images, postId, quillRef) {
     const url = []
     for (const image of images) {

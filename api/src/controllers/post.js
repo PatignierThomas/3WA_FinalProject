@@ -5,6 +5,7 @@ import fs from "fs";
 
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
+
 import { formatDate, TimeAgo } from "../utils/date.js";
 
 // get posts of a section paginated, filtered by user role and sorted by the most recent activity or creation date
@@ -88,6 +89,7 @@ export const postsBySection = async (req, res, next) => {
 // get the most recent post of each category and the date of the most recent activity
 export const mostRecentPostOfCategory = async (req, res, next) => {
     try {
+        // the subquery is meant to filter the most recent between the OG post and the latest reply
         const query = `
         SELECT 
             p.id postID, 
@@ -219,7 +221,7 @@ export const singlePostInfo = async (req, res, next) => {
     }
 }
 
-// update the post
+// update the post and delete the images that are not in the content
 export const updatePost = async (req, res, next) => {
     try {
         let { title, content } = req.body;
@@ -256,13 +258,14 @@ export const updatePost = async (req, res, next) => {
                 await Query.runWithParams(deleteQuery, [image.url]);
                 
                 const url = new URL(image.url);
-                const __dirname = dirname(fileURLToPath(import.meta.url));
-                const filePath = path.join(__dirname, '../..', url.pathname);
+                
+                // get the directory of this file
+                const __dirname = dirname(fileURLToPath(import.meta.url)); // 'C:/Users/username/project/src'
+                const filePath = path.join(__dirname, '../..', url.pathname); // 'C:/Users/username/project/public/assets/img/post/1234/image.jpg'
                 fs.unlink(filePath, (err) => {
                     if (err) {
-                        console.log(`Failed to delete file: ${err}`);
-                    } else {
-                        console.log(`File deleted: ${filePath}`);
+                        const customError = new CustomError(500, "File error", "Erreur serveur");
+                        next(customError);
                     }
                 });
             }
@@ -288,9 +291,7 @@ export const createPost = async (req, res, next) => {
         let { content, sectionId, title } = req.body;
 
         // React quill adds an empty paragraph when the editor is empty
-        content = content.replace("<p><br></p>", "");
-
-        if ( !content || !sectionId || !title) {
+        if ( !content || !sectionId || !title || content === "<p><br></p>") {
             const customError = new CustomError(400, "Bad request", "Requête invalide", "Tous les champs doivent être remplis");
             return next(customError);
         }

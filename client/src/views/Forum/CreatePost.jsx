@@ -6,14 +6,15 @@ import useSubmitPost from '../../hooks/useSubmitPost.js';
 
 function CreatePost() {
     const [value, setValue] = useState('')
+    const [msg, setMsg] = useState('')
     const quillRef = useRef();
+    const titleRef = useRef()
 
     const navigate = useNavigate()
     const param = useParams()
 
     const [images, setImages] = useState([])
 
-    const titleRef = useRef()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -27,8 +28,8 @@ function CreatePost() {
             credentials: 'include',
             body: JSON.stringify({ title, content: quillRef.current.value, sectionId: param.sectionId})
         })
-        if (res.ok) {
-            console.log('Post crée')
+        if (!res.ok) {
+            return setMsg("Erreur lors de la création du post")
         }
 
         const result = await res.json();
@@ -46,12 +47,15 @@ function CreatePost() {
         })
         if (nextRes.ok) {
             navigate(-1)
+        } else {
+            setMsg("Erreur lors de la création du post")
         }
     }
 
     return (
         <form onSubmit={handleSubmit} className='editor'>
             <fieldset>
+                {msg && <p>{msg}</p>}
                 <legend>Créer un post</legend>
                 <label>Titre</label>
                 <input ref={titleRef} type="text" name="title" id="title"/>

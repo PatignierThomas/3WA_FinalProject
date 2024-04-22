@@ -10,7 +10,7 @@ function PostContent({post}) {
             <img src={`http://localhost:9001/public/assets/img/avatar/default.png`} alt={`Avatar de ${post.username}`} /> 
             : <img src={post.src} alt={`Avatar de ${post.username}`} />}
             <p>écrit par {post.username}</p>
-            <p>{post.creation_date}</p>
+            <p>le {post.creation_date}</p>
             <div dangerouslySetInnerHTML={{ __html: post.content }} className='content ql-editor' />
             {post.last_update && <p className='update'>Dernière modification le {post.last_update}</p>}
         </article>

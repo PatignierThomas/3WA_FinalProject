@@ -15,11 +15,10 @@ function ProtectedAdminRoute({ child, redirectPath }) {
                 }
             );
             const result = await res.json();
-            if (res.ok && result.data.role === "admin") {
-                setIsAuthenticated(true);
-            } else {
-                navigate(redirectPath);
+            if (res.ok && result.message === "No Token" || result.data.role !== "admin") {
+                return navigate(redirectPath);
             }
+            setIsAuthenticated(true);
         }
          checkAuth();
     }, []);

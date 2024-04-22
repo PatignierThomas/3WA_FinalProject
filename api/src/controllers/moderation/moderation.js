@@ -1,6 +1,5 @@
 import Query from "../../model/Query.js";
 import CustomError from '../../utils/customError/errorHandler.js';
-import customSuccess from '../../utils/successRes.js';
 
 export const lockPost = async (req, res) => {
     try {

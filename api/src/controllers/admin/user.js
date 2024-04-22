@@ -1,7 +1,6 @@
 import Query from '../../model/Query.js';
 import { letterToIDRoleSwitch } from '../../utils/roleSwitch.js';
 import CustomError from '../../utils/customError/errorHandler.js';
-import customSuccess from '../../utils/successRes.js';
 
 
 // return a object with the number of users linked to the size of the pagination and the total number of users

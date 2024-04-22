@@ -1,6 +1,5 @@
 import Query from '../../model/Query.js';
 import CustomError from '../../utils/customError/errorHandler.js';
-import customSuccess from '../../utils/successRes.js';
 
 // create a new game, check if the form is filled and if the age is above 13
 export const createGame = async (req, res, next) => {

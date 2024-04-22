@@ -1,4 +1,5 @@
 import Query from "../model/Query.js";
+import bcrypt from "bcrypt";
 
 import CustomError from "../utils/customError/errorHandler.js";
 import customSuccess from "../utils/successRes.js";
@@ -26,7 +27,8 @@ export const updateUserInfo = async (req, res, next) => {
             const query = "SELECT password FROM users WHERE id = ?";
             const [data] = await Query.runWithParams(query, [req.params.userID]);
             if (!await bcrypt.compare(currentPassword, data.password)) {
-                return res.status(403).json({error: "Mot de passe incorrect"});
+                const customError = new CustomError(403, "Password error", "Mot de passe incorrect");
+                return next(customError);
             }
             if (newPassword.length < 8 || !/\d/.test(newPassword) || !/[A-Z]/.test(newPassword) || !/[!@#$%^&*]/.test(newPassword)) {
                 const customError = new CustomError(
@@ -36,7 +38,6 @@ export const updateUserInfo = async (req, res, next) => {
                     );
                 return next(customError);
             }
-            
             const hash = await bcrypt.hash(newPassword, Number(process.env.SALT));
             if (queryParam.length > 0) builtQuery += ", ";
             builtQuery += "password = ?"; 

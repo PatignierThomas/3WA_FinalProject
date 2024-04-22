@@ -46,7 +46,6 @@ function UpdateSection() {
             setError(result.errors)
         }
     }
-
     const handleSectionChange = (e, gameId) => {
         const selectedSectionId = e.target.value;
         const selectedSection = section.find(sec => sec.id === Number(selectedSectionId));
@@ -69,7 +68,7 @@ function UpdateSection() {
 
     const handleGameChange = (e) => {
         const selectedGame = e.target.value;
-        setSelectedGame(selectedGame); // Set the selected game
+        setSelectedGame(selectedGame);
         setFormValues(prev => ({ ...prev, gameId: selectedGame }));
     }
 
@@ -107,7 +106,7 @@ function UpdateSection() {
                             type="text" 
                             name="newName" 
                             id="newName"
-                            value={formValues['newName']}
+                            value={formValues['newName'] || ''}
                             onChange={(e) => handleChange('newName', e.target.value)}
                         />
                         <label htmlFor="newDescription">Nouvelle description :</label>
